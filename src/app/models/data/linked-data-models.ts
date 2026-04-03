@@ -17,6 +17,7 @@ export interface ICollectionData {
 }
 
 export interface ICollectionLink {
+    id:string,
     signification?: ISubBaseSignification; // link
     placement?: ISubBasePlacement;
     position?: ISubBasePosition;
