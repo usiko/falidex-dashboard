@@ -14,10 +14,11 @@ import { SymbolAccessoryStore } from './stores/symbols-accessory/symbols-accesso
 import { CodeSpeStore } from './stores/codes-spe/codes-spe.store';
 import { RelationDataStore } from './stores/relations/relations.store';
 import { forkJoin } from 'rxjs';
+import { TopBarComponent } from './components/feature/dashboard/smart/top-bar/top-bar.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, TopBarComponent],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })

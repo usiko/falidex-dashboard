@@ -1,0 +1,27 @@
+<mat-toolbar color="primary" class="top-bar">
+  <div class="left-section">
+    <mat-form-field appearance="outline" class="relation-select">
+      <mat-label>Relation</mat-label>
+      <mat-select 
+        [value]="selectedRelationId()" 
+        (selectionChange)="onRelationChange($event.value)">
+        @for (relation of relations(); track relation.id) {
+          <mat-option [value]="relation.id">{{ relation.name }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <span class="spacer"></span>
+
+  <div class="right-section">
+    <button mat-button routerLink="/filieres" routerLinkActive="active">
+      <mat-icon>school</mat-icon>
+      Filières
+    </button>
+    <button mat-button routerLink="/symbols" routerLinkActive="active">
+      <mat-icon>star</mat-icon>
+      Symboles
+    </button>
+  </div>
+</mat-toolbar>

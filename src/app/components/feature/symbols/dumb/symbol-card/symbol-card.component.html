@@ -1,0 +1,24 @@
+<mat-card class="symbol-card">
+  <mat-card-header>
+    <mat-icon mat-card-avatar>star</mat-icon>
+    <mat-card-title>{{ symbol.name }}</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    @if (symbol.imgs && symbol.imgs.length > 0) {
+      <div class="images-info">
+        <mat-chip-set>
+          <mat-chip>
+            <mat-icon matChipAvatar>image</mat-icon>
+            {{ symbol.imgs.length }} image(s)
+          </mat-chip>
+        </mat-chip-set>
+      </div>
+    }
+    @if (!symbol.imgs || symbol.imgs.length === 0) {
+      <div class="no-images">
+        <mat-icon>hide_image</mat-icon>
+        <span>Aucune image</span>
+      </div>
+    }
+  </mat-card-content>
+</mat-card>

@@ -1,0 +1,35 @@
+<div class="page-container">
+  <div class="page-header">
+    <h1>
+      <mat-icon>star</mat-icon>
+      Symboles
+    </h1>
+    <p class="subtitle">{{ symbols().length }} symbole(s) disponible(s)</p>
+  </div>
+
+  <div class="filters">
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>Rechercher</mat-label>
+      <input matInput [(ngModel)]="searchTerm" placeholder="Nom du symbole..." />
+      <mat-icon matPrefix>search</mat-icon>
+      @if (searchTerm()) {
+        <button matSuffix mat-icon-button (click)="clearSearch()">
+          <mat-icon>close</mat-icon>
+        </button>
+      }
+    </mat-form-field>
+  </div>
+
+  <div class="symbols-grid">
+    @if (filteredSymbols().length === 0) {
+      <div class="empty-state">
+        <mat-icon>info</mat-icon>
+        <p>Aucun symbole trouvé</p>
+      </div>
+    } @else {
+      @for (symbol of filteredSymbols(); track symbol.id) {
+        <app-symbol-card [symbol]="symbol" />
+      }
+    }
+  </div>
+</div>

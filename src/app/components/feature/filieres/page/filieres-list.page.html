@@ -1,0 +1,35 @@
+<div class="page-container">
+  <div class="page-header">
+    <h1>
+      <mat-icon>school</mat-icon>
+      Filières
+    </h1>
+    <p class="subtitle">{{ filieres().length }} filière(s) disponible(s)</p>
+  </div>
+
+  <div class="filters">
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>Rechercher</mat-label>
+      <input matInput [(ngModel)]="searchTerm" placeholder="Nom de la filière..." />
+      <mat-icon matPrefix>search</mat-icon>
+      @if (searchTerm()) {
+        <button matSuffix mat-icon-button (click)="clearSearch()">
+          <mat-icon>close</mat-icon>
+        </button>
+      }
+    </mat-form-field>
+  </div>
+
+  <div class="filieres-grid">
+    @if (filteredFilieres().length === 0) {
+      <div class="empty-state">
+        <mat-icon>info</mat-icon>
+        <p>Aucune filière trouvée</p>
+      </div>
+    } @else {
+      @for (filiere of filteredFilieres(); track filiere.id) {
+        <app-filiere-card [filiere]="filiere" />
+      }
+    }
+  </div>
+</div>
