@@ -6,7 +6,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
 import { FiliereStore } from '../../../../stores/filieres/filieres.store';
-import { FiliereCardComponent } from '../dumb/filiere-card/filiere-card.component';
+import { FiliereItemComponent } from '../smart/filiere-item/filiere-item.component';
 
 @Component({
   selector: 'app-filieres-list-page',
@@ -18,7 +18,7 @@ import { FiliereCardComponent } from '../dumb/filiere-card/filiere-card.componen
     MatInputModule,
     MatIconModule,
     FormsModule,
-    FiliereCardComponent
+    FiliereItemComponent
   ],
   templateUrl: './filieres-list.page.html',
   styleUrl: './filieres-list.page.scss'

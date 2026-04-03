@@ -1,0 +1,16 @@
+<mat-card class="filiere-card">
+  <mat-card-header>
+    <mat-icon mat-card-avatar>school</mat-icon>
+    <mat-card-title>{{ filiere()?.name || 'Filière inconnue' }}</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <div class="combinations-info">
+      <mat-chip-set>
+        <mat-chip highlighted>
+          <mat-icon matChipAvatar>link</mat-icon>
+          {{ combinationCount() }} combinaison(s)
+        </mat-chip>
+      </mat-chip-set>
+    </div>
+  </mat-card-content>
+</mat-card>

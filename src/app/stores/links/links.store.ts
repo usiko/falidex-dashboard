@@ -9,6 +9,13 @@ export const linkStore = signalStore(
   withEntities<IRelationItem>(),
   withMethods((store) => ({
     // Méthodes génériques communes
-    ...createEntityMethods<IRelationItem>()(store)
+    ...createEntityMethods<IRelationItem>()(store),
+    
+    // Méthode pour récupérer les liens par filiereId
+    getByFiliereId: (filiereId: string) => {
+      return computed(() => 
+        store.entities().filter(link => link.filiereId === filiereId)
+      );
+    }
   })),
 );

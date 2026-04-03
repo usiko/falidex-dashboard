@@ -1,20 +1,22 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { DataService } from './services/data/data.service';
-import { CirculaireStore } from './stores/circulaires/circulaires.store';
-import { FiliereStore } from './stores/filieres/filieres.store';
-import { SymbolStore } from './stores/symbols/symbols.store';
-import { SignificationStore } from './stores/significations/significations.store';
-import { PlacementStore } from './stores/placements/placements.store';
-import { PositionStore } from './stores/positions/positions.store';
-import { ColorStore } from './stores/colors/colors.store';
-import { CirculaireColorStore } from './stores/circulaires-colors/circulaires-colors.store';
-import { SymbolSensStore } from './stores/symbols-sens/symbols-sens.store';
-import { SymbolAccessoryStore } from './stores/symbols-accessory/symbols-accessory.store';
-import { CodeSpeStore } from './stores/codes-spe/codes-spe.store';
-import { RelationDataStore } from './stores/relations/relations.store';
 import { forkJoin } from 'rxjs';
 import { TopBarComponent } from './components/feature/dashboard/smart/top-bar/top-bar.component';
+import { DataService } from './services/data/data.service';
+import { CirculaireColorStore } from './stores/circulaires-colors/circulaires-colors.store';
+import { CirculaireStore } from './stores/circulaires/circulaires.store';
+import { CodeSpeStore } from './stores/codes-spe/codes-spe.store';
+import { ColorStore } from './stores/colors/colors.store';
+import { FiliereStore } from './stores/filieres/filieres.store';
+import { linkStore } from './stores/links/links.store';
+import { PlacementStore } from './stores/placements/placements.store';
+import { PositionStore } from './stores/positions/positions.store';
+import { RelationDataStore } from './stores/relations/relations.store';
+import { SelectedRelationStore } from './stores/selected-relation/selected-relation.store';
+import { SignificationStore } from './stores/significations/significations.store';
+import { SymbolAccessoryStore } from './stores/symbols-accessory/symbols-accessory.store';
+import { SymbolSensStore } from './stores/symbols-sens/symbols-sens.store';
+import { SymbolStore } from './stores/symbols/symbols.store';
 
 @Component({
   selector: 'app-root',
@@ -38,6 +40,9 @@ export class App implements OnInit {
   private readonly symbolAccessoryStore = inject(SymbolAccessoryStore);
   private readonly codeSpeStore = inject(CodeSpeStore);
   private readonly relationDataStore = inject(RelationDataStore);
+  private readonly linkStore = inject(linkStore);
+  private readonly selectedRelationStore = inject(SelectedRelationStore);
+
 
   ngOnInit(): void {
     this.loadAllData();
@@ -73,6 +78,13 @@ export class App implements OnInit {
         this.symbolSensStore.set(data.symbolsSens);
         this.symbolAccessoryStore.set(data.symbolsAccessory);
         this.relationDataStore.set([data.relationNational, data.relationToulon]);
+
+        // Initialiser la relation sélectionnée par défaut avec la première relation
+        const relations = [data.relationNational, data.relationToulon];
+        if (relations.length > 0 && relations[0].id) {
+          this.selectedRelationStore.setSelectedRelationId(relations[0].id);
+          this.linkStore.set(relations[0].relations);
+        }
 
         console.log('✅ Toutes les données ont été chargées dans les stores');
       },

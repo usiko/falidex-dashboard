@@ -28,7 +28,7 @@
       </div>
     } @else {
       @for (filiere of filteredFilieres(); track filiere.id) {
-        <app-filiere-card [filiere]="filiere" />
+        <app-filiere-item [filiereId]="filiere.id" />
       }
     }
   </div>
