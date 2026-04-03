@@ -2,13 +2,13 @@ import { computed, Signal } from '@angular/core';
 import { signalStore, withMethods } from '@ngrx/signals';
 import { withEntities } from '@ngrx/signals/entities';
 import { createEntityMethods } from '../entities.store';
-import { ICirculaire } from '../../models/data/linked-data-models';
+import { IBaseCirculaire } from '../../models/data/base-data-models';
 
 export const CirculaireStore = signalStore(
   { providedIn: 'root' },
-  withEntities<ICirculaire>(),
+  withEntities<IBaseCirculaire>(),
   withMethods((store) => ({
     // Méthodes génériques communes
-    ...createEntityMethods<ICirculaire>()(store)
+    ...createEntityMethods<IBaseCirculaire>()(store)
   })),
 );

@@ -2,13 +2,13 @@ import { computed, Signal } from '@angular/core';
 import { signalStore, withMethods } from '@ngrx/signals';
 import { withEntities } from '@ngrx/signals/entities';
 import { createEntityMethods } from '../entities.store';
-import { IPlacement } from '../../models/data/linked-data-models';
+import { IBasePlacement } from '../../models/data/base-data-models';
 
 export const PlacementStore = signalStore(
   { providedIn: 'root' },
-  withEntities<IPlacement>(),
+  withEntities<IBasePlacement>(),
   withMethods((store) => ({
     // Méthodes génériques communes
-    ...createEntityMethods<IPlacement>()(store)
+    ...createEntityMethods<IBasePlacement>()(store)
   })),
 );

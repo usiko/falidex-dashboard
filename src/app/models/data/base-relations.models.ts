@@ -2,6 +2,7 @@ import { IBaseCodeSpe } from './base-data-models';
 import { ICodeSpe } from './linked-data-models';
 
 export interface IRelationItem {
+    id:string,
     placementId?: string;
     positionId?: string;
     filiereId?: string;

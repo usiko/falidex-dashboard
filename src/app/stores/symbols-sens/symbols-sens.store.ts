@@ -2,13 +2,13 @@ import { computed, Signal } from '@angular/core';
 import { signalStore, withMethods } from '@ngrx/signals';
 import { withEntities } from '@ngrx/signals/entities';
 import { createEntityMethods } from '../entities.store';
-import { IBaseCodeSpe } from '../../models/data/base-data-models';
+import { IBaseSymbolSens } from '../../models/data/base-data-models';
 
-export const CodeSpeStore = signalStore(
+export const SymbolSensStore = signalStore(
   { providedIn: 'root' },
-  withEntities<IBaseCodeSpe>(),
+  withEntities<IBaseSymbolSens>(),
   withMethods((store) => ({
     // Méthodes génériques communes
-    ...createEntityMethods<IBaseCodeSpe>()(store)
+    ...createEntityMethods<IBaseSymbolSens>()(store)
   })),
 );
