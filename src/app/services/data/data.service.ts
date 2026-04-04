@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { v4 as uuidv4 } from 'uuid';
 import {
   IBaseCirculaire,
   IBaseCirculaireColor,
@@ -109,20 +111,40 @@ export class DataService {
    * Récupère les données de relation nationale
    */
   getRelationNational(): Observable<IRelationData> {
-    return this.http.get<IRelationData>(`${this.basePath}/relations/national.json`);
+    return this.http.get<IRelationData>(`${this.basePath}/relations/national.json`).pipe(
+      map(data => this.ensureRelationItemIds(data))
+    );
   }
 
   /**
    * Récupère les données de relation Toulon
    */
   getRelationToulon(): Observable<IRelationData> {
-    return this.http.get<IRelationData>(`${this.basePath}/relations/toulon.json`);
+    return this.http.get<IRelationData>(`${this.basePath}/relations/toulon.json`).pipe(
+      map(data => this.ensureRelationItemIds(data))
+    );
   }
 
   /**
    * Récupère les données d'une relation spécifique par son ID
    */
   getRelationById(relationId: string): Observable<IRelationData> {
-    return this.http.get<IRelationData>(`${this.basePath}/relations/${relationId}.json`);
+    return this.http.get<IRelationData>(`${this.basePath}/relations/${relationId}.json`).pipe(
+      map(data => this.ensureRelationItemIds(data))
+    );
+  }
+
+  /**
+   * Assure que tous les IRelationItem ont un ID
+   * Génère un UUID si l'ID est manquant
+   */
+  private ensureRelationItemIds(data: IRelationData): IRelationData {
+    return {
+      ...data,
+      relations: data.relations.map(item => ({
+        ...item,
+        id: item.id || uuidv4()
+      }))
+    };
   }
 }

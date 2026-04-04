@@ -29,7 +29,7 @@ export class FiliereItemComponent {
   });
 
   protected readonly links = computed(()=>{
-    return  this.linkStore.getByFiliereId(this.filiereId());
+    return  this.linkStore.getByFiliereId(this.filiereId())();
   })
 
   protected readonly combinationCount = computed(() => {

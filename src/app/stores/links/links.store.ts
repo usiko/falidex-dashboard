@@ -13,9 +13,12 @@ export const linkStore = signalStore(
     
     // Méthode pour récupérer les liens par filiereId
     getByFiliereId: (filiereId: string) => {
-      return computed(() => 
-        store.entities().filter(link => link.filiereId === filiereId)
+      return computed(() => {
+        return store.entities().filter(link => link.filiereId === filiereId)
+      }
       );
     }
+    
+    
   })),
 );
