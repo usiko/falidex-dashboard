@@ -12,7 +12,7 @@ export const routes: Routes = [
   },
   {
     path: 'filiere/:id',
-    loadComponent: () => import('./components/feature/filieres/page/detail/smart/filiere-detail-page/filiere-detail-page.component').then(m => m.FiliereDetailPageComponent)
+    loadComponent: () => import('./components/feature/filieres/page/detail/filiere-detail-page.component').then(m => m.FiliereDetailPageComponent)
   },
   {
     path: 'symbols',
@@ -20,7 +20,7 @@ export const routes: Routes = [
   },
   {
     path: 'symbole/:id',
-    loadComponent: () => import('./components/feature/symbols/page/detail/smart/symbol-detail-page/symbol-detail-page.component').then(m => m.SymbolDetailPageComponent)
+    loadComponent: () => import('./components/feature/symbols/page/detail/symbol-detail-page.component').then(m => m.SymbolDetailPageComponent)
   },
   {
     path: '**',
