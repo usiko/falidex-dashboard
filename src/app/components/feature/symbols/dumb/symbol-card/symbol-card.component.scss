@@ -18,30 +18,37 @@
       height: 40px;
       border-radius: 50%;
     }
-  }
-  
-  mat-card-content {
-    padding-top: 16px;
-  }
-  
-  .images-info {
-    mat-chip {
-      background: #fff3e0;
-      color: #e65100;
-    }
-  }
-  
-  .no-images {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    color: #999;
-    font-size: 14px;
     
-    mat-icon {
-      font-size: 20px;
-      width: 20px;
-      height: 20px;
+    .symbol-image-container {
+      position: relative;
+      width: 80px;
+      height: 80px;
+      border-radius: 8px;
+      img{
+        border-radius:15px;
+      }
+      
+      .symbol-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      
+      .image-count-badge {
+        position: absolute;
+        bottom: -3px;
+        right: -3px;
+        background: #ff9800;
+        color: white;
+        font-size: 10px;
+        font-weight: 600;
+        padding: 2px 4px;
+        border-radius: 8px;
+        min-width: 16px;
+        text-align: center;
+        line-height: 1;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+      }
     }
   }
 }

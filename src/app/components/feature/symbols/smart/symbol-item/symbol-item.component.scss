@@ -18,22 +18,44 @@
       width: 40px;
       height: 40px;
     }
+    
+    .symbol-image-container {
+      position: relative;
+      width: 80px;
+      height: 80px;
+      
+      img{
+        border-radius:15px;
+      }
+      
+      .symbol-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      
+      .image-count-badge {
+        position: absolute;
+        bottom: -3px;
+        right: -3px;
+        background: #ff9800;
+        color: white;
+        font-size: 10px;
+        font-weight: 600;
+        padding: 2px 4px;
+        border-radius: 8px;
+        min-width: 16px;
+        text-align: center;
+        line-height: 1;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+      }
+    }
   }
 
   mat-card-content {
     padding-top: 16px;
 
     .combinations-info {
-      margin-bottom: 12px;
-      
-      mat-chip-set {
-        mat-chip {
-          font-weight: 500;
-        }
-      }
-    }
-
-    .images-info {
       mat-chip-set {
         mat-chip {
           font-weight: 500;

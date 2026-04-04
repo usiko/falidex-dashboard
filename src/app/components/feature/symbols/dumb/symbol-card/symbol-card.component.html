@@ -1,24 +1,15 @@
 <mat-card class="symbol-card">
   <mat-card-header>
-    <mat-icon mat-card-avatar>star</mat-icon>
+    @if (symbol.imgs && symbol.imgs.length > 0) {
+      <div class="symbol-image-container" mat-card-avatar>
+        <img [src]="symbol.imgs[0].url" [alt]="symbol.name" class="symbol-image">
+        @if (symbol.imgs.length > 1) {
+          <div class="image-count-badge">{{ symbol.imgs.length }}</div>
+        }
+      </div>
+    } @else {
+      <mat-icon mat-card-avatar>hide_image</mat-icon>
+    }
     <mat-card-title>{{ symbol.name }}</mat-card-title>
   </mat-card-header>
-  <mat-card-content>
-    @if (symbol.imgs && symbol.imgs.length > 0) {
-      <div class="images-info">
-        <mat-chip-set>
-          <mat-chip>
-            <mat-icon matChipAvatar>image</mat-icon>
-            {{ symbol.imgs.length }} image(s)
-          </mat-chip>
-        </mat-chip-set>
-      </div>
-    }
-    @if (!symbol.imgs || symbol.imgs.length === 0) {
-      <div class="no-images">
-        <mat-icon>hide_image</mat-icon>
-        <span>Aucune image</span>
-      </div>
-    }
-  </mat-card-content>
 </mat-card>
