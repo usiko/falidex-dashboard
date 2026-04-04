@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -17,14 +17,17 @@ import {
   IBaseCodeSpe
 } from '../../models/data/base-data-models';
 import { IRelationData } from '../../models/data/base-relations.models';
+import { PictureService } from '../picture/picture.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DataService {
   private readonly basePath = '/mockdata';
+  private http = inject(HttpClient);
+  private pictureService = inject(PictureService);
 
-  constructor(private http: HttpClient) {}
+  constructor() {}
 
   // ==================== Items ====================
 
@@ -81,7 +84,22 @@ export class DataService {
    * Récupère la liste des symboles
    */
   getSymboles(): Observable<IBaseSymbol[]> {
-    return this.http.get<IBaseSymbol[]>(`${this.basePath}/items/symboles.json`);
+    return this.http.get<IBaseSymbol[]>(`${this.basePath}/items/symboles.json`).pipe(map(symboles=>{
+        return symboles.map(symbol=>{
+           
+            return {
+                ...symbol,
+                imgs:(symbol.imgs??[]).map(item=>{
+                     const url = this.pictureService.getFullResourceUrl(item.url)
+                     return {
+                        ...item,
+                        url:url??''
+                     }
+                })
+                
+            }
+        })
+    }))
   }
 
   /**

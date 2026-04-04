@@ -1,0 +1,7 @@
+{
+    "urls": {
+        "dataServer": "https://dev-falidex-server.herokuapp.com",
+        "pictureServer": "https://resources.falidex.fr/index.php"
+    },
+    "pictureServerSalt": "iBhodGT6GTqS6Bb"
+}
