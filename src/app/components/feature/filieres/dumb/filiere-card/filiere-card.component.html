@@ -1,6 +1,26 @@
 <mat-card class="filiere-card">
   <mat-card-header>
     <mat-icon mat-card-avatar>school</mat-icon>
-    <mat-card-title>{{ filiere.name }}</mat-card-title>
+    <mat-card-title>{{ filiere().name }}</mat-card-title>
   </mat-card-header>
+  @if (significationCount() !== undefined || symboleCount() !== undefined) {
+    <mat-card-content>
+      <div class="combinations-info">
+        <mat-chip-set>
+          @if (significationCount() !== undefined) {
+            <mat-chip>
+              <mat-icon matChipAvatar>assignment</mat-icon>
+              {{ significationCount() }} signification(s)
+            </mat-chip>
+          }
+          @if (symboleCount() !== undefined) {
+            <mat-chip>
+              <mat-icon matChipAvatar>star</mat-icon>
+              {{ symboleCount() }} symbole(s)
+            </mat-chip>
+          }
+        </mat-chip-set>
+      </div>
+    </mat-card-content>
+  }
 </mat-card>

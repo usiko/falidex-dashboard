@@ -1,15 +1,36 @@
 <mat-card class="symbol-card">
   <mat-card-header>
-    @if (symbol.imgs && symbol.imgs.length > 0) {
+    @let imgs = symbol().imgs;
+    @if (imgs && imgs.length > 0) {
       <div class="symbol-image-container" mat-card-avatar>
-        <img [src]="symbol.imgs[0].url" [alt]="symbol.name" class="symbol-image">
-        @if (symbol.imgs.length > 1) {
-          <div class="image-count-badge">{{ symbol.imgs.length }}</div>
+        <img [src]="imgs[0].url" [alt]="symbol().name" class="symbol-image">
+        @if (imgs.length > 1) {
+          <div class="image-count-badge">{{ imgs.length }}</div>
         }
       </div>
     } @else {
       <mat-icon mat-card-avatar>hide_image</mat-icon>
     }
-    <mat-card-title>{{ symbol.name }}</mat-card-title>
+    <mat-card-title>{{ symbol().name }}</mat-card-title>
   </mat-card-header>
+  @if (significationCount() !== undefined || filiereCount() !== undefined) {
+    <mat-card-content>
+      <div class="combinations-info">
+        <mat-chip-set>
+          @if (significationCount() !== undefined) {
+            <mat-chip>
+              <mat-icon matChipAvatar>assignment</mat-icon>
+              {{ significationCount() }} signification(s)
+            </mat-chip>
+          }
+          @if (filiereCount() !== undefined) {
+            <mat-chip>
+              <mat-icon matChipAvatar>school</mat-icon>
+              {{ filiereCount() }} filière(s)
+            </mat-chip>
+          }
+        </mat-chip-set>
+      </div>
+    </mat-card-content>
+  }
 </mat-card>

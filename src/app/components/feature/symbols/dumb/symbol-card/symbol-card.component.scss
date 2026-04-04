@@ -51,4 +51,16 @@
       }
     }
   }
+  
+  mat-card-content {
+    padding-top: 16px;
+    
+    .combinations-info {
+      mat-chip-set {
+        mat-chip {
+          font-weight: 500;
+        }
+      }
+    }
+  }
 }

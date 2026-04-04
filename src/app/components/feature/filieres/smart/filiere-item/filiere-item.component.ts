@@ -1,19 +1,13 @@
 import { Component, inject, computed, input } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { MatCardModule } from '@angular/material/card';
-import { MatChipsModule } from '@angular/material/chips';
-import { MatIconModule } from '@angular/material/icon';
 import { FiliereStore } from '../../../../../stores/filieres/filieres.store';
 import { linkStore } from '../../../../../stores/links/links.store';
+import { FiliereCardComponent } from '../../dumb/filiere-card/filiere-card.component';
 
 @Component({
   selector: 'app-filiere-item',
   standalone: true,
   imports: [
-    CommonModule,
-    MatCardModule,
-    MatChipsModule,
-    MatIconModule
+    FiliereCardComponent
   ],
   templateUrl: './filiere-item.component.html',
   styleUrl: './filiere-item.component.scss'

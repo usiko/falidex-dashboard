@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
@@ -20,5 +20,7 @@ import { IBaseSymbol } from '../../../../../models/data/base-data-models';
   styleUrl: './symbol-card.component.scss'
 })
 export class SymbolCardComponent {
-  @Input({ required: true }) symbol!: IBaseSymbol;
+  symbol = input.required<IBaseSymbol>();
+  filiereCount = input<number>();
+  significationCount = input<number>();
 }

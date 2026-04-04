@@ -1,29 +1,6 @@
-<mat-card class="symbol-card">
-  <mat-card-header>
-    @if (symbol() && hasImages()) {
-      <div class="symbol-image-container" mat-card-avatar>
-        <img [src]="symbol()!.imgs![0].url" [alt]="symbol()!.name" class="symbol-image">
-        @if (imageCount() > 1) {
-          <div class="image-count-badge">{{ imageCount() }}</div>
-        }
-      </div>
-    } @else {
-      <mat-icon mat-card-avatar>hide_image</mat-icon>
-    }
-    <mat-card-title>{{ symbol()?.name || 'Symbole inconnu' }}</mat-card-title>
-  </mat-card-header>
-  <mat-card-content>
-    <div class="combinations-info">
-      <mat-chip-set>
-        <mat-chip>
-          <mat-icon matChipAvatar>assignment</mat-icon>
-          {{ significationCount() }} signification(s)
-        </mat-chip>
-        <mat-chip>
-          <mat-icon matChipAvatar>school</mat-icon>
-          {{ filiereCount() }} filière(s)
-        </mat-chip>
-      </mat-chip-set>
-    </div>
-  </mat-card-content>
-</mat-card>
+@if (symbol()) {
+  <app-symbol-card 
+    [symbol]="symbol()!" 
+    [filiereCount]="filiereCount()" 
+    [significationCount]="significationCount()" />
+}

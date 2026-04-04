@@ -1,20 +1,6 @@
-<mat-card class="filiere-card">
-  <mat-card-header>
-    <mat-icon mat-card-avatar>school</mat-icon>
-    <mat-card-title>{{ filiere()?.name || 'Filière inconnue' }}</mat-card-title>
-  </mat-card-header>
-  <mat-card-content>
-    <div class="combinations-info">
-      <mat-chip-set>
-        <mat-chip>
-          <mat-icon matChipAvatar>assignment</mat-icon>
-          {{ significationCount() }} signification(s)
-        </mat-chip>
-        <mat-chip>
-          <mat-icon matChipAvatar>star</mat-icon>
-          {{ symboleCount() }} symbole(s)
-        </mat-chip>
-      </mat-chip-set>
-    </div>
-  </mat-card-content>
-</mat-card>
+@if (filiere()) {
+  <app-filiere-card 
+    [filiere]="filiere()!" 
+    [symboleCount]="symboleCount()" 
+    [significationCount]="significationCount()" />
+}
