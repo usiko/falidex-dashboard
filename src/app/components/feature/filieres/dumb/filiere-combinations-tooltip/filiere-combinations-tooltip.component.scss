@@ -1,0 +1,50 @@
+.combinations-tooltip {
+  padding: 8px;
+  max-width: 300px;
+  
+  .empty {
+    color: #999;
+    font-style: italic;
+    margin: 0;
+    font-size: 12px;
+  }
+  
+  .combinations-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    
+    .combination-item {
+      font-size: 12px;
+      line-height: 1.4;
+      
+      .symbol-name {
+        font-weight: 600;
+        color: #ff9800;
+      }
+      
+      .separator {
+        margin: 0 4px;
+        color: #666;
+        font-style: italic;
+      }
+      
+      .circulaire-name {
+        font-weight: 500;
+        color: #333;
+      }
+      
+      .color-single {
+        margin-left: 4px;
+        font-weight: 600;
+        font-size: 11px;
+      }
+      
+      .colors {
+        margin-left: 4px;
+        color: #666;
+        font-size: 11px;
+      }
+    }
+  }
+}

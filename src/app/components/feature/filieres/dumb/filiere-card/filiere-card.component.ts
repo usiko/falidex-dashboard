@@ -1,9 +1,12 @@
-import { Component, input } from '@angular/core';
+import { Component, input, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
+import { OverlayModule } from '@angular/cdk/overlay';
 import { IBaseFiliere } from '../../../../../models/data/base-data-models';
+import type { FiliereCombination } from '../filiere-combinations-tooltip/filiere-combinations-tooltip.component';
+import { FiliereCombinationsTooltipComponent } from '../filiere-combinations-tooltip/filiere-combinations-tooltip.component';
 
 @Component({
   selector: 'app-filiere-card',
@@ -12,7 +15,9 @@ import { IBaseFiliere } from '../../../../../models/data/base-data-models';
     CommonModule,
     MatCardModule,
     MatChipsModule,
-    MatIconModule
+    MatIconModule,
+    OverlayModule,
+    FiliereCombinationsTooltipComponent
   ],
   templateUrl: './filiere-card.component.html',
   styleUrl: './filiere-card.component.scss'
@@ -20,6 +25,17 @@ import { IBaseFiliere } from '../../../../../models/data/base-data-models';
 export class FiliereCardComponent {
   filiere = input.required<IBaseFiliere>();
   symboleCount = input<number>();
-  significationCount = input<number>();
   inactive = input<boolean>(false);
+  symboleNames = input<string[]>([]);
+  symboleCombinations = input<FiliereCombination[]>([]);
+  
+  protected isTooltipOpen = signal(false);
+  
+  showTooltip() {
+    this.isTooltipOpen.set(true);
+  }
+  
+  hideTooltip() {
+    this.isTooltipOpen.set(false);
+  }
 }

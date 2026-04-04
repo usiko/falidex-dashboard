@@ -1,0 +1,24 @@
+<div class="combinations-tooltip">
+  @if (combinations().length === 0) {
+    <p class="empty">Aucune combinaison</p>
+  } @else {
+    <div class="combinations-list">
+      @for (combo of combinations(); track $index) {
+        <div class="combination-item">
+          <span class="symbol-name">{{ combo.symbolName }}</span>
+          @if (combo.circulaireName) {
+            <span class="separator">sur</span>
+            <span class="circulaire-name">{{ combo.circulaireName }}</span>
+          }
+          @if (combo.colors.length === 1) {
+            <span class="color-single" [style.color]="combo.colors[0].colorData">
+              ({{ combo.colors[0].name }})
+            </span>
+          } @else if (combo.colors.length > 1) {
+            <span class="colors">({{ combo.colors.map(c => c.name).join(', ') }})</span>
+          }
+        </div>
+      }
+    </div>
+  }
+</div>

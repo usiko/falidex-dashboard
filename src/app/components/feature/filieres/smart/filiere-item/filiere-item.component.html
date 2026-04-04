@@ -1,7 +1,8 @@
 @if (filiere()) {
   <app-filiere-card 
     [filiere]="filiere()!" 
-    [symboleCount]="symboleCount()" 
-    [significationCount]="significationCount()"
-    [inactive]="inactive()" />
+    [symboleCount]="symboleCount()"
+    [inactive]="inactive()"
+    [symboleNames]="symboleNames()"
+    [symboleCombinations]="symboleCombinations()" />
 }

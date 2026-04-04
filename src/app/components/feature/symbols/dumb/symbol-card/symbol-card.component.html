@@ -18,13 +18,13 @@
       <div class="combinations-info">
         <mat-chip-set>
           @if (significationCount() !== undefined) {
-            <mat-chip>
+            <mat-chip [matTooltip]="significationNames().join(', ')" matTooltipPosition="above">
               <mat-icon matChipAvatar>assignment</mat-icon>
               {{ significationCount() }} signification(s)
             </mat-chip>
           }
           @if (filiereCount() !== undefined) {
-            <mat-chip>
+            <mat-chip [matTooltip]="filiereNames().join(', ')" matTooltipPosition="above">
               <mat-icon matChipAvatar>school</mat-icon>
               {{ filiereCount() }} filière(s)
             </mat-chip>

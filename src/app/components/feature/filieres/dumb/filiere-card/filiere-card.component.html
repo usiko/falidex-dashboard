@@ -3,24 +3,33 @@
     <mat-icon mat-card-avatar>school</mat-icon>
     <mat-card-title>{{ filiere().name }}</mat-card-title>
   </mat-card-header>
-  @if (significationCount() !== undefined || symboleCount() !== undefined) {
+  @if (symboleCount() !== undefined) {
     <mat-card-content>
       <div class="combinations-info">
         <mat-chip-set>
-          @if (significationCount() !== undefined) {
-            <mat-chip>
-              <mat-icon matChipAvatar>assignment</mat-icon>
-              {{ significationCount() }} signification(s)
-            </mat-chip>
-          }
-          @if (symboleCount() !== undefined) {
-            <mat-chip>
-              <mat-icon matChipAvatar>star</mat-icon>
-              {{ symboleCount() }} symbole(s)
-            </mat-chip>
-          }
+          <mat-chip 
+            cdkOverlayOrigin
+            #trigger="cdkOverlayOrigin"
+            (mouseenter)="showTooltip()"
+            (mouseleave)="hideTooltip()">
+            <mat-icon matChipAvatar>star</mat-icon>
+            {{ symboleCount() }} emblème et circulaires
+          </mat-chip>
         </mat-chip-set>
       </div>
     </mat-card-content>
+    
+    <ng-template
+      cdkConnectedOverlay
+      [cdkConnectedOverlayOrigin]="trigger"
+      [cdkConnectedOverlayOpen]="isTooltipOpen()"
+      [cdkConnectedOverlayPositions]="[
+        { originX: 'center', originY: 'top', overlayX: 'center', overlayY: 'bottom', offsetY: -8 },
+        { originX: 'center', originY: 'bottom', overlayX: 'center', overlayY: 'top', offsetY: 8 }
+      ]">
+      <div class="tooltip-overlay" (mouseenter)="showTooltip()" (mouseleave)="hideTooltip()">
+        <app-filiere-combinations-tooltip [combinations]="symboleCombinations()" />
+      </div>
+    </ng-template>
   }
 </mat-card>

@@ -9,6 +9,13 @@ export const CirculaireColorStore = signalStore(
   withEntities<IBaseCirculaireColor>(),
   withMethods((store) => ({
     // Méthodes génériques communes
-    ...createEntityMethods<IBaseCirculaireColor>()(store)
+    ...createEntityMethods<IBaseCirculaireColor>()(store),
+    
+    // Méthode pour récupérer les circulaire-colors par circulaireId
+    getByCirculaireId: (circulaireId: string) => {
+      return computed(() => {
+        return store.entities().filter(cc => cc.circulaireId === circulaireId);
+      });
+    }
   })),
 );

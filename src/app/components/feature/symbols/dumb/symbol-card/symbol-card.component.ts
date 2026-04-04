@@ -4,6 +4,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
 import { MatBadgeModule } from '@angular/material/badge';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { IBaseSymbol } from '../../../../../models/data/base-data-models';
 
 @Component({
@@ -14,7 +15,8 @@ import { IBaseSymbol } from '../../../../../models/data/base-data-models';
     MatCardModule,
     MatChipsModule,
     MatIconModule,
-    MatBadgeModule
+    MatBadgeModule,
+    MatTooltipModule
   ],
   templateUrl: './symbol-card.component.html',
   styleUrl: './symbol-card.component.scss'
@@ -24,4 +26,6 @@ export class SymbolCardComponent {
   filiereCount = input<number>();
   significationCount = input<number>();
   inactive = input<boolean>(false);
+  filiereNames = input<string[]>([]);
+  significationNames = input<string[]>([]);
 }
