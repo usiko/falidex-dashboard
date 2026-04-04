@@ -1,11 +1,14 @@
-import { Component, input } from '@angular/core';
+import { Component, input, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
 import { MatBadgeModule } from '@angular/material/badge';
-import { MatTooltipModule } from '@angular/material/tooltip';
+import { OverlayModule } from '@angular/cdk/overlay';
 import { IBaseSymbol } from '../../../../../models/data/base-data-models';
+import type { PositionStats } from '../../smart/symbol-item/symbol-item.component';
+import { SymbolPositionTooltipComponent } from '../symbol-position-tooltip/symbol-position-tooltip.component';
+import { FiliereCombinationsTooltipComponent } from '../../../filieres/dumb/filiere-combinations-tooltip/filiere-combinations-tooltip.component';
 
 @Component({
   selector: 'app-symbol-card',
@@ -16,16 +19,29 @@ import { IBaseSymbol } from '../../../../../models/data/base-data-models';
     MatChipsModule,
     MatIconModule,
     MatBadgeModule,
-    MatTooltipModule
+    OverlayModule,
+    SymbolPositionTooltipComponent,
+    FiliereCombinationsTooltipComponent
   ],
   templateUrl: './symbol-card.component.html',
   styleUrl: './symbol-card.component.scss'
 })
 export class SymbolCardComponent {
   symbol = input.required<IBaseSymbol>();
-  filiereCount = input<number>();
-  significationCount = input<number>();
+  positionStats = input<PositionStats[]>([]);
   inactive = input<boolean>(false);
-  filiereNames = input<string[]>([]);
-  significationNames = input<string[]>([]);
+  
+  protected openTooltipIndex = signal<number | null>(null);
+  
+  showTooltip(index: number) {
+    this.openTooltipIndex.set(index);
+  }
+  
+  hideTooltip() {
+    this.openTooltipIndex.set(null);
+  }
+  
+  isTooltipOpen(index: number): boolean {
+    return this.openTooltipIndex() === index;
+  }
 }

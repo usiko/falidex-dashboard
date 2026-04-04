@@ -13,21 +13,36 @@
     }
     <mat-card-title>{{ symbol().name }}</mat-card-title>
   </mat-card-header>
-  @if (significationCount() !== undefined || filiereCount() !== undefined) {
+  @if (positionStats().length > 0) {
     <mat-card-content>
       <div class="combinations-info">
         <mat-chip-set>
-          @if (significationCount() !== undefined) {
-            <mat-chip [matTooltip]="significationNames().join(', ')" matTooltipPosition="above">
-              <mat-icon matChipAvatar>assignment</mat-icon>
-              {{ significationCount() }} signification(s)
+          @for (posStat of positionStats(); track posStat.positionId; let idx = $index) {
+            <mat-chip
+              cdkOverlayOrigin
+              #trigger="cdkOverlayOrigin"
+              (mouseenter)="showTooltip(idx)"
+              (mouseleave)="hideTooltip()">
+              {{ posStat.count }} {{ posStat.positionName }}
             </mat-chip>
-          }
-          @if (filiereCount() !== undefined) {
-            <mat-chip [matTooltip]="filiereNames().join(', ')" matTooltipPosition="above">
-              <mat-icon matChipAvatar>school</mat-icon>
-              {{ filiereCount() }} filière(s)
-            </mat-chip>
+            
+            <ng-template
+              cdkConnectedOverlay
+              [cdkConnectedOverlayOrigin]="trigger"
+              [cdkConnectedOverlayOpen]="isTooltipOpen(idx)"
+              [cdkConnectedOverlayPositions]="[
+                { originX: 'center', originY: 'top', overlayX: 'center', overlayY: 'bottom', offsetY: -8 },
+                { originX: 'center', originY: 'bottom', overlayX: 'center', overlayY: 'top', offsetY: 8 }
+              ]">
+              <div class="tooltip-overlay" (mouseenter)="showTooltip(idx)" (mouseleave)="hideTooltip()">
+                @if (posStat.filiereCombinations) {
+                  <app-filiere-combinations-tooltip [combinations]="posStat.filiereCombinations" />
+                }
+                @if (posStat.details) {
+                  <app-symbol-position-tooltip [details]="posStat.details" />
+                }
+              </div>
+            </ng-template>
           }
         </mat-chip-set>
       </div>

@@ -1,0 +1,56 @@
+.position-tooltip {
+  .empty {
+    color: #666;
+    font-style: italic;
+    margin: 0;
+  }
+
+  .details-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    .detail-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .detail-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+
+      .sens-name {
+        font-weight: 600;
+        color: #2196F3;
+      }
+
+      .accessory-name {
+        font-weight: 500;
+        color: #FF9800;
+      }
+
+      .signification-name {
+        color: #333;
+      }
+
+      .separator {
+        color: #999;
+        font-weight: 300;
+      }
+    }
+    
+    .placement-line {
+      margin-top: 4px;
+      padding-left: 8px;
+      
+      .placement-name {
+        color: #666;
+        font-style: italic;
+        font-size: 11px;
+      }
+    }
+  }
+}

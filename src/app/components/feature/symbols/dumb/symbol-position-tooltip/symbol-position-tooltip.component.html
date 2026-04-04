@@ -1,0 +1,29 @@
+<div class="position-tooltip">
+  @if (details().length === 0) {
+    <p class="empty">Aucun détail</p>
+  } @else {
+    <div class="details-list">
+      @for (detail of details(); track $index) {
+        <div class="detail-group">
+          <div class="detail-item">
+            @if (detail.symboleSensName) {
+              <span class="sens-name">{{ detail.symboleSensName }}</span>
+            }
+            @if (detail.symboleAccessoryName) {
+              <span class="separator">+</span>
+              <span class="accessory-name">{{ detail.symboleAccessoryName }}</span>
+            }
+            @if (detail.significationName) {
+              <span class="signification-name">{{ detail.significationName }}</span>
+            }
+          </div>
+          @if (detail.placementName) {
+            <div class="placement-line">
+              <span class="placement-name">décernement: {{ detail.placementName }}</span>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  }
+</div>
