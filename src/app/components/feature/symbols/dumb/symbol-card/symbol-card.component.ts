@@ -1,5 +1,6 @@
-import { Component, input, signal } from '@angular/core';
+import { Component, input, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
@@ -31,6 +32,7 @@ export class SymbolCardComponent {
   positionStats = input<PositionStats[]>([]);
   inactive = input<boolean>(false);
   
+  private readonly router = inject(Router);
   protected openTooltipIndex = signal<number | null>(null);
   
   showTooltip(index: number) {
@@ -43,5 +45,9 @@ export class SymbolCardComponent {
   
   isTooltipOpen(index: number): boolean {
     return this.openTooltipIndex() === index;
+  }
+  
+  navigateToDetail() {
+    this.router.navigate(['/symbole', this.symbol().id]);
   }
 }

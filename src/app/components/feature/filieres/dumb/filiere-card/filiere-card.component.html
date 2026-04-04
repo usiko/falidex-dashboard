@@ -1,4 +1,4 @@
-<mat-card class="filiere-card" [class.inactive]="inactive()">
+<mat-card class="filiere-card" [class.inactive]="inactive()" (click)="navigateToDetail()">
   <mat-card-header>
     @if (symbolImageUrl()) {
       <img [src]="symbolImageUrl()" alt="Symbol" class="symbol-avatar" mat-card-avatar />
@@ -15,7 +15,8 @@
             cdkOverlayOrigin
             #trigger="cdkOverlayOrigin"
             (mouseenter)="showTooltip()"
-            (mouseleave)="hideTooltip()">
+            (mouseleave)="hideTooltip()"
+            (click)="$event.stopPropagation()">
             <mat-icon matChipAvatar>star</mat-icon>
             {{ symboleCount() }} emblème et circulaires
           </mat-chip>
