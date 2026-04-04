@@ -1,4 +1,4 @@
-<mat-card class="filiere-card">
+<mat-card class="filiere-card" [class.inactive]="inactive()">
   <mat-card-header>
     <mat-icon mat-card-avatar>school</mat-icon>
     <mat-card-title>{{ filiere().name }}</mat-card-title>

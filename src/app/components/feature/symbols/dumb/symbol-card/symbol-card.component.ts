@@ -23,4 +23,5 @@ export class SymbolCardComponent {
   symbol = input.required<IBaseSymbol>();
   filiereCount = input<number>();
   significationCount = input<number>();
+  inactive = input<boolean>(false);
 }

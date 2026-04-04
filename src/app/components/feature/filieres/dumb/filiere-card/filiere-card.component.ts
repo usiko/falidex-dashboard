@@ -21,4 +21,5 @@ export class FiliereCardComponent {
   filiere = input.required<IBaseFiliere>();
   symboleCount = input<number>();
   significationCount = input<number>();
+  inactive = input<boolean>(false);
 }

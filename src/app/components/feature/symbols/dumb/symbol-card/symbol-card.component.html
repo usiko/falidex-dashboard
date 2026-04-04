@@ -1,4 +1,4 @@
-<mat-card class="symbol-card">
+<mat-card class="symbol-card" [class.inactive]="inactive()">
   <mat-card-header>
     @let imgs = symbol().imgs;
     @if (imgs && imgs.length > 0) {

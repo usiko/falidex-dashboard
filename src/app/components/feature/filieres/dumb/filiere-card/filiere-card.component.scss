@@ -7,6 +7,11 @@
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
   }
   
+  &.inactive {
+    opacity: 0.5;
+    filter: grayscale(50%);
+  }
+  
   mat-card-header {
     mat-icon[mat-card-avatar] {
       background: #4caf50;

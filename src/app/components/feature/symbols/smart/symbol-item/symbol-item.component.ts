@@ -29,4 +29,9 @@ export class SymbolItemComponent {
   protected readonly filiereCount = computed(() => this.stats().filiereCount);
   
   protected readonly significationCount = computed(() => this.stats().significationCount);
+  
+  protected readonly inactive = computed(() => {
+    const stats = this.stats();
+    return stats.filiereCount === 0 && stats.significationCount === 0;
+  });
 }
