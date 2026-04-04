@@ -28,7 +28,7 @@
       </div>
     } @else {
       @for (symbol of filteredSymbols(); track symbol.id) {
-        <app-symbol-card [symbol]="symbol" />
+        <app-symbol-item [symboleId]="symbol.id" />
       }
     }
   </div>

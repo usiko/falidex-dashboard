@@ -7,7 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
 import { FormsModule } from '@angular/forms';
 import { SymbolStore } from '../../../../stores/symbols/symbols.store';
-import { SymbolCardComponent } from '../dumb/symbol-card/symbol-card.component';
+import { SymbolItemComponent } from '../smart/symbol-item/symbol-item.component';
 
 @Component({
   selector: 'app-symbols-list-page',
@@ -20,7 +20,7 @@ import { SymbolCardComponent } from '../dumb/symbol-card/symbol-card.component';
     MatIconModule,
     MatChipsModule,
     FormsModule,
-    SymbolCardComponent
+    SymbolItemComponent
   ],
   templateUrl: './symbols-list.page.html',
   styleUrl: './symbols-list.page.scss'

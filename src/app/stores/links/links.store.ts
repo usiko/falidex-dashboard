@@ -17,6 +17,42 @@ export const linkStore = signalStore(
         return store.entities().filter(link => link.filiereId === filiereId)
       }
       );
+    },
+
+    // Méthode pour récupérer les liens par symboleId
+    getBySymboleId: (symboleId: string) => {
+      return computed(() => {
+        return store.entities().filter(link => link.symboleId === symboleId)
+      }
+      );
+    },
+
+    // Statistiques pour une filière
+    getFiliereStats: (filiereId: string) => {
+      return computed(() => {
+        const links = store.entities().filter(link => link.filiereId === filiereId);
+        const uniqueSymboles = new Set(links.map(link => link.symboleId).filter(Boolean));
+        const uniqueSignifications = new Set(links.map(link => link.significationId).filter(Boolean));
+        
+        return {
+          symboleCount: uniqueSymboles.size,
+          significationCount: uniqueSignifications.size
+        };
+      });
+    },
+
+    // Statistiques pour un symbole
+    getSymboleStats: (symboleId: string) => {
+      return computed(() => {
+        const links = store.entities().filter(link => link.symboleId === symboleId);
+        const uniqueFilieres = new Set(links.map(link => link.filiereId).filter(Boolean));
+        const uniqueSignifications = new Set(links.map(link => link.significationId).filter(Boolean));
+        
+        return {
+          filiereCount: uniqueFilieres.size,
+          significationCount: uniqueSignifications.size
+        };
+      });
     }
     
     

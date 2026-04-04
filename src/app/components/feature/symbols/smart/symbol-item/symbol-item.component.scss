@@ -1,0 +1,44 @@
+.symbol-card {
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  }
+
+  mat-card-header {
+    mat-icon[mat-card-avatar] {
+      background-color: #ff9800;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+    }
+  }
+
+  mat-card-content {
+    padding-top: 16px;
+
+    .combinations-info {
+      margin-bottom: 12px;
+      
+      mat-chip-set {
+        mat-chip {
+          font-weight: 500;
+        }
+      }
+    }
+
+    .images-info {
+      mat-chip-set {
+        mat-chip {
+          font-weight: 500;
+        }
+      }
+    }
+  }
+}

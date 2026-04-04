@@ -6,9 +6,13 @@
   <mat-card-content>
     <div class="combinations-info">
       <mat-chip-set>
-        <mat-chip highlighted>
-          <mat-icon matChipAvatar>link</mat-icon>
-          {{ combinationCount() }} combinaison(s)
+        <mat-chip>
+          <mat-icon matChipAvatar>assignment</mat-icon>
+          {{ significationCount() }} signification(s)
+        </mat-chip>
+        <mat-chip>
+          <mat-icon matChipAvatar>star</mat-icon>
+          {{ symboleCount() }} symbole(s)
         </mat-chip>
       </mat-chip-set>
     </div>

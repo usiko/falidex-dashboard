@@ -22,17 +22,17 @@ export class FiliereItemComponent {
   filiereId = input.required<string>();
 
   private readonly filiereStore = inject(FiliereStore);
-  private readonly linkStore = inject(linkStore);
+  private readonly linkStoreInstance = inject(linkStore);
 
   protected readonly filiere = computed(() => {
     return this.filiereStore.getById(this.filiereId())()
   });
 
-  protected readonly links = computed(()=>{
-    return  this.linkStore.getByFiliereId(this.filiereId())();
-  })
-
-  protected readonly combinationCount = computed(() => {
-    return this.links().length;
+  protected readonly stats = computed(() => {
+    return this.linkStoreInstance.getFiliereStats(this.filiereId())();
   });
+
+  protected readonly symboleCount = computed(() => this.stats().symboleCount);
+
+  protected readonly significationCount = computed(() => this.stats().significationCount);
 }
