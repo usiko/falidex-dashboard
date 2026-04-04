@@ -28,6 +28,7 @@ export class FiliereCardComponent {
   inactive = input<boolean>(false);
   symboleNames = input<string[]>([]);
   symboleCombinations = input<FiliereCombination[]>([]);
+  symbolImageUrl = input<string | undefined>();
   
   protected isTooltipOpen = signal(false);
   

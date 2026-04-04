@@ -23,6 +23,13 @@
       height: 40px;
       border-radius: 50%;
     }
+    
+    .symbol-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
   }
   
   mat-card-content {

@@ -51,6 +51,16 @@ export class FiliereItemComponent {
       .filter(name => name);
   });
   
+  protected readonly firstSymbolImage = computed(() => {
+    const links = this.linkStoreInstance.getByFiliereId(this.filiereId())();
+    const firstSymbolId = links.find(link => link.symboleId)?.symboleId;
+    
+    if (!firstSymbolId) return undefined;
+    
+    const symbol = this.symbolStore.getById(firstSymbolId)();
+    return symbol?.imgs && symbol.imgs.length > 0 ? symbol.imgs[0].url : undefined;
+  });
+  
   protected readonly symboleCombinations = computed(() => {
     const links = this.linkStoreInstance.getByFiliereId(this.filiereId())();
     const combinations: FiliereCombination[] = [];
