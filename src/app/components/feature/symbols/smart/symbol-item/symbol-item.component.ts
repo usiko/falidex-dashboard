@@ -95,7 +95,9 @@ export class SymbolItemComponent {
               const [filiereId, circulaireId] = key.split('|');
               
               const filiereName = filiereId ? this.filiereStore.getById(filiereId)()?.name || '' : '';
-              const circulaireName = circulaireId ? this.circulaireStore.getById(circulaireId)()?.name || '' : '';
+              const circulaire = circulaireId ? this.circulaireStore.getById(circulaireId)() : null;
+              const circulaireName = circulaire?.name || '';
+              const matiere = circulaire?.matiere;
               
               // Trouver les couleurs pour ce circulaire
               const colors: ColorInfo[] = [];
@@ -119,6 +121,7 @@ export class SymbolItemComponent {
                 combinations.push({
                   symbolName: filiereName,
                   circulaireName,
+                  matiere,
                   colors: colors.filter((c, index, self) => 
                     index === self.findIndex((t) => t.name === c.name)
                   )

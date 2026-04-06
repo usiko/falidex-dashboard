@@ -1,5 +1,6 @@
 import { Component, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ColorBadgeComponent } from '../../../../shared/color-badge/color-badge.component';
 
 export interface ColorInfo {
   name: string;
@@ -9,13 +10,14 @@ export interface ColorInfo {
 export interface FiliereCombination {
   symbolName: string;
   circulaireName: string;
+  matiere?: string;
   colors: ColorInfo[];
 }
 
 @Component({
   selector: 'app-filiere-combinations-tooltip',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ColorBadgeComponent],
   templateUrl: './filiere-combinations-tooltip.component.html',
   styleUrl: './filiere-combinations-tooltip.component.scss'
 })
