@@ -1,0 +1,40 @@
+.color-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  background: white;
+  border-radius: 12px;
+  font-size: 12px;
+  border: 1px solid #e0e0e0;
+  position: relative;
+  overflow: hidden;
+  
+  &.velour {
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 12px;
+      background-image: url('/textures/black-twill.png');
+      background-size: 20px 20px;
+      background-repeat: repeat;
+      background-position: center;
+      mix-blend-mode: multiply;
+      opacity: 0.4;
+      pointer-events: none;
+    }
+  }
+  
+  .color-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 1px solid #ccc;
+    position: relative;
+    z-index: 1;
+  }
+}

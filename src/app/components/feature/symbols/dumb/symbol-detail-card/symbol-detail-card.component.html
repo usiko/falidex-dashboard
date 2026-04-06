@@ -1,20 +1,30 @@
 <div class="symbol-detail">
-  <mat-card>
-    <mat-card-header>
-      <mat-card-title>{{ symbol()?.name }}</mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-      <p>ID: {{ symbol()?.id }}</p>
-      @if (symbol()?.imgs && symbol()!.imgs!.length > 0) {
-        <div class="images">
-          @for (img of symbol()!.imgs; track img.id; let idx = $index) {
-            <img 
-              [src]="img.url" 
-              [alt]="symbol()?.name" 
-              (click)="openImageCarousel(idx)" />
-          }
-        </div>
-      }
-    </mat-card-content>
-  </mat-card>
+  <h1 class="symbol-title">{{ symbol()?.name }}</h1>
+  
+  @if (symbol()?.imgs && symbol()!.imgs!.length > 0) {
+    <div class="images-section">
+      <div class="images-grid">
+        @for (img of symbol()!.imgs; track img.id; let idx = $index) {
+          <img 
+            [src]="img.url" 
+            [alt]="symbol()?.name" 
+            class="symbol-image"
+            (click)="openImageCarousel(idx)" />
+        }
+      </div>
+    </div>
+  }
+  
+  @if (links().length > 0) {
+    <div class="relations-section">
+      <h2 class="section-title">Relations</h2>
+      <div class="relations-container">
+        @for (link of links(); track link.id) {
+          <app-symbol-relation-item [linkId]="link.id" [hideSymbol]="true" />
+        }
+      </div>
+    </div>
+  } @else {
+    <p class="no-relations">Aucune relation associée</p>
+  }
 </div>

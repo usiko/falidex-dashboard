@@ -1,22 +1,24 @@
 import { Component, input, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatCardModule } from '@angular/material/card';
 import { MatDialog } from '@angular/material/dialog';
 import { IBaseSymbol } from '../../../../../models/data/base-data-models';
+import { IRelationItem } from '../../../../../models/data/base-relations.models';
 import { ImageCarouselDialogComponent } from '../../dialogs/image-carousel-dialog/image-carousel-dialog.component';
+import { SymbolRelationItemComponent } from '../../smart/symbol-relation-item/symbol-relation-item.component';
 
 @Component({
   selector: 'app-symbol-detail-card',
   standalone: true,
   imports: [
     CommonModule,
-    MatCardModule
+    SymbolRelationItemComponent
   ],
   templateUrl: './symbol-detail-card.component.html',
   styleUrl: './symbol-detail-card.component.scss'
 })
 export class SymbolDetailCardComponent {
   symbol = input<IBaseSymbol>();
+  links = input<IRelationItem[]>([]);
   
   private readonly dialog = inject(MatDialog);
   

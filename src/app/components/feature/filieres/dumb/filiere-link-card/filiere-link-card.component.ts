@@ -3,12 +3,14 @@ import { CommonModule } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { LinkData } from '../../models/link-data.model';
 import { ImageCarouselDialogComponent } from '../../../symbols/dialogs/image-carousel-dialog/image-carousel-dialog.component';
+import { ColorBadgeComponent } from '../../../../shared/color-badge/color-badge.component';
 
 @Component({
   selector: 'app-filiere-link-card',
   standalone: true,
   imports: [
-    CommonModule
+    CommonModule,
+    ColorBadgeComponent
   ],
   templateUrl: './filiere-link-card.component.html',
   styleUrl: './filiere-link-card.component.scss'

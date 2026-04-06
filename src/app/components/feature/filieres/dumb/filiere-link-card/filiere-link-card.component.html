@@ -42,24 +42,19 @@
       @if (data.circulaire) {
         <div class="detail-item">
           <span class="label">Circulaire:</span>
-          <span class="value">{{ data.circulaire.name }} ({{ data.circulaire.matiere }})</span>
-        </div>
-        
-        @if (data.circulaireColors.length > 0) {
-          <div class="detail-item colors-item">
-            <span class="label">Couleurs:</span>
-            <div class="colors-inline">
-              @for (cc of data.circulaireColors; track cc.circulaireColor.id) {
-                @for (color of cc.colors; track color.id) {
-                  <span class="color-badge">
-                    <span class="color-dot" [style.backgroundColor]="color.colorData"></span>
-                    {{ color.name }}
-                  </span>
+          <div class="circulaire-content">
+            <span class="value">{{ data.circulaire.name }} ({{ data.circulaire.matiere }})</span>
+            @if (data.circulaireColors.length > 0) {
+              <div class="colors-inline">
+                @for (cc of data.circulaireColors; track cc.circulaireColor.id) {
+                  @for (color of cc.colors; track color.id) {
+                    <app-color-badge [color]="color" [matiere]="data.circulaire.matiere" />
+                  }
                 }
-              }
-            </div>
+              </div>
+            }
           </div>
-        }
+        </div>
       }
     </div>
   }
