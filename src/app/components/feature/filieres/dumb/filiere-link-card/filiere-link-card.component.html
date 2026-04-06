@@ -1,0 +1,66 @@
+<div class="link-card">
+  @if (linkData(); as data) {
+    @if (data.symbole && data.symbole.imgs && data.symbole.imgs.length > 0) {
+      <div class="symbol-image-container">
+        <img 
+          [src]="data.symbole.imgs[0].url" 
+          [alt]="data.symbole.name" 
+          class="symbol-image" 
+          (click)="openImageCarousel(data.symbole.imgs, 0, data.symbole.name || 'unknown')" />
+      </div>
+    }
+    
+    <div class="link-details">
+      @if (data.symbole) {
+        <div class="detail-item">
+          <span class="label">Symbole:</span>
+          <span class="value">{{ data.symbole.name }}</span>
+        </div>
+      }
+      
+      @if (data.symboleSens) {
+        <div class="detail-item">
+          <span class="label">Symbole Sens:</span>
+          <span class="value">{{ data.symboleSens.name }}</span>
+        </div>
+      }
+      
+      @if (data.position) {
+        <div class="detail-item">
+          <span class="label">Position:</span>
+          <span class="value">{{ data.position.name }}</span>
+        </div>
+      }
+      
+      @if (data.placement) {
+        <div class="detail-item">
+          <span class="label">Décernement:</span>
+          <span class="value">{{ data.placement.name }}</span>
+        </div>
+      }
+      
+      @if (data.circulaire) {
+        <div class="detail-item">
+          <span class="label">Circulaire:</span>
+          <span class="value">{{ data.circulaire.name }} ({{ data.circulaire.matiere }})</span>
+        </div>
+        
+        @if (data.circulaireColors.length > 0) {
+          <div class="detail-item colors-item">
+            <span class="label">Couleurs:</span>
+            <div class="colors-inline">
+              @for (cc of data.circulaireColors; track cc.circulaireColor.id) {
+                @for (color of cc.colors; track color.id) {
+                  <span class="color-badge">
+                    <span class="color-dot" [style.backgroundColor]="color.colorData"></span>
+                    {{ color.name }}
+                  </span>
+                }
+              }
+            </div>
+          </div>
+        }
+      }
+    </div>
+  }
+</div>

@@ -1,0 +1,20 @@
+.dialog-content {
+  width: 80vw;
+  height: 70vh;
+  max-width: 1200px;
+  max-height: 800px;
+  padding: 0;
+  overflow: hidden;
+
+  app-carousel {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+:host ::ng-deep {
+  .mat-mdc-dialog-container .mdc-dialog__surface {
+    overflow: hidden;
+  }
+}

@@ -1,10 +1,13 @@
 <div class="filiere-detail">
-  <mat-card>
-    <mat-card-header>
-      <mat-card-title>{{ filiere()?.name }}</mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-      <p>ID: {{ filiere()?.id }}</p>
-    </mat-card-content>
-  </mat-card>
+  <h1 class="filiere-title">{{ filiere()?.name }}</h1>
+  
+  @if (links().length > 0) {
+    <div class="links-container">
+      @for (link of links(); track link.id) {
+        <app-filiere-link-item [linkId]="link.id" />
+      }
+    </div>
+  } @else {
+    <p class="no-links">Aucune relation associée</p>
+  }
 </div>

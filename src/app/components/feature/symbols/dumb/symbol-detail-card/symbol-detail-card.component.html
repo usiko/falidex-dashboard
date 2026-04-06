@@ -7,8 +7,11 @@
       <p>ID: {{ symbol()?.id }}</p>
       @if (symbol()?.imgs && symbol()!.imgs!.length > 0) {
         <div class="images">
-          @for (img of symbol()!.imgs; track img.id) {
-            <img [src]="img.url" [alt]="symbol()?.name" />
+          @for (img of symbol()!.imgs; track img.id; let idx = $index) {
+            <img 
+              [src]="img.url" 
+              [alt]="symbol()?.name" 
+              (click)="openImageCarousel(idx)" />
           }
         </div>
       }
