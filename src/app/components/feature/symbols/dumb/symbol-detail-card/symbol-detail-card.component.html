@@ -20,7 +20,11 @@
       <h2 class="section-title">Relations</h2>
       <div class="relations-container">
         @for (link of links(); track link.id) {
-          <app-symbol-relation-item [linkId]="link.id" [hideSymbol]="true" />
+          <app-symbol-relation-item 
+            [linkId]="link.id" 
+            [hideSymbol]="true" 
+            (editLink)="editLink.emit($event)" 
+            (deleteLink)="deleteLink.emit($event)" />
         }
       </div>
     </div>

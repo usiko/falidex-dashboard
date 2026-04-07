@@ -1,3 +1,7 @@
 @if (filiere()) {
-  <app-filiere-detail-card [filiere]="filiere()" [links]="links()" />
+  <app-filiere-detail-card 
+    [filiere]="filiere()" 
+    [links]="links()" 
+    (editLink)="onEditLink($event)" 
+    (deleteLink)="onDeleteLink($event)" />
 }

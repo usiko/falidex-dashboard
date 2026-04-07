@@ -4,7 +4,10 @@
   @if (links().length > 0) {
     <div class="links-container">
       @for (link of links(); track link.id) {
-        <app-filiere-link-item [linkId]="link.id" />
+        <app-filiere-link-item 
+          [linkId]="link.id" 
+          (editLink)="editLink.emit($event)" 
+          (deleteLink)="deleteLink.emit($event)" />
       }
     </div>
   } @else {

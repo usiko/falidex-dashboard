@@ -1,4 +1,4 @@
-import { Component, inject, computed, input } from '@angular/core';
+import { Component, inject, computed, input, output } from '@angular/core';
 import { linkStore } from '../../../../../stores/links/links.store';
 import { PositionStore } from '../../../../../stores/positions/positions.store';
 import { PlacementStore } from '../../../../../stores/placements/placements.store';
@@ -21,6 +21,9 @@ import { FiliereLinkCardComponent } from '../../dumb/filiere-link-card/filiere-l
 })
 export class FiliereLinkItemComponent {
   linkId = input<string>();
+  
+  editLink = output<string>();
+  deleteLink = output<string>();
   
   private readonly linksStore = inject(linkStore);
   private readonly positionStore = inject(PositionStore);

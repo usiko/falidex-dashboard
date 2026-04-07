@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IBaseFiliere } from '../../../../../models/data/base-data-models';
 import { IRelationItem } from '../../../../../models/data/base-relations.models';
@@ -17,4 +17,7 @@ import { FiliereLinkItemComponent } from '../../smart/filiere-link-item/filiere-
 export class FiliereDetailCardComponent {
   filiere = input<IBaseFiliere>();
   links = input<IRelationItem[]>([]);
+  
+  editLink = output<string>();
+  deleteLink = output<string>();
 }

@@ -1,4 +1,4 @@
-import { Component, input, inject } from '@angular/core';
+import { Component, input, output, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { IBaseSymbol } from '../../../../../models/data/base-data-models';
@@ -19,6 +19,9 @@ import { SymbolRelationItemComponent } from '../../smart/symbol-relation-item/sy
 export class SymbolDetailCardComponent {
   symbol = input<IBaseSymbol>();
   links = input<IRelationItem[]>([]);
+  
+  editLink = output<string>();
+  deleteLink = output<string>();
   
   private readonly dialog = inject(MatDialog);
   

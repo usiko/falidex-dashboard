@@ -1,4 +1,4 @@
-import { Component, inject, computed, input } from '@angular/core';
+import { Component, inject, computed, input, output } from '@angular/core';
 import { linkStore } from '../../../../../stores/links/links.store';
 import { PositionStore } from '../../../../../stores/positions/positions.store';
 import { PlacementStore } from '../../../../../stores/placements/placements.store';
@@ -22,6 +22,9 @@ import { SymbolRelationCardComponent } from '../../dumb/symbol-relation-card/sym
 export class SymbolRelationItemComponent {
   linkId = input<string>();
   hideSymbol = input<boolean>(false);
+  
+  editLink = output<string>();
+  deleteLink = output<string>();
   
   private readonly linksStore = inject(linkStore);
   private readonly positionStore = inject(PositionStore);

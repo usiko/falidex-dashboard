@@ -8,6 +8,7 @@
   border-radius: 6px;
   border-left: 3px solid #333;
   max-width: 700px;
+  position: relative;
   
   .relation-details {
     flex: 1;
@@ -45,5 +46,13 @@
         align-items: center;
       }
     }
+  }
+  
+  .action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-left: auto;
+    flex-shrink: 0;
   }
 }
