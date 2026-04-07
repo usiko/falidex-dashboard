@@ -1,0 +1,6 @@
+@if (relationData()) {
+  <app-symbol-relation-card 
+    [relationData]="relationData()!" 
+    (edit)="editLink.emit(linkId()!)" 
+    (delete)="deleteLink.emit(linkId()!)" />
+}

@@ -1,0 +1,40 @@
+<div class="symbol-detail">
+  <div class="header">
+    <h1 class="symbol-title">{{ symbol()?.name }}</h1>
+    <button mat-raised-button color="primary" (click)="addLink.emit()">
+      <mat-icon>add</mat-icon>
+      Ajouter une relation
+    </button>
+  </div>
+  
+  @if (symbol()?.imgs && symbol()!.imgs!.length > 0) {
+    <div class="images-section">
+      <div class="images-grid">
+        @for (img of symbol()!.imgs; track img.id; let idx = $index) {
+          <img 
+            [src]="img.url" 
+            [alt]="symbol()?.name" 
+            class="symbol-image"
+            (click)="openImageCarousel(idx)" />
+        }
+      </div>
+    </div>
+  }
+  
+  @if (links().length > 0) {
+    <div class="relations-section">
+      <h2 class="section-title">Relations</h2>
+      <div class="relations-container">
+        @for (link of links(); track link.id) {
+          <app-symbol-relation-item 
+            [linkId]="link.id" 
+            [hideSymbol]="true" 
+            (editLink)="editLink.emit($event)" 
+            (deleteLink)="deleteLink.emit($event)" />
+        }
+      </div>
+    </div>
+  } @else {
+    <p class="no-relations">Aucune relation associée</p>
+  }
+</div>

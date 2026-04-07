@@ -1,0 +1,70 @@
+<div class="link-card">
+  @if (linkData(); as data) {
+    @if (data.symbole && data.symbole.imgs && data.symbole.imgs.length > 0) {
+      <div class="symbol-image-container">
+        <img 
+          [src]="data.symbole.imgs[0].url" 
+          [alt]="data.symbole.name" 
+          class="symbol-image" 
+          (click)="openImageCarousel(data.symbole.imgs, 0, data.symbole.name || 'unknown')" />
+      </div>
+    }
+    
+    <div class="link-details">
+      @if (data.symbole) {
+        <div class="detail-item">
+          <span class="label">Symbole:</span>
+          <span class="value">{{ data.symbole.name }}</span>
+        </div>
+      }
+      
+      @if (data.symboleSens) {
+        <div class="detail-item">
+          <span class="label">Symbole Sens:</span>
+          <span class="value">{{ data.symboleSens.name }}</span>
+        </div>
+      }
+      
+      @if (data.position) {
+        <div class="detail-item">
+          <span class="label">Position:</span>
+          <span class="value">{{ data.position.name }}</span>
+        </div>
+      }
+      
+      @if (data.placement) {
+        <div class="detail-item">
+          <span class="label">Décernement:</span>
+          <span class="value">{{ data.placement.name }}</span>
+        </div>
+      }
+      
+      @if (data.circulaire) {
+        <div class="detail-item">
+          <span class="label">Circulaire:</span>
+          <div class="circulaire-content">
+            <span class="value">{{ data.circulaire.name }} ({{ data.circulaire.matiere }})</span>
+            @if (data.circulaireColors.length > 0) {
+              <div class="colors-inline">
+                @for (cc of data.circulaireColors; track cc.circulaireColor.id) {
+                  @for (color of cc.colors; track color.id) {
+                    <app-color-badge [color]="color" [matiere]="data.circulaire.matiere" />
+                  }
+                }
+              </div>
+            }
+          </div>
+        </div>
+      }
+    </div>
+    
+    <div class="action-buttons">
+      <button mat-icon-button color="primary" (click)="onEdit()" title="Modifier">
+        <mat-icon>edit</mat-icon>
+      </button>
+      <button mat-icon-button color="warn" (click)="onDelete()" title="Supprimer">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </div>
+  }
+</div>

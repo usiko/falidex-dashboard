@@ -1,0 +1,17 @@
+<div class="symbol-detail">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>{{ symbol()?.name }}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <p>ID: {{ symbol()?.id }}</p>
+      @if (symbol()?.imgs && symbol()!.imgs!.length > 0) {
+        <div class="images">
+          @for (img of symbol()!.imgs; track img.id) {
+            <img [src]="img.url" [alt]="symbol()?.name" />
+          }
+        </div>
+      }
+    </mat-card-content>
+  </mat-card>
+</div>

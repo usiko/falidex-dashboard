@@ -1,0 +1,16 @@
+<h2 mat-dialog-title>{{ data.symbolName }}</h2>
+
+<mat-dialog-content class="dialog-content">
+  <app-carousel 
+    [slides]="slides"
+    [navigation]="true"
+    [pagination]="true"
+    [loop]="true"
+    [slidesPerView]="1"
+    [initialSlide]="data.initialIndex"
+  />
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Fermer</button>
+</mat-dialog-actions>

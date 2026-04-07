@@ -1,0 +1,8 @@
+@if (symbol()) {
+  <app-symbol-detail-card 
+    [symbol]="symbol()" 
+    [links]="links()" 
+    (addLink)="onAddLink()" 
+    (editLink)="onEditLink($event)" 
+    (deleteLink)="onDeleteLink($event)" />
+}

@@ -29,6 +29,13 @@
       width: 80px;
       height: 80px;
       border-radius: 8px;
+      cursor: pointer;
+      transition: transform 0.2s;
+      
+      &:hover {
+        transform: scale(1.05);
+      }
+      
       img{
         border-radius:15px;
       }
