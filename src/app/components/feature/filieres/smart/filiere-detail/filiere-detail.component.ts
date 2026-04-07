@@ -58,4 +58,9 @@ export class FiliereDetailComponent {
       }
     });
   }
+  
+  onAddLink() {
+    console.log('Ajouter une relation pour la filière:', this.id());
+    // TODO: Implémenter la logique d'ajout
+  }
 }

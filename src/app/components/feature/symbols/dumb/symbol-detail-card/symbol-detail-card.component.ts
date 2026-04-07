@@ -1,6 +1,8 @@
 import { Component, input, output, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { IBaseSymbol } from '../../../../../models/data/base-data-models';
 import { IRelationItem } from '../../../../../models/data/base-relations.models';
 import { ImageCarouselDialogComponent } from '../../dialogs/image-carousel-dialog/image-carousel-dialog.component';
@@ -11,7 +13,9 @@ import { SymbolRelationItemComponent } from '../../smart/symbol-relation-item/sy
   standalone: true,
   imports: [
     CommonModule,
-    SymbolRelationItemComponent
+    SymbolRelationItemComponent,
+    MatButtonModule,
+    MatIconModule
   ],
   templateUrl: './symbol-detail-card.component.html',
   styleUrl: './symbol-detail-card.component.scss'
@@ -20,6 +24,7 @@ export class SymbolDetailCardComponent {
   symbol = input<IBaseSymbol>();
   links = input<IRelationItem[]>([]);
   
+  addLink = output<void>();
   editLink = output<string>();
   deleteLink = output<string>();
   

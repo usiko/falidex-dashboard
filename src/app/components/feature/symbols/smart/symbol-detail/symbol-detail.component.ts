@@ -60,4 +60,9 @@ export class SymbolDetailComponent {
       }
     });
   }
+  
+  onAddLink() {
+    console.log('Ajouter une relation pour le symbole:', this.id());
+    // TODO: Implémenter la logique d'ajout
+  }
 }

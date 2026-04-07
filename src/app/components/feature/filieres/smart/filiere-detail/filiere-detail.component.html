@@ -2,6 +2,7 @@
   <app-filiere-detail-card 
     [filiere]="filiere()" 
     [links]="links()" 
+    (addLink)="onAddLink()" 
     (editLink)="onEditLink($event)" 
     (deleteLink)="onDeleteLink($event)" />
 }

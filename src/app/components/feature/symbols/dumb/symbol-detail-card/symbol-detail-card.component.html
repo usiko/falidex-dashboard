@@ -1,5 +1,11 @@
 <div class="symbol-detail">
-  <h1 class="symbol-title">{{ symbol()?.name }}</h1>
+  <div class="header">
+    <h1 class="symbol-title">{{ symbol()?.name }}</h1>
+    <button mat-raised-button color="primary" (click)="addLink.emit()">
+      <mat-icon>add</mat-icon>
+      Ajouter une relation
+    </button>
+  </div>
   
   @if (symbol()?.imgs && symbol()!.imgs!.length > 0) {
     <div class="images-section">
