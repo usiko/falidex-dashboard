@@ -15,12 +15,24 @@ export const routes: Routes = [
     loadComponent: () => import('./components/feature/filieres/page/detail/filiere-detail-page.component').then(m => m.FiliereDetailPageComponent)
   },
   {
+    path: 'filiere/:id/edit',
+    loadComponent: () => import('./components/feature/filieres/page/edit/filiere-edit-page.component').then(m => m.FiliereEditPageComponent)
+  },
+  {
     path: 'symbols',
     loadComponent: () => import('./components/feature/symbols/page/symbols-list.page').then(m => m.SymbolsListPageComponent)
   },
   {
     path: 'symbole/:id',
     loadComponent: () => import('./components/feature/symbols/page/detail/symbol-detail-page.component').then(m => m.SymbolDetailPageComponent)
+  },
+  {
+    path: 'symbole/:id/edit',
+    loadComponent: () => import('./components/feature/symbols/page/edit/symbol-edit-page.component').then(m => m.SymbolEditPageComponent)
+  },
+  {
+    path: 'relation/:id/edit',
+    loadComponent: () => import('./components/feature/relations/page/edit/relation-edit-page.component').then(m => m.RelationEditPageComponent)
   },
   {
     path: '**',

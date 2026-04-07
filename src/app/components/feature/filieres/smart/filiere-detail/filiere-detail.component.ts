@@ -1,4 +1,5 @@
 import { Component, inject, computed, input } from '@angular/core';
+import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { FiliereStore } from '../../../../../stores/filieres/filieres.store';
 import { linkStore } from '../../../../../stores/links/links.store';
@@ -20,6 +21,7 @@ export class FiliereDetailComponent {
   private readonly filiereStore = inject(FiliereStore);
   private readonly linksStore = inject(linkStore);
   private readonly dialog = inject(MatDialog);
+  private readonly router = inject(Router);
   
   protected readonly filiere = computed(() => {
     const id = this.id();
@@ -34,8 +36,7 @@ export class FiliereDetailComponent {
   });
   
   onEditLink(linkId: string) {
-    console.log('Edit link:', linkId);
-    // TODO: Implémenter la logique de modification
+    this.router.navigate(['/relation', linkId, 'edit']);
   }
   
   onDeleteLink(linkId: string) {

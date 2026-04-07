@@ -1,0 +1,9 @@
+<div class="filiere-edit-form">
+  <h1 class="form-title">Édition de la filière</h1>
+  
+  @if (filiere()) {
+    <div class="filiere-info">
+      <p><strong>Nom :</strong> {{ filiere()!.name }}</p>
+    </div>
+  }
+</div>
