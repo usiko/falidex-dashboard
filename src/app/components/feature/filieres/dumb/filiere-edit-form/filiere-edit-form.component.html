@@ -1,9 +1,145 @@
 <div class="filiere-edit-form">
-  <h1 class="form-title">Édition de la filière</h1>
+  <h1 class="form-title">
+    @if (relation()) {
+      Édition de la relation
+    } @else {
+      Nouvelle relation pour la filière
+    }
+  </h1>
   
   @if (filiere()) {
     <div class="filiere-info">
-      <p><strong>Nom :</strong> {{ filiere()!.name }}</p>
+      <p><strong>Filière :</strong> {{ filiere()!.name }}</p>
     </div>
   }
+  
+  @if (relation()) {
+    <div class="filiere-info">
+      <p><strong>ID de la relation :</strong> {{ relation()!.id }}</p>
+    </div>
+  }
+  
+  <!-- Champs non modifiables -->
+  <div class="form-section">
+    <h2>Informations fixes</h2>
+    
+    <div class="form-row">
+      <div class="form-field readonly">
+        <label>Position</label>
+        <input type="text" [value]="position" readonly disabled />
+      </div>
+      
+      <div class="form-field readonly">
+        <label>Décernement</label>
+        <input type="text" [value]="decernement" readonly disabled />
+      </div>
+    </div>
+  </div>
+  
+  <!-- Sélection du symbole (obligatoire) -->
+  <div class="form-section">
+    <h2>Symbole <span class="required">*</span></h2>
+    
+    @if (selectedSymbole()) {
+      <div class="selected-item">
+        <span><strong>Sélectionné :</strong> {{ selectedSymbole()!.name }}</span>
+        <button mat-raised-button color="primary" (click)="openSymboleDialog()">
+          <mat-icon>edit</mat-icon>
+          Modifier
+        </button>
+      </div>
+    } @else {
+      <button mat-raised-button color="primary" (click)="openSymboleDialog()">
+        <mat-icon>add</mat-icon>
+        Sélectionner un symbole
+      </button>
+    }
+  </div>
+  
+  <!-- Symbole sens et accessoire sur la même ligne -->
+  <div class="form-row-sections">
+    <!-- Sélection du symbole sens (optionnel) -->
+    <div class="form-section">
+      <h2>Symbole sens <span class="optional">(optionnel)</span></h2>
+      
+      @if (selectedSymboleSens()) {
+        <div class="selected-item">
+          <span><strong>Sélectionné :</strong> {{ selectedSymboleSens()!.name }}</span>
+          <button type="button" (click)="clearSymboleSens()">Retirer</button>
+        </div>
+      } @else {
+        <p class="hint">Sélectionnez un symbole sens (optionnel)</p>
+        <app-symbols-sens-collection 
+          [selectable]="true" 
+          (selection)="onSymboleSensSelect($event)" />
+      }
+    </div>
+    
+    <!-- Sélection du symbole accessoire (optionnel) -->
+    <div class="form-section">
+      <h2>Symbole accessoire <span class="optional">(optionnel)</span></h2>
+      
+      @if (selectedSymboleAccessory()) {
+        <div class="selected-item">
+          <span><strong>Sélectionné :</strong> {{ selectedSymboleAccessory()!.name }}</span>
+          <button type="button" (click)="clearSymboleAccessory()">Retirer</button>
+        </div>
+      } @else {
+        <p class="hint">Sélectionnez un symbole accessoire (optionnel)</p>
+        <app-symbols-accessory-collection 
+          [selectable]="true" 
+          (selection)="onSymboleAccessorySelect($event)" />
+      }
+    </div>
+  </div>
+  
+  <!-- Sélection de la circulaire -->
+  <div class="form-section">
+    <h2>Circulaire <span class="required">*</span></h2>
+    
+    @if (selectedCirculaire()) {
+      <div class="selected-item">
+        <span><strong>Sélectionné :</strong> {{ selectedCirculaire()!.name }}</span>
+        <button mat-raised-button color="primary" (click)="openCirculaireDialog()">
+          <mat-icon>edit</mat-icon>
+          Modifier
+        </button>
+      </div>
+      
+      <!-- Affichage circulaire + circulaire-color + colors -->
+      @if (circulaireDisplay() && circulaireDisplay()!.length > 0) {
+        <div class="circulaire-details">
+          <h3>Détails circulaire, circulaire-color et couleurs</h3>
+          @for (item of circulaireDisplay(); track item.circulaireColor.id) {
+            <div class="circulaire-line">
+              <span class="circulaire-name">{{ selectedCirculaire()!.name }}</span>
+              <span class="separator">→</span>
+              <span class="circulaire-color-name">{{ item.circulaireColor.name }}</span>
+              <span class="separator">→</span>
+              <span class="colors">
+                @for (color of item.colors; track color.id) {
+                  <span class="color-badge" [style.background-color]="color.colorData">
+                    {{ color.name }}
+                  </span>
+                }
+              </span>
+            </div>
+          }
+        </div>
+      }
+    } @else {
+      <button mat-raised-button color="primary" (click)="openCirculaireDialog()">
+        <mat-icon>add</mat-icon>
+        Sélectionner une circulaire
+      </button>
+    }
+  </div>
+  
+  <!-- Actions -->
+  <div class="form-actions">
+    <button type="button" class="btn-cancel">Annuler</button>
+    <button type="submit" class="btn-save" [disabled]="!selectedSymbole() || !selectedCirculaire()">
+      Enregistrer
+    </button>
+  </div>
 </div>

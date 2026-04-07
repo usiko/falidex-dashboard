@@ -1,0 +1,9 @@
+<div class="collection">
+  @for (symbol of symbols(); track symbol.id) {
+    <div class="collection-item" 
+         [class.selectable]="selectable()"
+         (click)="onSelect(symbol)">
+      {{ symbol.name }}
+    </div>
+  }
+</div>

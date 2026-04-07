@@ -1,0 +1,9 @@
+<div class="collection">
+  @for (filiere of filieres(); track filiere.id) {
+    <div class="collection-item" 
+         [class.selectable]="selectable()"
+         (click)="onSelect(filiere)">
+      {{ filiere.name }}
+    </div>
+  }
+</div>

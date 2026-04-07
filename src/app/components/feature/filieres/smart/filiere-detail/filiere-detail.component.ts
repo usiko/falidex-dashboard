@@ -36,7 +36,7 @@ export class FiliereDetailComponent {
   });
   
   onEditLink(linkId: string) {
-    this.router.navigate(['/relation', linkId, 'edit']);
+    this.router.navigate(['/relation', linkId, 'filiere', 'edit']);
   }
   
   onDeleteLink(linkId: string) {
@@ -61,7 +61,16 @@ export class FiliereDetailComponent {
   }
   
   onAddLink() {
-    console.log('Ajouter une relation pour la filière:', this.id());
-    // TODO: Implémenter la logique d'ajout
+    const filiereId = this.id();
+    if (!filiereId) return;
+    
+    // Créer une nouvelle relation avec le filiereId
+    const newRelationId = this.linksStore.create({
+      filiereId: filiereId,
+      // Les autres champs seront remplis dans le formulaire
+    });
+    
+    // Naviguer vers le formulaire d'édition de la nouvelle relation
+    this.router.navigate(['/relation', newRelationId, 'filiere', 'edit']);
   }
 }

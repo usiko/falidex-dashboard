@@ -1,0 +1,9 @@
+<div class="collection">
+  @for (circulaire of circulaires(); track circulaire.id) {
+    <div class="collection-item" 
+         [class.selectable]="selectable()"
+         (click)="onSelect(circulaire)">
+      {{ circulaire.name }}
+    </div>
+  }
+</div>
