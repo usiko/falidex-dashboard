@@ -1,7 +1,7 @@
 <div class="symbol-detail">
   <div class="header">
     <h1 class="symbol-title">{{ symbol()?.name }}</h1>
-    <button mat-raised-button color="primary" (click)="addLink.emit()">
+    <button mat-raised-button color="primary" [disabled]="!editable()" (click)="addLink.emit()">
       <mat-icon>add</mat-icon>
       Ajouter une relation
     </button>
@@ -29,6 +29,7 @@
           <app-symbol-relation-item 
             [linkId]="link.id" 
             [hideSymbol]="true" 
+            [editable]="editable()" 
             (editLink)="editLink.emit($event)" 
             (deleteLink)="deleteLink.emit($event)" />
         }

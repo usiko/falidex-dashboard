@@ -1,0 +1,22 @@
+<mat-dialog-content>
+  <h2 class="dialog-title">{{ data.title }}</h2>
+  
+  <mat-form-field appearance="outline" class="search-field">
+    <mat-label>Rechercher</mat-label>
+    <input matInput [ngModel]="searchTerm()" (ngModelChange)="onSearchChange($event)" placeholder="Tapez pour rechercher...">
+    <mat-icon matPrefix>search</mat-icon>
+    @if (searchTerm()) {
+      <button matSuffix mat-icon-button (click)="onSearchChange('')">
+        <mat-icon>close</mat-icon>
+      </button>
+    }
+  </mat-form-field>
+  
+  <div class="collection-container">
+    <ng-container #collectionContainer></ng-container>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Annuler</button>
+</mat-dialog-actions>

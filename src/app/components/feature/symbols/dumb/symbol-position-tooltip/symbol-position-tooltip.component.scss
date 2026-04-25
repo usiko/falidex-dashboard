@@ -8,19 +8,37 @@
   .details-list {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 8px;
 
     .detail-group {
       display: flex;
       flex-direction: column;
       gap: 4px;
+      padding: 6px 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      background: white;
     }
 
     .detail-item {
       display: flex;
+      flex-wrap: nowrap;
       align-items: center;
       gap: 6px;
       font-size: 13px;
+      white-space: nowrap;
+      
+      .spe-badge {
+        display: inline-block;
+        background: #3f51b5;
+        color: white;
+        font-size: 9px;
+        font-weight: 700;
+        padding: 2px 4px;
+        border-radius: 3px;
+        margin-left: auto;
+        flex-shrink: 0;
+      }
 
       .sens-name {
         font-weight: 600;

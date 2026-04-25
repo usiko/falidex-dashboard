@@ -14,10 +14,11 @@ import { SymbolCardComponent } from '../../dumb/symbol-card/symbol-card.componen
 import type { PositionDetail } from '../../dumb/symbol-position-tooltip/symbol-position-tooltip.component';
 import type { FiliereCombination, ColorInfo } from '../../../filieres/dumb/filiere-combinations-tooltip/filiere-combinations-tooltip.component';
 
-export interface PositionStats {
-  positionId: string;
-  positionName: string;
+export interface RelationTypeStats {
+  typeId: string;
+  typeName: string;
   count: number;
+  speCount: number;
   details?: PositionDetail[];
   filiereCombinations?: FiliereCombination[];
 }
@@ -50,178 +51,128 @@ export class SymbolItemComponent {
     return this.symbolStore.getById(this.symboleId())()
   });
 
-  protected readonly positionStats = computed(() => {
+  protected readonly relationTypeStats = computed(() => {
     const links = this.linkStoreInstance.getBySymboleId(this.symboleId())();
     
-    // Grouper par position
-    const positionMap = new Map<string, typeof links>();
+    // Séparer les liens avec filière et avec signification
+    const linksWithFiliere = links.filter(link => link.filiereId);
+    const linksWithSignification = links.filter(link => link.significationId && !link.filiereId);
     
-    links.forEach(link => {
-      if (link.positionId) {
-        if (!positionMap.has(link.positionId)) {
-          positionMap.set(link.positionId, []);
+    const stats: RelationTypeStats[] = [];
+    
+    // Traiter les liens avec filière
+    if (linksWithFiliere.length > 0) {
+      const combinations: FiliereCombination[] = [];
+      const speCount = linksWithFiliere.filter(link => link.spe === true).length;
+      
+      // Regrouper par filière et circulaire
+      const grouped = new Map<string, typeof linksWithFiliere>();
+      
+      linksWithFiliere.forEach(link => {
+        const key = `${link.filiereId}|${link.circulaireId || ''}`;
+        if (!grouped.has(key)) {
+          grouped.set(key, []);
         }
-        positionMap.get(link.positionId)!.push(link);
-      }
-    });
-    
-    // Convertir en tableau d'objets avec les noms de position et détails
-    const stats: PositionStats[] = [];
-    positionMap.forEach((positionLinks, positionId) => {
-      const position = this.positionStore.getById(positionId)();
-      if (position) {
-        // Cas spécial: position-3 (sur circulaire)
-        if (positionId === 'position-3') {
-          // Séparer les liens avec filière et sans filière
-          const linksWithFiliere = positionLinks.filter(link => link.filiereId);
-          const linksWithoutFiliere = positionLinks.filter(link => !link.filiereId);
+        grouped.get(key)!.push(link);
+      });
+      
+      // Créer les combinaisons
+      grouped.forEach((groupLinks, key) => {
+        const [filiereId, circulaireId] = key.split('|');
+        
+        const filiereName = filiereId ? this.filiereStore.getById(filiereId)()?.name || '' : '';
+        const circulaire = circulaireId ? this.circulaireStore.getById(circulaireId)() : null;
+        const circulaireName = circulaire?.name || '';
+        const matiere = circulaire?.matiere;
+        
+        // Vérifier si au moins un lien a spe=true
+        const hasSpe = groupLinks.some(link => link.spe === true);
+        
+        // Trouver les couleurs pour ce circulaire
+        const colors: ColorInfo[] = [];
+        if (circulaireId) {
+          const circulaireColors = this.circulaireColorStore.getByCirculaireId(circulaireId)();
           
-          // Si on a des liens avec filière, créer les FiliereCombination
-          if (linksWithFiliere.length > 0) {
-            const combinations: FiliereCombination[] = [];
-            
-            // Regrouper par filière et circulaire
-            const grouped = new Map<string, Set<string>>();
-            
-            linksWithFiliere.forEach(link => {
-              const key = `${link.filiereId}|${link.circulaireId || ''}`;
-              if (!grouped.has(key)) {
-                grouped.set(key, new Set());
-              }
-            });
-            
-            // Créer les combinaisons
-            grouped.forEach((_, key) => {
-              const [filiereId, circulaireId] = key.split('|');
-              
-              const filiereName = filiereId ? this.filiereStore.getById(filiereId)()?.name || '' : '';
-              const circulaire = circulaireId ? this.circulaireStore.getById(circulaireId)() : null;
-              const circulaireName = circulaire?.name || '';
-              const matiere = circulaire?.matiere;
-              
-              // Trouver les couleurs pour ce circulaire
-              const colors: ColorInfo[] = [];
-              if (circulaireId) {
-                const circulaireColors = this.circulaireColorStore.getByCirculaireId(circulaireId)();
-                
-                circulaireColors.forEach(cc => {
-                  cc.colorIds.forEach(colorId => {
-                    const color = this.colorStore.getById(colorId)();
-                    if (color?.name && color?.colorData) {
-                      colors.push({
-                        name: color.name,
-                        colorData: color.colorData
-                      });
-                    }
-                  });
-                });
-              }
-              
-              if (filiereName) {
-                combinations.push({
-                  symbolName: filiereName,
-                  circulaireName,
-                  matiere,
-                  colors: colors.filter((c, index, self) => 
-                    index === self.findIndex((t) => t.name === c.name)
-                  )
+          circulaireColors.forEach(cc => {
+            cc.colorIds.forEach(colorId => {
+              const color = this.colorStore.getById(colorId)();
+              if (color?.name && color?.colorData) {
+                colors.push({
+                  name: color.name,
+                  colorData: color.colorData
                 });
               }
             });
-            
-            stats.push({
-              positionId,
-              positionName: position.name || '',
-              count: positionLinks.length,
-              filiereCombinations: combinations
-            });
-          }
-          
-          // Si on a des liens sans filière, créer les PositionDetail
-          if (linksWithoutFiliere.length > 0) {
-            const details: PositionDetail[] = linksWithoutFiliere.map(link => {
-              const detail: PositionDetail = {};
-              
-              if (link.symboleSensId) {
-                const sens = this.symbolSensStore.getById(link.symboleSensId)();
-                detail.symboleSensName = sens?.name;
-              }
-              
-              if (link.symboleAccessoryId) {
-                const accessory = this.symbolAccessoryStore.getById(link.symboleAccessoryId)();
-                detail.symboleAccessoryName = accessory?.name;
-              }
-              
-              if (link.significationId) {
-                const signification = this.significationStore.getById(link.significationId)();
-                detail.significationName = signification?.content;
-              }
-              
-              // Ajouter le placement pour sur circulaire avec signification
-              if (link.placementId) {
-                const placement = this.placementStore.getById(link.placementId)();
-                detail.placementName = placement?.name;
-              }
-              
-              return detail;
-            });
-            
-            // Si on a déjà une stat pour position-3, ajouter les détails
-            const existingStat = stats.find(s => s.positionId === positionId);
-            if (existingStat) {
-              existingStat.details = details;
-            } else {
-              stats.push({
-                positionId,
-                positionName: position.name || '',
-                count: positionLinks.length,
-                details
-              });
-            }
-          }
-        } else {
-          // Pour les autres positions, utiliser PositionDetail
-          const details: PositionDetail[] = positionLinks.map(link => {
-            const detail: PositionDetail = {};
-            
-            if (link.symboleSensId) {
-              const sens = this.symbolSensStore.getById(link.symboleSensId)();
-              detail.symboleSensName = sens?.name;
-            }
-            
-            if (link.symboleAccessoryId) {
-              const accessory = this.symbolAccessoryStore.getById(link.symboleAccessoryId)();
-              detail.symboleAccessoryName = accessory?.name;
-            }
-            
-            if (link.significationId) {
-              const signification = this.significationStore.getById(link.significationId)();
-              detail.significationName = signification?.content;
-            }
-            
-            // Ajouter le placement pour sur velours et autres positions
-            if (link.placementId) {
-              const placement = this.placementStore.getById(link.placementId)();
-              detail.placementName = placement?.name;
-            }
-            
-            return detail;
-          });
-          
-          stats.push({
-            positionId,
-            positionName: position.name || '',
-            count: positionLinks.length,
-            details
           });
         }
-      }
-    });
+        
+        if (filiereName) {
+          combinations.push({
+            symbolName: filiereName,
+            circulaireName,
+            matiere,
+            colors: colors.filter((c, index, self) => 
+              index === self.findIndex((t) => t.name === c.name)
+            ),
+            hasSpe
+          });
+        }
+      });
+      
+      stats.push({
+        typeId: 'filiere',
+        typeName: 'pour filière',
+        count: linksWithFiliere.length,
+        speCount,
+        filiereCombinations: combinations
+      });
+    }
+    
+    // Traiter les liens avec signification
+    if (linksWithSignification.length > 0) {
+      const details: PositionDetail[] = linksWithSignification.map(link => {
+        const detail: PositionDetail = {
+          spe: link.spe
+        };
+        
+        if (link.symboleSensId) {
+          const sens = this.symbolSensStore.getById(link.symboleSensId)();
+          detail.symboleSensName = sens?.name;
+        }
+        
+        if (link.symboleAccessoryId) {
+          const accessory = this.symbolAccessoryStore.getById(link.symboleAccessoryId)();
+          detail.symboleAccessoryName = accessory?.name;
+        }
+        
+        if (link.significationId) {
+          const signification = this.significationStore.getById(link.significationId)();
+          detail.significationName = signification?.content;
+        }
+        
+        if (link.placementId) {
+          const placement = this.placementStore.getById(link.placementId)();
+          detail.placementName = placement?.name;
+        }
+        
+        return detail;
+      });
+      
+      const speCount = linksWithSignification.filter(link => link.spe === true).length;
+      
+      stats.push({
+        typeId: 'signification',
+        typeName: 'pour signification',
+        count: linksWithSignification.length,
+        speCount,
+        details
+      });
+    }
     
     return stats;
   });
   
   protected readonly inactive = computed(() => {
-    return this.positionStats().length === 0;
+    return this.relationTypeStats().length === 0;
   });
 }

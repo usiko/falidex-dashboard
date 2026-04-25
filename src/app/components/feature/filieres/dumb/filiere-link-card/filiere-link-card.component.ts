@@ -21,6 +21,7 @@ import { ColorBadgeComponent } from '../../../../shared/color-badge/color-badge.
 })
 export class FiliereLinkCardComponent {
   linkData = input<LinkData>();
+  editable = input<boolean>(true);
   
   edit = output<void>();
   delete = output<void>();

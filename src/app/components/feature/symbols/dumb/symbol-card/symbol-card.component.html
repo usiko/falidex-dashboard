@@ -13,18 +13,18 @@
     }
     <mat-card-title>{{ symbol().name }}</mat-card-title>
   </mat-card-header>
-  @if (positionStats().length > 0) {
+  @if (relationTypeStats().length > 0) {
     <mat-card-content>
       <div class="combinations-info">
         <mat-chip-set>
-          @for (posStat of positionStats(); track posStat.positionId; let idx = $index) {
+          @for (relStat of relationTypeStats(); track relStat.typeId; let idx = $index) {
             <mat-chip
               cdkOverlayOrigin
               #trigger="cdkOverlayOrigin"
               (mouseenter)="showTooltip(idx)"
               (mouseleave)="hideTooltip()"
               (click)="$event.stopPropagation()">
-              {{ posStat.count }} {{ posStat.positionName }}
+              {{ relStat.count }} {{ relStat.typeName }}@if (relStat.speCount > 0) {<span class="spe-count"> ({{ relStat.speCount }} spe)</span>}
             </mat-chip>
             
             <ng-template
@@ -36,11 +36,11 @@
                 { originX: 'center', originY: 'bottom', overlayX: 'center', overlayY: 'top', offsetY: 8 }
               ]">
               <div class="tooltip-overlay" (mouseenter)="showTooltip(idx)" (mouseleave)="hideTooltip()">
-                @if (posStat.filiereCombinations) {
-                  <app-filiere-combinations-tooltip [combinations]="posStat.filiereCombinations" />
+                @if (relStat.filiereCombinations) {
+                  <app-filiere-combinations-tooltip [combinations]="relStat.filiereCombinations" />
                 }
-                @if (posStat.details) {
-                  <app-symbol-position-tooltip [details]="posStat.details" />
+                @if (relStat.details) {
+                  <app-symbol-position-tooltip [details]="relStat.details" />
                 }
               </div>
             </ng-template>

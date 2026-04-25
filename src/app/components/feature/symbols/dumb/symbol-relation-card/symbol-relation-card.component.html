@@ -1,6 +1,13 @@
-<div class="relation-card">
+<div class="relation-card" [class.spe-item]="relationData()?.link?.spe">
   @if (relationData(); as data) {
     <div class="relation-details">
+      @if (data.link.spe) {
+        <div class="detail-item spe-badge">
+          <span class="label">Spécificité:</span>
+          <span class="value spe-true">oui</span>
+        </div>
+      }
+      
       @if (data.position) {
         <div class="detail-item">
           <span class="label">Position:</span>
@@ -49,10 +56,10 @@
     </div>
     
     <div class="action-buttons">
-      <button mat-icon-button color="primary" (click)="onEdit()" title="Modifier">
+      <button mat-icon-button color="primary" [disabled]="!editable()" (click)="onEdit()" title="Modifier">
         <mat-icon>edit</mat-icon>
       </button>
-      <button mat-icon-button color="warn" (click)="onDelete()" title="Supprimer">
+      <button mat-icon-button color="warn" [disabled]="!editable()" (click)="onDelete()" title="Supprimer">
         <mat-icon>delete</mat-icon>
       </button>
     </div>

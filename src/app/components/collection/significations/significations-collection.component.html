@@ -1,0 +1,9 @@
+<div class="collection">
+  @for (signification of significations(); track signification.id) {
+    <div class="collection-item" 
+         [class.selectable]="selectable()"
+         (click)="onSelect(signification)">
+      {{ signification.content }}
+    </div>
+  }
+</div>

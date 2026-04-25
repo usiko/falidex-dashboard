@@ -1,0 +1,32 @@
+<h2 mat-dialog-title>{{ title }}</h2>
+
+<mat-dialog-content>
+  <form class="code-spe-form">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Nom</mat-label>
+      <input matInput [(ngModel)]="name" name="name" required placeholder="Nom de la spécificité">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Texte</mat-label>
+      <textarea matInput [(ngModel)]="text" name="text" required placeholder="Texte de la spécificité" rows="3"></textarea>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Article (optionnel)</mat-label>
+      <input matInput [(ngModel)]="article" name="article" placeholder="Article de référence">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Note (optionnel)</mat-label>
+      <textarea matInput [(ngModel)]="note" name="note" placeholder="Note complémentaire" rows="2"></textarea>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Annuler</button>
+  <button mat-raised-button color="primary" (click)="onSave()" [disabled]="!isValid">
+    {{ data.mode === 'add' ? 'Ajouter' : 'Modifier' }}
+  </button>
+</mat-dialog-actions>

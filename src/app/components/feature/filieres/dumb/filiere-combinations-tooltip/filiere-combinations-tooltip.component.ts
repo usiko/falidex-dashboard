@@ -12,6 +12,7 @@ export interface FiliereCombination {
   circulaireName: string;
   matiere?: string;
   colors: ColorInfo[];
+  hasSpe?: boolean;
 }
 
 @Component({

@@ -1,0 +1,9 @@
+<div class="collection">
+  @for (codeSpe of codesSpe(); track codeSpe.id) {
+    <div class="collection-item" 
+         [class.selectable]="selectable()"
+         (click)="onSelect(codeSpe)">
+      {{ codeSpe.name }}
+    </div>
+  }
+</div>

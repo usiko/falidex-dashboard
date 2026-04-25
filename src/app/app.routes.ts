@@ -15,10 +15,6 @@ export const routes: Routes = [
     loadComponent: () => import('./components/feature/filieres/page/detail/filiere-detail-page.component').then(m => m.FiliereDetailPageComponent)
   },
   {
-    path: 'filiere/:id/edit',
-    loadComponent: () => import('./components/feature/filieres/page/edit/filiere-edit-page.component').then(m => m.FiliereEditPageComponent)
-  },
-  {
     path: 'symbols',
     loadComponent: () => import('./components/feature/symbols/page/symbols-list.page').then(m => m.SymbolsListPageComponent)
   },
@@ -27,12 +23,28 @@ export const routes: Routes = [
     loadComponent: () => import('./components/feature/symbols/page/detail/symbol-detail-page.component').then(m => m.SymbolDetailPageComponent)
   },
   {
-    path: 'symbole/:id/edit',
-    loadComponent: () => import('./components/feature/symbols/page/edit/symbol-edit-page.component').then(m => m.SymbolEditPageComponent)
+    path: 'relation/:id/symbole/edit',
+    loadComponent: () => import('./components/feature/relations/page/symbole-edit/relation-symbole-edit-page.component').then(m => m.RelationSymboleEditPageComponent)
   },
   {
-    path: 'relation/:id/edit',
+    path: 'relation/symbole/new',
+    loadComponent: () => import('./components/feature/relations/page/symbole-edit/relation-symbole-edit-page.component').then(m => m.RelationSymboleEditPageComponent)
+  },
+  {
+    path: 'relation/current/edit',
     loadComponent: () => import('./components/feature/relations/page/edit/relation-edit-page.component').then(m => m.RelationEditPageComponent)
+  },
+  {
+    path: 'relation/new',
+    loadComponent: () => import('./components/feature/relations/page/new/relation-new-page.component').then(m => m.RelationNewPageComponent)
+  },
+  {
+    path: 'relation/:id/filiere/edit',
+    loadComponent: () => import('./components/feature/relations/page/filiere-edit/relation-filiere-edit-page.component').then(m => m.RelationFiliereEditPageComponent)
+  },
+  {
+    path: 'relation/filiere/new',
+    loadComponent: () => import('./components/feature/relations/page/filiere-edit/relation-filiere-edit-page.component').then(m => m.RelationFiliereEditPageComponent)
   },
   {
     path: '**',

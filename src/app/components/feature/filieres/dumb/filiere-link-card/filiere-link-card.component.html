@@ -1,4 +1,4 @@
-<div class="link-card">
+<div class="link-card" [class.spe-item]="linkData()?.link?.spe">
   @if (linkData(); as data) {
     @if (data.symbole && data.symbole.imgs && data.symbole.imgs.length > 0) {
       <div class="symbol-image-container">
@@ -11,6 +11,13 @@
     }
     
     <div class="link-details">
+      @if (data.link.spe) {
+        <div class="detail-item spe-badge">
+          <span class="label">Spécificité:</span>
+          <span class="value spe-true">oui</span>
+        </div>
+      }
+      
       @if (data.symbole) {
         <div class="detail-item">
           <span class="label">Symbole:</span>
@@ -59,10 +66,10 @@
     </div>
     
     <div class="action-buttons">
-      <button mat-icon-button color="primary" (click)="onEdit()" title="Modifier">
+      <button mat-icon-button color="primary" [disabled]="!editable()" (click)="onEdit()" title="Modifier">
         <mat-icon>edit</mat-icon>
       </button>
-      <button mat-icon-button color="warn" (click)="onDelete()" title="Supprimer">
+      <button mat-icon-button color="warn" [disabled]="!editable()" (click)="onDelete()" title="Supprimer">
         <mat-icon>delete</mat-icon>
       </button>
     </div>

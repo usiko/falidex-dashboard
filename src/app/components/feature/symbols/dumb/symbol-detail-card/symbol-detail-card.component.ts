@@ -23,6 +23,7 @@ import { SymbolRelationItemComponent } from '../../smart/symbol-relation-item/sy
 export class SymbolDetailCardComponent {
   symbol = input<IBaseSymbol>();
   links = input<IRelationItem[]>([]);
+  editable = input<boolean>(true);
   
   addLink = output<void>();
   editLink = output<string>();

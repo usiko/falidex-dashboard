@@ -5,6 +5,7 @@ import { SymbolStore } from '../../../../../stores/symbols/symbols.store';
 import { linkStore } from '../../../../../stores/links/links.store';
 import { SymbolDetailCardComponent } from '../../dumb/symbol-detail-card/symbol-detail-card.component';
 import { ConfirmDialogComponent, ConfirmDialogData } from '../../../../shared/confirm-dialog/confirm-dialog.component';
+import { SelectedRelationStore } from '../../../../../stores/selected-relation/selected-relation.store';
 
 @Component({
   selector: 'app-symbol-detail',
@@ -22,6 +23,7 @@ export class SymbolDetailComponent {
   private readonly linksStore = inject(linkStore);
   private readonly dialog = inject(MatDialog);
   private readonly router = inject(Router);
+  private readonly selectedRelationStore = inject(SelectedRelationStore);
   
   protected readonly symbol = computed(() => {
     const id = this.id();
@@ -37,8 +39,10 @@ export class SymbolDetailComponent {
     return this.linksStore.entities().filter(link => link.symboleId === symbolId);
   });
   
+  protected readonly editable = this.selectedRelationStore.isEditable;
+  
   onEditLink(linkId: string) {
-    this.router.navigate(['/relation', linkId, 'edit']);
+    this.router.navigate(['/relation', linkId, 'symbole', 'edit']);
   }
   
   onDeleteLink(linkId: string) {
@@ -63,7 +67,12 @@ export class SymbolDetailComponent {
   }
   
   onAddLink() {
-    console.log('Ajouter une relation pour le symbole:', this.id());
-    // TODO: Implémenter la logique d'ajout
+    const symboleId = this.id();
+    if (!symboleId) return;
+    
+    // Naviguer vers le formulaire de création de la nouvelle relation
+    this.router.navigate(['/relation', 'symbole', 'new'], {
+      queryParams: { symboleId }
+    });
   }
 }

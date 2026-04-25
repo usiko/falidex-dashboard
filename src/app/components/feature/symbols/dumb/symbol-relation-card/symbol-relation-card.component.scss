@@ -10,6 +10,10 @@
   max-width: 700px;
   position: relative;
   
+  &.spe-item {
+    border-left-color: #3f51b5; // Material primary color
+  }
+  
   .relation-details {
     flex: 1;
     display: flex;
@@ -46,6 +50,13 @@
         align-items: center;
       }
     }
+    
+    .spe-badge {
+      .spe-true {
+        color: #3f51b5; // Material primary color
+        font-weight: 600;
+      }
+    }
   }
   
   .action-buttons {
@@ -54,5 +65,10 @@
     gap: 4px;
     margin-left: auto;
     flex-shrink: 0;
+    
+    button:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
   }
 }

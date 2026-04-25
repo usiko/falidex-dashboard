@@ -6,6 +6,7 @@ export interface PositionDetail {
   symboleAccessoryName?: string;
   significationName?: string;
   placementName?: string;
+  spe?: boolean;
 }
 
 @Component({

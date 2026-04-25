@@ -217,14 +217,5 @@
             "color-4",
             "color-18"
         ]
-    },
-    {
-        "id": "circulaire-color-30",
-        "circulaireId": "circulaire-30",
-        "colorIds": [
-            "color-18",
-            "color-4",
-            "color-18"
-        ]
     }
 ]

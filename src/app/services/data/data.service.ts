@@ -159,9 +159,9 @@ export class DataService {
   private ensureRelationItemIds(data: IRelationData): IRelationData {
     return {
       ...data,
-      relations: data.relations.map(item => ({
+      relations: data.relations.map((item,index) => ({
         ...item,
-        id: item.id || uuidv4()
+        id: item.id ||`rel-${index}`
       }))
     };
   }

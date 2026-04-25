@@ -28,6 +28,10 @@ export interface IRelationData {
     id: string;
     annee: number;
     default: boolean;
+    visible:boolean;
+    editable:boolean;
+    national:boolean;
+    ville?:string
     relations: IRelationItem[];
     specificites?: IBaseCodeSpe[];
 }

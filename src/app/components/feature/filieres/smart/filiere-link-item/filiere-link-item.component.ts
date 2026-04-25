@@ -21,6 +21,7 @@ import { FiliereLinkCardComponent } from '../../dumb/filiere-link-card/filiere-l
 })
 export class FiliereLinkItemComponent {
   linkId = input<string>();
+  editable = input<boolean>(true);
   
   editLink = output<string>();
   deleteLink = output<string>();

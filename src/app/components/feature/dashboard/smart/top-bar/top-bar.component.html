@@ -5,16 +5,50 @@
       <mat-select 
         [value]="selectedRelationId()" 
         (selectionChange)="onRelationChange($event.value)">
+        <mat-select-trigger>
+          @if (selectedRelation()) {
+            <span class="relation-option" [class.default-relation]="selectedRelation()!.default">
+              <span>{{ selectedRelation()!.name}} - {{selectedRelation()!.annee}}</span>
+              <span class="icons">
+                @if (selectedRelation()!.visible!== undefined && !selectedRelation()!.visible) {
+                  <mat-icon class="visibility-icon">visibility_off</mat-icon>
+                }
+                @if (!selectedRelation()!.editable) {
+                  <mat-icon class="lock-icon">lock</mat-icon>
+                }
+              </span>
+            </span>
+          }
+        </mat-select-trigger>
         @for (relation of relations(); track relation.id) {
-          <mat-option [value]="relation.id">{{ relation.name }}</mat-option>
+          <mat-option [value]="relation.id">
+            <span class="relation-option" [class.default-relation]="relation.default">
+              <span>{{ relation.name}} - {{relation.annee}}</span>
+              <span class="icons">
+                @if (relation.visible !== undefined && !relation.visible) {
+                  <mat-icon class="visibility-icon">visibility_off</mat-icon>
+                }
+                @if (!relation.editable) {
+                  <mat-icon class="lock-icon">lock</mat-icon>
+                }
+              </span>
+            </span>
+          </mat-option>
         }
       </mat-select>
     </mat-form-field>
+    <button mat-mini-fab color="accent" (click)="onAddRelation()" matTooltip="Ajouter une relation">
+      <mat-icon>add</mat-icon>
+    </button>
   </div>
 
   <span class="spacer"></span>
 
   <div class="right-section">
+     <button mat-button routerLink="/relation/current/edit" routerLinkActive="active">
+      <mat-icon>info</mat-icon>
+      Relation Info
+    </button>
     <button mat-button routerLink="/filieres" routerLinkActive="active">
       <mat-icon>school</mat-icon>
       Filières
@@ -23,5 +57,6 @@
       <mat-icon>star</mat-icon>
       Symboles
     </button>
+
   </div>
 </mat-toolbar>

@@ -1,0 +1,9 @@
+<div class="collection">
+  @for (color of colors(); track color.id) {
+    <div class="collection-item" 
+         [class.selectable]="selectable()"
+         (click)="onSelect(color)">
+      {{ color.name }}
+    </div>
+  }
+</div>

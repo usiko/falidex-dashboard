@@ -1,8 +1,6 @@
 import { Component, inject } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { map } from 'rxjs/operators';
 import { RelationEditComponent } from '../../smart/relation-edit/relation-edit.component';
+import { SelectedRelationStore } from '../../../../../stores/selected-relation/selected-relation.store';
 
 @Component({
   selector: 'app-relation-edit-page',
@@ -14,11 +12,7 @@ import { RelationEditComponent } from '../../smart/relation-edit/relation-edit.c
   styleUrl: './relation-edit-page.component.scss'
 })
 export class RelationEditPageComponent {
-  private readonly route = inject(ActivatedRoute);
+  private readonly selectedRelationStore = inject(SelectedRelationStore);
   
-  protected readonly id = toSignal(
-    this.route.paramMap.pipe(
-      map(params => params.get('id') ?? undefined)
-    )
-  );
+  protected readonly id = this.selectedRelationStore.selectedRelationId;
 }

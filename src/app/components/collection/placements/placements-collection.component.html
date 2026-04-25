@@ -1,0 +1,9 @@
+<div class="collection">
+  @for (placement of placements(); track placement.id) {
+    <div class="collection-item" 
+         [class.selectable]="selectable()"
+         (click)="onSelect(placement)">
+      {{ placement.name }}
+    </div>
+  }
+</div>

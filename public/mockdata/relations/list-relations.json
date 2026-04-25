@@ -2,11 +2,16 @@
 	{
 		"name": "national",
 		"id": "nat",
-		"lastUpdate": "30/08/2021 20:58"
+		"lastUpdate": "30/08/2021 20:58",
+        "annee":131,
+        "editable":true,
+        "national":true
 	},
 	{
 		"name": "toulon",
 		"id": "tln",
-		"lastUpdate": "30/08/2021 20:58"
+		"lastUpdate": "30/08/2021 20:58",
+        "annee":131,
+        "editable":true
 	}
 ]

@@ -1,0 +1,16 @@
+<div class="collection">
+  @for (item of circulaires(); track item.circulaire.id) {
+    <div class="collection-item" 
+         [class.selectable]="selectable()"
+         (click)="onSelect(item.circulaire)">
+      <div class="circulaire-info">
+        <span class="circulaire-name">{{ item.circulaire.name }}</span>
+      </div>
+      <div class="circulaire-colors">
+        @for (color of item.colors; track $index) {
+          <app-color-badge [color]="color" [matiere]="item.circulaire.matiere" />
+        }
+      </div>
+    </div>
+  }
+</div>
