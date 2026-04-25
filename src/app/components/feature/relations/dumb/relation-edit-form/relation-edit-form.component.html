@@ -6,58 +6,112 @@
       <p><strong>ID :</strong> {{ relation()!.id }}</p>
     </div>
 
-    <form class="form-content" (ngSubmit)="onSubmit()">
-      <!-- Nom -->
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Nom</mat-label>
-        <input matInput [(ngModel)]="name" name="name" [disabled]="national" required />
-        <mat-icon matPrefix>label</mat-icon>
-      </mat-form-field>
+    <div class="content-wrapper">
+      <form class="form-content" (ngSubmit)="onSubmit()">
+        <!-- Nom -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Nom</mat-label>
+          <input matInput [(ngModel)]="name" name="name" [disabled]="national" required />
+          <mat-icon matPrefix>label</mat-icon>
+        </mat-form-field>
 
-      <!-- Année -->
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Année</mat-label>
-        <input matInput type="number" [(ngModel)]="annee" name="annee" required />
-        <mat-icon matPrefix>calendar_today</mat-icon>
-      </mat-form-field>
+        <!-- Année -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Année</mat-label>
+          <input matInput type="number" [(ngModel)]="annee" name="annee" required />
+          <mat-icon matPrefix>calendar_today</mat-icon>
+        </mat-form-field>
 
-      <!-- Ville -->
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Ville</mat-label>
-        <input matInput [(ngModel)]="ville" name="ville" required />
-        <mat-icon matPrefix>location_city</mat-icon>
-      </mat-form-field>
+        <!-- Ville -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Ville</mat-label>
+          <input matInput [(ngModel)]="ville" name="ville" required />
+          <mat-icon matPrefix>location_city</mat-icon>
+        </mat-form-field>
 
-      <!-- Toggles -->
-      <div class="toggles-section">
-        <mat-slide-toggle [ngModel]="national" (ngModelChange)="onNationalChange($event)" name="national" color="primary">
-          National
-        </mat-slide-toggle>
+        <!-- Toggles -->
+        <div class="toggles-section">
+          <mat-slide-toggle [ngModel]="national" (ngModelChange)="onNationalChange($event)" name="national" color="primary">
+            National
+          </mat-slide-toggle>
 
-        <mat-slide-toggle [(ngModel)]="defaultRelation" name="default" color="primary">
-          Par défaut
-        </mat-slide-toggle>
+          <mat-slide-toggle [(ngModel)]="defaultRelation" name="default" color="primary">
+            Par défaut
+          </mat-slide-toggle>
 
-        <mat-slide-toggle [(ngModel)]="visible" name="visible" color="primary">
-          Visible
-        </mat-slide-toggle>
+          <mat-slide-toggle [(ngModel)]="visible" name="visible" color="primary">
+            Visible
+          </mat-slide-toggle>
 
-        <mat-slide-toggle [(ngModel)]="editable" name="editable" color="primary">
-          Éditable
-        </mat-slide-toggle>
-      </div>
+          <mat-slide-toggle [(ngModel)]="editable" name="editable" color="primary">
+            Éditable
+          </mat-slide-toggle>
+        </div>
 
-      <!-- Actions -->
-      <div class="form-actions">
-        <button mat-raised-button type="button" (click)="onCancel()">
-          <mat-icon>close</mat-icon>
-          Annuler
-        </button>
-        <button mat-raised-button color="primary" type="submit">
-          <mat-icon>save</mat-icon>
-          Enregistrer
-        </button>
-      </div>
-    </form>
+        <!-- Actions -->
+        <div class="form-actions">
+          <button mat-raised-button type="button" (click)="onCancel()">
+            <mat-icon>close</mat-icon>
+            Annuler
+          </button>
+          <button mat-raised-button color="primary" type="submit">
+            <mat-icon>save</mat-icon>
+            Enregistrer
+          </button>
+        </div>
+      </form>
+
+      <!-- Spécificités -->
+      @if (!national) {
+        <div class="specificites-section">
+          <div class="section-header">
+            <h3 class="section-title">
+              <mat-icon>list_alt</mat-icon>
+              Spécificités ({{ specificites.length }})
+            </h3>
+            <button 
+              mat-mini-fab 
+              color="primary" 
+              type="button"
+              (click)="onAddSpecificite()"
+              matTooltip="Ajouter une spécificité">
+              <mat-icon>add</mat-icon>
+            </button>
+          </div>
+          @if (specificites.length > 0) {
+            <div class="specificites-list">
+              @for (spe of specificites; track spe.id) {
+                <div class="specificite-card">
+                  <button 
+                    mat-icon-button 
+                    class="delete-button" 
+                    type="button"
+                    (click)="onDeleteSpecificite(spe.id)"
+                    matTooltip="Supprimer">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                  @if (spe.name) {
+                    <div class="spe-header">
+                      <strong>{{ spe.name }}</strong>
+                    </div>
+                  }
+                  <div class="spe-content">
+                    <p><strong>Texte :</strong> {{ spe.text }}</p>
+                    @if (spe.article) {
+                      <p><strong>Article :</strong> {{ spe.article }}</p>
+                    }
+                    @if (spe.note) {
+                      <p><strong>Note :</strong> {{ spe.note }}</p>
+                    }
+                  </div>
+                </div>
+              }
+            </div>
+          } @else {
+            <p class="empty-message">Aucune spécificité</p>
+          }
+        </div>
+      }
+    </div>
   }
 </div>

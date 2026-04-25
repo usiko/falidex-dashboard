@@ -6,7 +6,9 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { IRelationData } from '../../../../../models/data/base-relations.models';
+import { IBaseCodeSpe } from '../../../../../models/data/base-data-models';
 
 @Component({
   selector: 'app-relation-edit-form',
@@ -18,7 +20,8 @@ import { IRelationData } from '../../../../../models/data/base-relations.models'
     MatInputModule,
     MatSlideToggleModule,
     MatButtonModule,
-    MatIconModule
+    MatIconModule,
+    MatTooltipModule
   ],
   templateUrl: './relation-edit-form.component.html',
   styleUrl: './relation-edit-form.component.scss'
@@ -37,6 +40,7 @@ export class RelationEditFormComponent {
   protected defaultRelation = false;
   protected visible = true;
   protected editable = true;
+  protected specificites: IBaseCodeSpe[] = [];
   
   constructor() {
     // Initialiser les champs à partir de la relation
@@ -51,6 +55,7 @@ export class RelationEditFormComponent {
       this.defaultRelation = rel.default || false;
       this.visible = rel.visible ?? true;
       this.editable = rel.editable ?? true;
+      this.specificites = rel.specificites ? [...rel.specificites] : [];
     });
   }
   
@@ -66,7 +71,8 @@ export class RelationEditFormComponent {
       national: this.national,
       default: this.defaultRelation,
       visible: this.visible,
-      editable: this.editable
+      editable: this.editable,
+      specificites: this.specificites
     };
     
     this.validated.emit(relationData);
@@ -77,6 +83,15 @@ export class RelationEditFormComponent {
     if (value) {
       this.name = 'national';
     }
+  }
+  
+  protected onDeleteSpecificite(id: string): void {
+    this.specificites = this.specificites.filter(spe => spe.id !== id);
+  }
+  
+  protected onAddSpecificite(): void {
+    // TODO: Ouvrir un dialog pour ajouter une spécificité
+    console.log('Ajouter une spécificité');
   }
   
   protected onCancel(): void {
