@@ -1,5 +1,8 @@
 @if (filiere()) {
-  <app-filiere-edit-form [relation]="relation()" [filiere]="filiere()!" />
+  <app-filiere-edit-form 
+    [relation]="relation()" 
+    [filiere]="filiere()!" 
+    (validated)="onValidated($event)" />
 } @else {
   <div class="loading">Chargement...</div>
 }
