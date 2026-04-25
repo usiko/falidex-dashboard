@@ -18,7 +18,7 @@
             (mouseleave)="hideTooltip()"
             (click)="$event.stopPropagation()">
             <mat-icon matChipAvatar>star</mat-icon>
-            {{ symboleCount() }} emblème et circulaires
+            {{ symboleCount() }} emblème et circulaires@if (speCount() > 0) {<span class="spe-count"> ({{ speCount() }} spe)</span>}
           </mat-chip>
         </mat-chip-set>
       </div>

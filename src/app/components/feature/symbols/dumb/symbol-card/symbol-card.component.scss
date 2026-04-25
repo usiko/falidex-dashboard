@@ -71,6 +71,12 @@
       mat-chip-set {
         mat-chip {
           font-weight: 500;
+          
+          .spe-count {
+            color: #3f51b5;
+            font-size: 0.9em;
+            font-weight: 600;
+          }
         }
       }
     }

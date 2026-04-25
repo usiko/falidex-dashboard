@@ -39,6 +39,11 @@ export class FiliereItemComponent {
 
   protected readonly symboleCount = computed(() => this.stats().symboleCount);
   
+  protected readonly speCount = computed(() => {
+    const links = this.linkStoreInstance.getByFiliereId(this.filiereId())();
+    return links.filter(link => link.spe === true).length;
+  });
+  
   protected readonly inactive = computed(() => {
     return this.stats().symboleCount === 0;
   });

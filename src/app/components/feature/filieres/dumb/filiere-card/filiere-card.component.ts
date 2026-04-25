@@ -26,6 +26,7 @@ import { FiliereCombinationsTooltipComponent } from '../filiere-combinations-too
 export class FiliereCardComponent {
   filiere = input.required<IBaseFiliere>();
   symboleCount = input<number>();
+  speCount = input<number>(0);
   inactive = input<boolean>(false);
   symboleNames = input<string[]>([]);
   symboleCombinations = input<FiliereCombination[]>([]);

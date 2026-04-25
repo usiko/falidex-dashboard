@@ -8,7 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatBadgeModule } from '@angular/material/badge';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { IBaseSymbol } from '../../../../../models/data/base-data-models';
-import type { PositionStats } from '../../smart/symbol-item/symbol-item.component';
+import type { RelationTypeStats } from '../../smart/symbol-item/symbol-item.component';
 import { SymbolPositionTooltipComponent } from '../symbol-position-tooltip/symbol-position-tooltip.component';
 import { FiliereCombinationsTooltipComponent } from '../../../filieres/dumb/filiere-combinations-tooltip/filiere-combinations-tooltip.component';
 import { ImageCarouselDialogComponent } from '../../dialogs/image-carousel-dialog/image-carousel-dialog.component';
@@ -31,7 +31,7 @@ import { ImageCarouselDialogComponent } from '../../dialogs/image-carousel-dialo
 })
 export class SymbolCardComponent {
   symbol = input.required<IBaseSymbol>();
-  positionStats = input<PositionStats[]>([]);
+  relationTypeStats = input<RelationTypeStats[]>([]);
   inactive = input<boolean>(false);
   
   private readonly router = inject(Router);
