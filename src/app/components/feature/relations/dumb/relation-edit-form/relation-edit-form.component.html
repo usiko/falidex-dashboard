@@ -50,6 +50,10 @@
 
         <!-- Actions -->
         <div class="form-actions">
+          <button mat-raised-button color="warn" type="button" [disabled]="!editable" (click)="onDelete()" class="delete-action">
+            <mat-icon>delete</mat-icon>
+            Supprimer
+          </button>
           <button mat-raised-button type="button" (click)="onCancel()">
             <mat-icon>close</mat-icon>
             Annuler

@@ -35,6 +35,10 @@ export const routes: Routes = [
     loadComponent: () => import('./components/feature/relations/page/edit/relation-edit-page.component').then(m => m.RelationEditPageComponent)
   },
   {
+    path: 'relation/new',
+    loadComponent: () => import('./components/feature/relations/page/new/relation-new-page.component').then(m => m.RelationNewPageComponent)
+  },
+  {
     path: 'relation/:id/filiere/edit',
     loadComponent: () => import('./components/feature/relations/page/filiere-edit/relation-filiere-edit-page.component').then(m => m.RelationFiliereEditPageComponent)
   },

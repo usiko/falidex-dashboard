@@ -41,4 +41,17 @@ export class RelationEditComponent {
     // Retour à la page précédente
     this.router.navigate(['/filieres']);
   }
+  
+  protected onDeleted(): void {
+    const id = this.id();
+    if (!id) return;
+    
+    // Suppression de la relation
+    this.relationStore.remove(id);
+    
+    console.log('Relation supprimée:', id);
+    
+    // Retour à la page d'accueil
+    this.router.navigate(['/filieres']);
+  }
 }

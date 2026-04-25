@@ -35,12 +35,31 @@ export class RelationEditFormComponent {
   // Output pour la validation
   validated = output<IRelationData | null>();
   
+  // Output pour la suppression
+  deleted = output<void>();
+  
   // Inject MatDialog
   private dialog = inject(MatDialog);
   
+  // Calcul de l'année par défaut (différence depuis le 26 juin 1888)
+  private getDefaultYear(): number {
+    const now = new Date();
+    const currentYear = now.getFullYear();
+    const referenceDate = new Date(currentYear, 5, 26); // 26 juin de l'année courante (mois 5 = juin en JS)
+    
+    let yearDiff = currentYear - 1888;
+    
+    // Si on est avant le 26 juin, on soustrait 1
+    if (now < referenceDate) {
+      yearDiff -= 1;
+    }
+    
+    return yearDiff;
+  }
+  
   // Propriétés pour les champs du formulaire
   protected name = '';
-  protected annee = new Date().getFullYear();
+  protected annee = this.getDefaultYear();
   protected ville = '';
   protected national = false;
   protected defaultRelation = false;
@@ -55,7 +74,7 @@ export class RelationEditFormComponent {
       if (!rel) return;
       
       this.name = rel.name || '';
-      this.annee = rel.annee || new Date().getFullYear();
+      this.annee = rel.annee || this.getDefaultYear();
       this.ville = rel.ville || '';
       this.national = rel.national || false;
       this.defaultRelation = rel.default || false;
@@ -151,5 +170,25 @@ export class RelationEditFormComponent {
   
   protected onCancel(): void {
     this.validated.emit(null);
+  }
+  
+  protected onDelete(): void {
+    const dialogData: ConfirmDialogData = {
+      title: 'Confirmation de suppression',
+      message: 'Êtes-vous sûr de vouloir supprimer cette relation ? Cette action est irréversible.',
+      confirmText: 'Supprimer',
+      cancelText: 'Annuler'
+    };
+    
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: dialogData,
+      width: '400px'
+    });
+    
+    dialogRef.afterClosed().subscribe(confirmed => {
+      if (confirmed) {
+        this.deleted.emit();
+      }
+    });
   }
 }

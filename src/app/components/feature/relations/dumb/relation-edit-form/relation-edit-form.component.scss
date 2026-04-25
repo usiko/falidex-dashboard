@@ -69,6 +69,21 @@
       padding-top: 20px;
       border-top: 1px solid #e0e0e0;
 
+      .delete-action {
+        margin-right: auto;
+        background-color: #d32f2f;
+        color: white;
+
+        &:hover:not(:disabled) {
+          background-color: #c62828;
+        }
+
+        &:disabled {
+          background-color: #ffcdd2;
+          color: rgba(0, 0, 0, 0.38);
+        }
+      }
+
       button {
         min-width: 120px;
 

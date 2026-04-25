@@ -5,6 +5,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { Router, RouterModule } from '@angular/router';
 import { RelationDataStore } from '../../../../../stores/relations/relations.store';
 import { linkStore } from '../../../../../stores/links/links.store';
@@ -20,6 +21,7 @@ import { SelectedRelationStore } from '../../../../../stores/selected-relation/s
     MatFormFieldModule,
     MatButtonModule,
     MatIconModule,
+    MatTooltipModule,
     RouterModule
   ],
   templateUrl: './top-bar.component.html',
@@ -48,5 +50,9 @@ export class TopBarComponent implements OnInit {
       this.linkStore.set(relation.relations);
       console.log('Relation sélectionnée:', relationId, '- Liens chargés:', relation.relations.length);
     }
+  }
+  
+  protected onAddRelation(): void {
+    this.router.navigate(['/relation/new']);
   }
 }

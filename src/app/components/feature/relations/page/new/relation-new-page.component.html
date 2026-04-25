@@ -1,0 +1,51 @@
+<div class="relation-new-page">
+  <div class="copy-section">
+    <mat-card>
+      <mat-card-content>
+        <div class="copy-header">
+          <mat-icon>content_copy</mat-icon>
+          <h3>Copier depuis une relation existante (optionnel)</h3>
+        </div>
+        <p class="copy-description">
+          Sélectionnez une relation existante pour copier ses spécificités et ses liens.
+          Les informations de base (nom, année, ville) ne seront pas copiées.
+        </p>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Relation à copier</mat-label>
+          <mat-select 
+            [value]="selectedRelationToCopy()" 
+            (selectionChange)="onRelationToCopyChange($event.value)">
+            <mat-option [value]="null">Aucune - Créer une relation vide</mat-option>
+            @for (relation of relations(); track relation.id) {
+              <mat-option [value]="relation.id">{{ relation.name }} - {{ relation.annee }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        @if (selectedRelationToCopy()) {
+          <div class="copy-info">
+            <mat-icon>info</mat-icon>
+            <span>
+              @if (newRelation().specificites && newRelation().specificites!.length > 0) {
+                {{ newRelation().specificites!.length }} spécificité(s) copiée(s)
+              }
+              @if (newRelation().relations && newRelation().relations.length > 0) {
+                @if (newRelation().specificites && newRelation().specificites!.length > 0) {
+                  et 
+                }
+                {{ newRelation().relations.length }} lien(s) copié(s)
+              }
+              @if ((!newRelation().specificites || newRelation().specificites!.length === 0) && (!newRelation().relations || newRelation().relations.length === 0)) {
+                Aucune donnée à copier
+              }
+            </span>
+          </div>
+        }
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <app-relation-edit-form 
+    [relation]="newRelation()" 
+    (validated)="onValidated($event)" 
+    (deleted)="onDeleted()" />
+</div>
