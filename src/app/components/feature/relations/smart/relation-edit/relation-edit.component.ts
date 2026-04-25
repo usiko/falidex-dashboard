@@ -1,6 +1,9 @@
 import { Component, inject, computed, input } from '@angular/core';
+import { Router } from '@angular/router';
 import { linkStore } from '../../../../../stores/links/links.store';
 import { RelationEditFormComponent } from '../../dumb/relation-edit-form/relation-edit-form.component';
+import { RelationDataStore } from '../../../../../stores/relations/relations.store';
+import { IRelationData } from '../../../../../models/data/base-relations.models';
 
 @Component({
   selector: 'app-relation-edit',
@@ -14,11 +17,28 @@ import { RelationEditFormComponent } from '../../dumb/relation-edit-form/relatio
 export class RelationEditComponent {
   id = input<string>();
   
-  private readonly linksStore = inject(linkStore);
+  private readonly relationStore = inject(RelationDataStore);
+  private readonly router = inject(Router);
   
-  protected readonly link = computed(() => {
+  protected readonly relation = computed(() => {
     const id = this.id();
     if (!id) return undefined;
-    return this.linksStore.getById(id)();
+    return this.relationStore.getById(id)();
   });
+
+  protected onValidated(relationData: IRelationData | null): void {
+    if (!relationData) {
+      // Annulation - retour à la page précédente ou accueil
+      this.router.navigate(['/filieres']);
+      return;
+    }
+
+    // Mise à jour de la relation
+    this.relationStore.update(relationData.id, relationData);
+    
+    console.log('Relation mise à jour:', relationData);
+    
+    // Retour à la page précédente
+    this.router.navigate(['/filieres']);
+  }
 }

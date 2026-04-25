@@ -1,9 +1,63 @@
 <div class="relation-edit-form">
   <h1 class="form-title">Édition de la relation</h1>
   
-  @if (link()) {
+  @if (relation()) {
     <div class="relation-info">
-      <p><strong>ID :</strong> {{ link()!.id }}</p>
+      <p><strong>ID :</strong> {{ relation()!.id }}</p>
     </div>
+
+    <form class="form-content" (ngSubmit)="onSubmit()">
+      <!-- Nom -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Nom</mat-label>
+        <input matInput [(ngModel)]="name" name="name" [disabled]="national" required />
+        <mat-icon matPrefix>label</mat-icon>
+      </mat-form-field>
+
+      <!-- Année -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Année</mat-label>
+        <input matInput type="number" [(ngModel)]="annee" name="annee" required />
+        <mat-icon matPrefix>calendar_today</mat-icon>
+      </mat-form-field>
+
+      <!-- Ville -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Ville</mat-label>
+        <input matInput [(ngModel)]="ville" name="ville" required />
+        <mat-icon matPrefix>location_city</mat-icon>
+      </mat-form-field>
+
+      <!-- Toggles -->
+      <div class="toggles-section">
+        <mat-slide-toggle [ngModel]="national" (ngModelChange)="onNationalChange($event)" name="national" color="primary">
+          National
+        </mat-slide-toggle>
+
+        <mat-slide-toggle [(ngModel)]="defaultRelation" name="default" color="primary">
+          Par défaut
+        </mat-slide-toggle>
+
+        <mat-slide-toggle [(ngModel)]="visible" name="visible" color="primary">
+          Visible
+        </mat-slide-toggle>
+
+        <mat-slide-toggle [(ngModel)]="editable" name="editable" color="primary">
+          Éditable
+        </mat-slide-toggle>
+      </div>
+
+      <!-- Actions -->
+      <div class="form-actions">
+        <button mat-raised-button type="button" (click)="onCancel()">
+          <mat-icon>close</mat-icon>
+          Annuler
+        </button>
+        <button mat-raised-button color="primary" type="submit">
+          <mat-icon>save</mat-icon>
+          Enregistrer
+        </button>
+      </div>
+    </form>
   }
 </div>

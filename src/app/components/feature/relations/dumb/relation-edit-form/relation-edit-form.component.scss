@@ -16,6 +16,7 @@
     padding: 16px;
     background: #f9f9f9;
     border-radius: 6px;
+    margin-bottom: 24px;
     
     p {
       margin: 0;
@@ -25,6 +26,48 @@
       strong {
         font-weight: 600;
         margin-right: 8px;
+      }
+    }
+  }
+
+  .form-content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    .full-width {
+      width: 100%;
+    }
+
+    .toggles-section {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 24px;
+      padding: 20px;
+      background: #f9f9f9;
+      border-radius: 6px;
+      border: 1px solid #e0e0e0;
+
+      mat-slide-toggle {
+        margin: 0;
+      }
+    }
+
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      margin-top: 8px;
+      padding-top: 20px;
+      border-top: 1px solid #e0e0e0;
+
+      button {
+        min-width: 120px;
+
+        mat-icon {
+          margin-right: 8px;
+        }
       }
     }
   }

@@ -31,7 +31,7 @@ export const routes: Routes = [
     loadComponent: () => import('./components/feature/relations/page/symbole-edit/relation-symbole-edit-page.component').then(m => m.RelationSymboleEditPageComponent)
   },
   {
-    path: 'relation/:id/edit',
+    path: 'relation/current/edit',
     loadComponent: () => import('./components/feature/relations/page/edit/relation-edit-page.component').then(m => m.RelationEditPageComponent)
   },
   {
