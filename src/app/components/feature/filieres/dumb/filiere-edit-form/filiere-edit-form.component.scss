@@ -3,13 +3,27 @@
   max-width: 1200px;
   margin: 0 auto;
   
-  .form-title {
-    font-size: 24px;
-    font-weight: 600;
-    color: #333;
-    margin: 0 0 24px 0;
+  .form-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
     padding-bottom: 12px;
     border-bottom: 2px solid #333;
+
+    .form-title {
+      font-size: 24px;
+      font-weight: 600;
+      color: #333;
+      margin: 0;
+      padding: 0;
+      border: none;
+    }
+
+    .specificite-toggle {
+      display: flex;
+      align-items: center;
+    }
   }
   
   .filiere-info {

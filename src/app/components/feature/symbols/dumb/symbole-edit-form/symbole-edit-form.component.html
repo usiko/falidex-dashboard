@@ -1,11 +1,23 @@
 <div class="symbole-edit-form">
-  <h1 class="form-title">
-    @if (relation()) {
-      Édition de la relation
-    } @else {
-      Nouvelle relation pour le symbole
+  <div class="form-header">
+    <h1 class="form-title">
+      @if (relation()) {
+        Édition de la relation
+      } @else {
+        Nouvelle relation pour le symbole
+      }
+    </h1>
+    @if (!selectedRelationStore.isNational()) {
+      <div class="specificite-toggle">
+        <mat-slide-toggle 
+          [(ngModel)]="isSpecificite" 
+          [disabled]="!editable()"
+          color="primary">
+          Spécificité
+        </mat-slide-toggle>
+      </div>
     }
-  </h1>
+  </div>
   
   @if (symbole()) {
     <div class="symbole-info">

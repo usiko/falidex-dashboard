@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { FormsModule } from '@angular/forms';
 import { IBaseFiliere, IBaseSymbol, IBaseSymbolSens, IBaseSymbolAcessory, IBaseCirculaire, IBaseCirculaireColor, IBaseColor } from '../../../../../models/data/base-data-models';
 import { ColorBadgeComponent, ColorBadgeData } from '../../../../shared/color-badge/color-badge.component';
 import { IRelationItem } from '../../../../../models/data/base-relations.models';
@@ -17,14 +19,17 @@ import { SymbolStore } from '../../../../../stores/symbols/symbols.store';
 import { SymbolSensStore } from '../../../../../stores/symbols-sens/symbols-sens.store';
 import { SymbolAccessoryStore } from '../../../../../stores/symbols-accessory/symbols-accessory.store';
 import { CirculaireStore } from '../../../../../stores/circulaires/circulaires.store';
+import { SelectedRelationStore } from '../../../../../stores/selected-relation/selected-relation.store';
 
 @Component({
   selector: 'app-filiere-edit-form',
   standalone: true,
   imports: [
     CommonModule,
+    FormsModule,
     MatButtonModule,
     MatIconModule,
+    MatSlideToggleModule,
     SymbolsSensCollectionComponent,
     SymbolsAccessoryCollectionComponent,
     ColorBadgeComponent
@@ -40,6 +45,9 @@ export class FiliereEditFormComponent {
   // Output pour la validation
   validated = output<IRelationItem | null>();
   
+  // Spécificité
+  protected isSpecificite = signal<boolean>(false);
+  
   // Valeurs fixes non modifiables
   protected readonly position = 'sur circulaire';
   protected readonly decernement = 'libre sous conditions';
@@ -52,6 +60,7 @@ export class FiliereEditFormComponent {
   
   // Stores pour les dépendances
   private dialog = inject(MatDialog);
+  protected selectedRelationStore = inject(SelectedRelationStore);
   private circulaireColorStore = inject(CirculaireColorStore);
   private colorStore = inject(ColorStore);
   private symbolStore = inject(SymbolStore);
@@ -64,6 +73,9 @@ export class FiliereEditFormComponent {
     effect(() => {
       const relation = this.relation();
       if (!relation) return;
+      
+      // Initialiser la spécificité
+      this.isSpecificite.set(relation.spe ?? false);
       
       // Charger le symbole
       if (relation.symboleId) {
@@ -222,7 +234,7 @@ export class FiliereEditFormComponent {
       positionId: 'position-3', // sur circulaire (valeur fixe)
       placementId: 'placement-1', // libre sous conditions (valeur fixe)
       significationId: undefined,
-      spe: false,
+      spe: this.isSpecificite(),
       note: undefined
     };
     

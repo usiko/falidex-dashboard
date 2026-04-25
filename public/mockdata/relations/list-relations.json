@@ -4,7 +4,8 @@
 		"id": "nat",
 		"lastUpdate": "30/08/2021 20:58",
         "annee":131,
-        "editable":false
+        "editable":true,
+        "national":true
 	},
 	{
 		"name": "toulon",

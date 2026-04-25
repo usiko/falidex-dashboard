@@ -85,7 +85,7 @@ export class App implements OnInit {
         // Initialiser la relation sélectionnée par défaut avec la première relation
         const relations = [data.relationNational, data.relationToulon];
         if (relations.length > 0 && relations[0].id) {
-          this.selectedRelationStore.setSelectedRelationId(relations[0].id,!!relations[0].editable);
+          this.selectedRelationStore.setSelectedRelationId(relations[0].id,!!relations[0].editable,!!relations[0].national);
           this.linkStore.set(relations[0].relations);
         }
 

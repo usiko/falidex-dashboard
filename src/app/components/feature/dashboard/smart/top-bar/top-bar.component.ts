@@ -51,7 +51,7 @@ export class TopBarComponent implements OnInit {
   protected onRelationChange(relationId: string): void {
     const relation = this.relationStore.entityMap()[relationId];
     if (relation) {
-      this.selectedRelationStore.setSelectedRelationId(relationId,!!relation.editable);
+      this.selectedRelationStore.setSelectedRelationId(relationId,!!relation.editable,!!relation.national);
       this.linkStore.set(relation.relations);
       console.log('Relation sélectionnée:', relationId, '- Liens chargés:', relation.relations.length);
     }
