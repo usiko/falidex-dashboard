@@ -4,14 +4,36 @@
   align-items: center;
   gap: 12px;
 }
-
+.relation-select{
+    width: 250px;
+}
 .relation-option {
   display: flex;
   align-items: center;
   justify-content: space-between;
   width: 100%;
   gap: 8px;
+  
+  &.default-relation {
+    color: #3f51b5; // Material primary color
+    font-weight: 500;
+  }
+  
+  .icons {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+  }
 
+  .visibility-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    color: #9e9e9e;
+    flex-shrink: 0;
+  }
+  
   .lock-icon {
     font-size: 18px;
     width: 18px;

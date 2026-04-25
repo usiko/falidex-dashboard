@@ -7,21 +7,31 @@
         (selectionChange)="onRelationChange($event.value)">
         <mat-select-trigger>
           @if (selectedRelation()) {
-            <span class="relation-option">
+            <span class="relation-option" [class.default-relation]="selectedRelation()!.default">
               <span>{{ selectedRelation()!.name}} - {{selectedRelation()!.annee}}</span>
-              @if (!selectedRelation()!.editable) {
-                <mat-icon class="lock-icon">lock</mat-icon>
-              }
+              <span class="icons">
+                @if (selectedRelation()!.visible!== undefined && !selectedRelation()!.visible) {
+                  <mat-icon class="visibility-icon">visibility_off</mat-icon>
+                }
+                @if (!selectedRelation()!.editable) {
+                  <mat-icon class="lock-icon">lock</mat-icon>
+                }
+              </span>
             </span>
           }
         </mat-select-trigger>
         @for (relation of relations(); track relation.id) {
           <mat-option [value]="relation.id">
-            <span class="relation-option">
+            <span class="relation-option" [class.default-relation]="relation.default">
               <span>{{ relation.name}} - {{relation.annee}}</span>
-              @if (!relation.editable) {
-                <mat-icon class="lock-icon">lock</mat-icon>
-              }
+              <span class="icons">
+                @if (relation.visible !== undefined && !relation.visible) {
+                  <mat-icon class="visibility-icon">visibility_off</mat-icon>
+                }
+                @if (!relation.editable) {
+                  <mat-icon class="lock-icon">lock</mat-icon>
+                }
+              </span>
             </span>
           </mat-option>
         }
