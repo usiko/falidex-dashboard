@@ -16,6 +16,9 @@
             @if (detail.significationName) {
               <span class="signification-name">{{ detail.significationName }}</span>
             }
+            @if (detail.spe) {
+              <span class="spe-badge">SPE</span>
+            }
           </div>
           @if (detail.placementName) {
             <div class="placement-line">

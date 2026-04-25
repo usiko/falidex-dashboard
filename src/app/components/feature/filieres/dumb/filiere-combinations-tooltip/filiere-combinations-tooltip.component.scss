@@ -1,6 +1,5 @@
 .combinations-tooltip {
   padding: 8px;
-  max-width: 300px;
   
   .empty {
     color: #999;
@@ -17,6 +16,28 @@
     .combination-item {
       font-size: 12px;
       line-height: 1.4;
+      display: flex;
+      flex-wrap: nowrap;
+      align-items: center;
+      gap: 4px;
+      padding: 6px 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      background: white;
+      white-space: nowrap;
+      flex-wrap: wrap;
+      
+      .spe-badge {
+        display: inline-block;
+        background: #3f51b5;
+        color: white;
+        font-size: 9px;
+        font-weight: 700;
+        padding: 2px 4px;
+        border-radius: 3px;
+        margin-left: 5px;
+        flex-shrink: 0;
+      }
       
       .symbol-name {
         font-weight: 600;
@@ -36,7 +57,7 @@
       
       .colors-container {
         display: inline-flex;
-        flex-wrap: wrap;
+        flex-wrap: nowrap;
         gap: 4px;
         margin-left: 4px;
         vertical-align: middle;

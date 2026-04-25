@@ -66,25 +66,29 @@ export class FiliereItemComponent {
     const combinations: FiliereCombination[] = [];
     
     // Regrouper par symbole et circulaire
-    const grouped = new Map<string, Set<string>>();
+    const grouped = new Map<string, typeof links>();
     
     links.forEach(link => {
       if (!link.symboleId) return;
       
       const key = `${link.symboleId}|${link.circulaireId || ''}`;
       if (!grouped.has(key)) {
-        grouped.set(key, new Set());
+        grouped.set(key, []);
       }
+      grouped.get(key)!.push(link);
     });
     
     // Créer les combinaisons
-    grouped.forEach((_, key) => {
+    grouped.forEach((groupLinks, key) => {
       const [symboleId, circulaireId] = key.split('|');
       
       const symbolName = this.symbolStore.getById(symboleId)()?.name || '';
       const circulaire = circulaireId ? this.circulaireStore.getById(circulaireId)() : null;
       const circulaireName = circulaire?.name || '';
       const matiere = circulaire?.matiere;
+      
+      // Vérifier si au moins un lien a spe=true
+      const hasSpe = groupLinks.some(link => link.spe === true);
       
       // Trouver les couleurs pour ce circulaire
       const colors: ColorInfo[] = [];
@@ -111,7 +115,8 @@ export class FiliereItemComponent {
           matiere,
           colors: colors.filter((c, index, self) => 
             index === self.findIndex((t) => t.name === c.name)
-          )
+          ),
+          hasSpe
         });
       }
     });

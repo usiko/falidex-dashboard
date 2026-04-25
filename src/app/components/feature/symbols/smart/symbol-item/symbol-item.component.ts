@@ -81,23 +81,27 @@ export class SymbolItemComponent {
             const combinations: FiliereCombination[] = [];
             
             // Regrouper par filière et circulaire
-            const grouped = new Map<string, Set<string>>();
+            const grouped = new Map<string, typeof linksWithFiliere>();
             
             linksWithFiliere.forEach(link => {
               const key = `${link.filiereId}|${link.circulaireId || ''}`;
               if (!grouped.has(key)) {
-                grouped.set(key, new Set());
+                grouped.set(key, []);
               }
+              grouped.get(key)!.push(link);
             });
             
             // Créer les combinaisons
-            grouped.forEach((_, key) => {
+            grouped.forEach((groupLinks, key) => {
               const [filiereId, circulaireId] = key.split('|');
               
               const filiereName = filiereId ? this.filiereStore.getById(filiereId)()?.name || '' : '';
               const circulaire = circulaireId ? this.circulaireStore.getById(circulaireId)() : null;
               const circulaireName = circulaire?.name || '';
               const matiere = circulaire?.matiere;
+              
+              // Vérifier si au moins un lien a spe=true
+              const hasSpe = groupLinks.some(link => link.spe === true);
               
               // Trouver les couleurs pour ce circulaire
               const colors: ColorInfo[] = [];
@@ -124,7 +128,8 @@ export class SymbolItemComponent {
                   matiere,
                   colors: colors.filter((c, index, self) => 
                     index === self.findIndex((t) => t.name === c.name)
-                  )
+                  ),
+                  hasSpe
                 });
               }
             });
@@ -140,7 +145,9 @@ export class SymbolItemComponent {
           // Si on a des liens sans filière, créer les PositionDetail
           if (linksWithoutFiliere.length > 0) {
             const details: PositionDetail[] = linksWithoutFiliere.map(link => {
-              const detail: PositionDetail = {};
+              const detail: PositionDetail = {
+                spe: link.spe
+              };
               
               if (link.symboleSensId) {
                 const sens = this.symbolSensStore.getById(link.symboleSensId)();
@@ -182,7 +189,9 @@ export class SymbolItemComponent {
         } else {
           // Pour les autres positions, utiliser PositionDetail
           const details: PositionDetail[] = positionLinks.map(link => {
-            const detail: PositionDetail = {};
+            const detail: PositionDetail = {
+              spe: link.spe
+            };
             
             if (link.symboleSensId) {
               const sens = this.symbolSensStore.getById(link.symboleSensId)();
