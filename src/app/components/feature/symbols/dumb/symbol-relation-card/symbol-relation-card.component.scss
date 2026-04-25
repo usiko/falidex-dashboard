@@ -54,5 +54,10 @@
     gap: 4px;
     margin-left: auto;
     flex-shrink: 0;
+    
+    button:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
   }
 }

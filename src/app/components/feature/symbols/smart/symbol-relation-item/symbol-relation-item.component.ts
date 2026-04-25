@@ -22,6 +22,7 @@ import { SymbolRelationCardComponent } from '../../dumb/symbol-relation-card/sym
 export class SymbolRelationItemComponent {
   linkId = input<string>();
   hideSymbol = input<boolean>(false);
+  editable = input<boolean>(true);
   
   editLink = output<string>();
   deleteLink = output<string>();

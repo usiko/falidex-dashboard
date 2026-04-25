@@ -35,6 +35,7 @@ import { CirculaireStore } from '../../../../../stores/circulaires/circulaires.s
 export class FiliereEditFormComponent {
   filiere = input<IBaseFiliere>();
   relation = input<IRelationItem>();
+  editable = input<boolean>(true);
   
   // Output pour la validation
   validated = output<IRelationItem | null>();

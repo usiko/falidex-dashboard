@@ -2,6 +2,7 @@
     "name": "toulon",
     "id": "tln",
     "annee":131,
+    "editable":true,
     "relations": [{
             "placementId": "placement-1",
             "positionId": "position-3",

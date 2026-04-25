@@ -1,6 +1,7 @@
 @if (linkData()) {
   <app-filiere-link-card 
     [linkData]="linkData()!" 
+    [editable]="editable()" 
     (edit)="editLink.emit(linkId()!)" 
     (delete)="deleteLink.emit(linkId()!)" />
 }

@@ -43,13 +43,15 @@
     @if (selectedSymbole()) {
       <div class="selected-item">
         <span><strong>Sélectionné :</strong> {{ selectedSymbole()!.name }}</span>
-        <button mat-raised-button color="primary" (click)="openSymboleDialog()">
-          <mat-icon>edit</mat-icon>
-          Modifier
-        </button>
+        @if (editable()) {
+          <button mat-raised-button color="primary" (click)="openSymboleDialog()">
+            <mat-icon>edit</mat-icon>
+            Modifier
+          </button>
+        }
       </div>
     } @else {
-      <button mat-raised-button color="primary" (click)="openSymboleDialog()">
+      <button mat-raised-button color="primary" [disabled]="!editable()" (click)="openSymboleDialog()">
         <mat-icon>add</mat-icon>
         Sélectionner un symbole
       </button>
@@ -65,12 +67,15 @@
       @if (selectedSymboleSens()) {
         <div class="selected-item">
           <span><strong>Sélectionné :</strong> {{ selectedSymboleSens()!.name }}</span>
-          <button type="button" (click)="clearSymboleSens()">Retirer</button>
+          <button mat-raised-button color="warn" [disabled]="!editable()" (click)="clearSymboleSens()">
+            <mat-icon>close</mat-icon>
+            Retirer
+          </button>
         </div>
       } @else {
         <p class="hint">Sélectionnez un symbole sens (optionnel)</p>
         <app-symbols-sens-collection 
-          [selectable]="true" 
+          [selectable]="editable()" 
           (selection)="onSymboleSensSelect($event)" />
       }
     </div>
@@ -82,12 +87,15 @@
       @if (selectedSymboleAccessory()) {
         <div class="selected-item">
           <span><strong>Sélectionné :</strong> {{ selectedSymboleAccessory()!.name }}</span>
-          <button type="button" (click)="clearSymboleAccessory()">Retirer</button>
+          <button mat-raised-button color="warn" [disabled]="!editable()" (click)="clearSymboleAccessory()">
+            <mat-icon>close</mat-icon>
+            Retirer
+          </button>
         </div>
       } @else {
         <p class="hint">Sélectionnez un symbole accessoire (optionnel)</p>
         <app-symbols-accessory-collection 
-          [selectable]="true" 
+          [selectable]="editable()" 
           (selection)="onSymboleAccessorySelect($event)" />
       }
     </div>
@@ -105,13 +113,15 @@
             <app-color-badge [color]="color" [matiere]="selectedCirculaire()!.matiere" />
           }
         </span>
-        <button mat-raised-button color="primary" (click)="openCirculaireDialog()">
-          <mat-icon>edit</mat-icon>
-          Modifier
-        </button>
+        @if (editable()) {
+          <button mat-raised-button color="primary" (click)="openCirculaireDialog()">
+            <mat-icon>edit</mat-icon>
+            Modifier
+          </button>
+        }
       </div>
     } @else {
-      <button mat-raised-button color="primary" (click)="openCirculaireDialog()">
+      <button mat-raised-button color="primary" [disabled]="!editable()" (click)="openCirculaireDialog()">
         <mat-icon>add</mat-icon>
         Sélectionner une circulaire
       </button>
@@ -119,10 +129,16 @@
   </div>
   
   <!-- Actions -->
-  <div class="form-actions">
-    <button type="button" class="btn-cancel" (click)="onCancel()">Annuler</button>
-    <button type="button" class="btn-save" [disabled]="!selectedSymbole() || !selectedCirculaire()" (click)="onSubmit()">
-      Enregistrer
-    </button>
-  </div>
+  @if (editable()) {
+    <div class="form-actions">
+      <button type="button" class="btn-cancel" (click)="onCancel()">Annuler</button>
+      <button type="button" class="btn-save" [disabled]="!selectedSymbole() || !selectedCirculaire()" (click)="onSubmit()">
+        Enregistrer
+      </button>
+    </div>
+  } @else {
+    <div class="form-actions">
+      <button type="button" class="btn-cancel" (click)="onCancel()">Retour</button>
+    </div>
+  }
 </div>

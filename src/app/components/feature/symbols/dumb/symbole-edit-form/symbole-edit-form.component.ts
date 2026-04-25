@@ -43,6 +43,7 @@ type RelationMode = 'filiere' | 'signification';
 export class SymboleEditFormComponent {
   symbole = input<IBaseSymbol>();
   relation = input<IRelationItem>();
+  editable = input<boolean>(true);
   
   // Output pour la validation
   validated = output<IRelationItem | null>();

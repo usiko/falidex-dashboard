@@ -21,6 +21,7 @@ import { FiliereLinkItemComponent } from '../../smart/filiere-link-item/filiere-
 export class FiliereDetailCardComponent {
   filiere = input<IBaseFiliere>();
   links = input<IRelationItem[]>([]);
+  editable = input<boolean>(true);
   
   addLink = output<void>();
   editLink = output<string>();

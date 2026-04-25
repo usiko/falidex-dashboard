@@ -19,6 +19,7 @@ import { ColorBadgeComponent } from '../../../../shared/color-badge/color-badge.
 })
 export class SymbolRelationCardComponent {
   relationData = input<SymbolRelationData>();
+  editable = input<boolean>(true);
   
   edit = output<void>();
   delete = output<void>();

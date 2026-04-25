@@ -35,13 +35,13 @@
       @if (selectedSymboleSens()) {
         <div class="selected-item">
           <span><strong>Sélectionné :</strong> {{ selectedSymboleSens()!.name }}</span>
-          <button mat-raised-button color="warn" (click)="clearSymboleSens()">
+          <button mat-raised-button color="warn" [disabled]="!editable()" (click)="clearSymboleSens()">
             <mat-icon>close</mat-icon>
             Retirer
           </button>
         </div>
       } @else {
-        <button mat-raised-button color="primary" (click)="openSymboleSensDialog()">
+        <button mat-raised-button color="primary" [disabled]="!editable()" (click)="openSymboleSensDialog()">
           <mat-icon>add</mat-icon>
           Sélectionner un symbole sens
         </button>
@@ -55,13 +55,13 @@
       @if (selectedSymboleAccessory()) {
         <div class="selected-item">
           <span><strong>Sélectionné :</strong> {{ selectedSymboleAccessory()!.name }}</span>
-          <button mat-raised-button color="warn" (click)="clearSymboleAccessory()">
+          <button mat-raised-button color="warn" [disabled]="!editable()" (click)="clearSymboleAccessory()">
             <mat-icon>close</mat-icon>
             Retirer
           </button>
         </div>
       } @else {
-        <button mat-raised-button color="primary" (click)="openSymboleAccessoryDialog()">
+        <button mat-raised-button color="primary" [disabled]="!editable()" (click)="openSymboleAccessoryDialog()">
           <mat-icon>add</mat-icon>
           Sélectionner un symbole accessoire
         </button>
@@ -79,7 +79,7 @@
       @if (selectedFiliere()) {
         <div class="selected-item">
           <span><strong>Sélectionné :</strong> {{ selectedFiliere()!.name }}</span>
-          <button mat-raised-button color="warn" (click)="clearFiliere()">
+          <button mat-raised-button color="warn" [disabled]="!editable()" (click)="clearFiliere()">
             <mat-icon>close</mat-icon>
             Retirer
           </button>
@@ -89,7 +89,7 @@
           mat-raised-button 
           color="primary" 
           (click)="openFiliereDialog()"
-          [disabled]="!!selectedSignification()">
+          [disabled]="!editable() || !!selectedSignification()">
           <mat-icon>add</mat-icon>
           Sélectionner une filière
         </button>
@@ -111,7 +111,7 @@
       @if (selectedSignification()) {
         <div class="selected-item">
           <span><strong>Sélectionné :</strong> {{ selectedSignification()!.content }}</span>
-          <button mat-raised-button color="warn" (click)="clearSignification()">
+          <button mat-raised-button color="warn" [disabled]="!editable()" (click)="clearSignification()">
             <mat-icon>close</mat-icon>
             Retirer
           </button>
@@ -121,7 +121,7 @@
           mat-raised-button 
           color="primary" 
           (click)="openSignificationDialog()"
-          [disabled]="!!selectedFiliere()">
+          [disabled]="!editable() || !!selectedFiliere()">
           <mat-icon>add</mat-icon>
           Sélectionner une signification
         </button>
@@ -146,13 +146,15 @@
               <app-color-badge [color]="color" [matiere]="selectedCirculaire()!.matiere" />
             }
           </span>
-          <button mat-raised-button color="primary" (click)="openCirculaireDialog()">
-            <mat-icon>edit</mat-icon>
-            Modifier
-          </button>
+          @if (editable()) {
+            <button mat-raised-button color="primary" (click)="openCirculaireDialog()">
+              <mat-icon>edit</mat-icon>
+              Modifier
+            </button>
+          }
         </div>
       } @else {
-        <button mat-raised-button color="primary" (click)="openCirculaireDialog()">
+        <button mat-raised-button color="primary" [disabled]="!editable()" (click)="openCirculaireDialog()">
           <mat-icon>add</mat-icon>
           Sélectionner une circulaire
         </button>
@@ -187,13 +189,13 @@
         @if (selectedPosition()) {
           <div class="selected-item">
             <span><strong>Sélectionné :</strong> {{ selectedPosition()!.name }}</span>
-            <button mat-raised-button color="warn" (click)="clearPosition()">
+            <button mat-raised-button color="warn" [disabled]="!editable()" (click)="clearPosition()">
               <mat-icon>close</mat-icon>
               Retirer
             </button>
           </div>
         } @else {
-          <button mat-raised-button color="primary" (click)="openPositionDialog()">
+          <button mat-raised-button color="primary" [disabled]="!editable()" (click)="openPositionDialog()">
             <mat-icon>add</mat-icon>
             Sélectionner une position
           </button>
@@ -207,13 +209,13 @@
         @if (selectedPlacement()) {
           <div class="selected-item">
             <span><strong>Sélectionné :</strong> {{ selectedPlacement()!.name }}</span>
-            <button mat-raised-button color="warn" (click)="clearPlacement()">
+            <button mat-raised-button color="warn" [disabled]="!editable()" (click)="clearPlacement()">
               <mat-icon>close</mat-icon>
               Retirer
             </button>
           </div>
         } @else {
-          <button mat-raised-button color="primary" (click)="openPlacementDialog()">
+          <button mat-raised-button color="primary" [disabled]="!editable()" (click)="openPlacementDialog()">
             <mat-icon>add</mat-icon>
             Sélectionner un décernement
           </button>
@@ -223,10 +225,16 @@
   }
   
   <!-- Actions -->
-  <div class="form-actions">
-    <button type="button" class="btn-cancel" (click)="onCancel()">Annuler</button>
-    <button type="button" class="btn-save" [disabled]="!isFormValid()" (click)="onSubmit()">
-      Enregistrer
-    </button>
-  </div>
+  @if (editable()) {
+    <div class="form-actions">
+      <button type="button" class="btn-cancel" (click)="onCancel()">Annuler</button>
+      <button type="button" class="btn-save" [disabled]="!isFormValid()" (click)="onSubmit()">
+        Enregistrer
+      </button>
+    </div>
+  } @else {
+    <div class="form-actions">
+      <button type="button" class="btn-cancel" (click)="onCancel()">Retour</button>
+    </div>
+  }
 </div>

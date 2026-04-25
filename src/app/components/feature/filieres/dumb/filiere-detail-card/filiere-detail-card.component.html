@@ -1,7 +1,7 @@
 <div class="filiere-detail">
   <div class="header">
     <h1 class="filiere-title">{{ filiere()?.name }}</h1>
-    <button mat-raised-button color="primary" (click)="addLink.emit()">
+    <button mat-raised-button color="primary" [disabled]="!editable()" (click)="addLink.emit()">
       <mat-icon>add</mat-icon>
       Ajouter une relation
     </button>
@@ -12,6 +12,7 @@
       @for (link of links(); track link.id) {
         <app-filiere-link-item 
           [linkId]="link.id" 
+          [editable]="editable()" 
           (editLink)="editLink.emit($event)" 
           (deleteLink)="deleteLink.emit($event)" />
       }

@@ -5,6 +5,7 @@ import { FiliereStore } from '../../../../../stores/filieres/filieres.store';
 import { linkStore } from '../../../../../stores/links/links.store';
 import { FiliereDetailCardComponent } from '../../dumb/filiere-detail-card/filiere-detail-card.component';
 import { ConfirmDialogComponent, ConfirmDialogData } from '../../../../shared/confirm-dialog/confirm-dialog.component';
+import { SelectedRelationStore } from '../../../../../stores/selected-relation/selected-relation.store';
 
 @Component({
   selector: 'app-filiere-detail',
@@ -22,6 +23,7 @@ export class FiliereDetailComponent {
   private readonly linksStore = inject(linkStore);
   private readonly dialog = inject(MatDialog);
   private readonly router = inject(Router);
+  private readonly selectedRelationStore = inject(SelectedRelationStore);
   
   protected readonly filiere = computed(() => {
     const id = this.id();
@@ -34,6 +36,8 @@ export class FiliereDetailComponent {
     if (!id) return [];
     return this.linksStore.getByFiliereId(id)();
   });
+  
+  protected readonly editable = this.selectedRelationStore.isEditable;
   
   onEditLink(linkId: string) {
     this.router.navigate(['/relation', linkId, 'filiere', 'edit']);

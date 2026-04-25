@@ -5,6 +5,7 @@ import { linkStore } from '../../../../../stores/links/links.store';
 import { SymbolStore } from '../../../../../stores/symbols/symbols.store';
 import { SymboleEditFormComponent } from '../../../symbols/dumb/symbole-edit-form/symbole-edit-form.component';
 import { IRelationItem } from '../../../../../models/data/base-relations.models';
+import { SelectedRelationStore } from '../../../../../stores/selected-relation/selected-relation.store';
 
 @Component({
   selector: 'app-relation-symbole-edit',
@@ -23,6 +24,7 @@ export class RelationSymboleEditComponent {
   private readonly linksStore = inject(linkStore);
   private readonly symboleStore = inject(SymbolStore);
   private readonly router = inject(Router);
+  private readonly selectedRelationStore = inject(SelectedRelationStore);
   
   protected readonly relation = computed(() => {
     const id = this.id();
@@ -45,6 +47,8 @@ export class RelationSymboleEditComponent {
     
     return undefined;
   });
+  
+  protected readonly editable = this.selectedRelationStore.isEditable;
   
   protected onValidated(relationData: IRelationItem | null): void {
     if (!relationData) {

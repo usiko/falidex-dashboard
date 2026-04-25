@@ -2,6 +2,7 @@
     "name": "national",
     "id": "nat",
     "annee":131,
+    "editable":false,
     "relations": [{
             "placementId": "placement-1",
             "positionId": "position-3",
