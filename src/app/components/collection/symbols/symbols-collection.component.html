@@ -1,9 +1,16 @@
-<div class="collection">
+<div class="gallery">
   @for (symbol of symbols(); track symbol.id) {
-    <div class="collection-item" 
+    <div class="gallery-item" 
          [class.selectable]="selectable()"
          (click)="onSelect(symbol)">
-      {{ symbol.name }}
+      @if (symbol.imgs && symbol.imgs.length > 0) {
+        <img [src]="symbol.imgs[0].url" [alt]="symbol.name" class="symbol-image" />
+      } @else {
+        <div class="symbol-image placeholder">
+          <span>?</span>
+        </div>
+      }
+      <div class="symbol-name">{{ symbol.name }}</div>
     </div>
   }
 </div>

@@ -2,15 +2,10 @@
 
 <mat-dialog-content>
   <div class="collection-container">
-    <ng-container *ngComponentOutlet="data.collectionComponent; 
-                                       inputs: { selectable: true }; 
-                                       outputs: { selection: onItemSelected.bind(this) }" />
+    <ng-container #collectionContainer></ng-container>
   </div>
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-  <button mat-button (click)="onCancel()">Annuler</button>
-  <button mat-raised-button color="primary" (click)="onConfirm()" [disabled]="!selectedItem">
-    Sélectionner
-  </button>
+  <button mat-button mat-dialog-close>Annuler</button>
 </mat-dialog-actions>

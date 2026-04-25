@@ -4,6 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { IBaseFiliere, IBaseSymbol, IBaseSymbolSens, IBaseSymbolAcessory, IBaseCirculaire, IBaseCirculaireColor, IBaseColor } from '../../../../../models/data/base-data-models';
+import { ColorBadgeComponent, ColorBadgeData } from '../../../../shared/color-badge/color-badge.component';
 import { IRelationItem } from '../../../../../models/data/base-relations.models';
 import { SymbolsCollectionComponent } from '../../../../collection/symbols/symbols-collection.component';
 import { SymbolsSensCollectionComponent } from '../../../../collection/symbols-sens/symbols-sens-collection.component';
@@ -25,7 +26,8 @@ import { CirculaireStore } from '../../../../../stores/circulaires/circulaires.s
     MatButtonModule,
     MatIconModule,
     SymbolsSensCollectionComponent,
-    SymbolsAccessoryCollectionComponent
+    SymbolsAccessoryCollectionComponent,
+    ColorBadgeComponent
   ],
   templateUrl: './filiere-edit-form.component.html',
   styleUrl: './filiere-edit-form.component.scss'
@@ -95,6 +97,32 @@ export class FiliereEditFormComponent {
     );
   });
   
+  // Computed pour récupérer les couleurs du circulaire sélectionné
+  protected selectedCirculaireColors = computed((): ColorBadgeData[] => {
+    const circulaire = this.selectedCirculaire();
+    if (!circulaire) return [];
+    
+    const circulaireColors = this.circulaireColorStore.entities().filter(
+      cc => cc.circulaireId === circulaire.id
+    );
+    const colors: ColorBadgeData[] = [];
+    
+    circulaireColors.forEach(cc => {
+      cc.colorIds.forEach(colorId => {
+        const color = this.colorStore.getById(colorId)();
+        if (color && color.name && color.colorData) {
+          colors.push({
+            id: color.id,
+            name: color.name,
+            colorData: color.colorData
+          });
+        }
+      });
+    });
+    
+    return colors;
+  });
+  
   // Computed pour afficher une ligne circulaire + circulaire-color + colors
   protected circulaireDisplay = computed(() => {
     const circulaire = this.selectedCirculaire();
@@ -124,10 +152,11 @@ export class FiliereEditFormComponent {
       }
     );
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.selectedSymbole.set(result);
-      }
+    // Écouter l'événement de sélection du dialog
+    const subscription = dialogRef.componentInstance.itemSelected.subscribe((symbole: IBaseSymbol) => {
+      this.selectedSymbole.set(symbole);
+      dialogRef.close(symbole);
+      subscription.unsubscribe();
     });
   }
   
@@ -151,10 +180,11 @@ export class FiliereEditFormComponent {
       }
     );
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.selectedCirculaire.set(result);
-      }
+    // Écouter l'événement de sélection du dialog
+    const subscription = dialogRef.componentInstance.itemSelected.subscribe((circulaire: IBaseCirculaire) => {
+      this.selectedCirculaire.set(circulaire);
+      dialogRef.close(circulaire);
+      subscription.unsubscribe();
     });
   }
   

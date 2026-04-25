@@ -99,34 +99,17 @@
     
     @if (selectedCirculaire()) {
       <div class="selected-item">
-        <span><strong>Sélectionné :</strong> {{ selectedCirculaire()!.name }}</span>
+        <span>
+          <strong>Sélectionné :</strong> {{ selectedCirculaire()!.name }}
+          @for (color of selectedCirculaireColors(); track color.id) {
+            <app-color-badge [color]="color" [matiere]="selectedCirculaire()!.matiere" />
+          }
+        </span>
         <button mat-raised-button color="primary" (click)="openCirculaireDialog()">
           <mat-icon>edit</mat-icon>
           Modifier
         </button>
       </div>
-      
-      <!-- Affichage circulaire + circulaire-color + colors -->
-      @if (circulaireDisplay() && circulaireDisplay()!.length > 0) {
-        <div class="circulaire-details">
-          <h3>Détails circulaire, circulaire-color et couleurs</h3>
-          @for (item of circulaireDisplay(); track item.circulaireColor.id) {
-            <div class="circulaire-line">
-              <span class="circulaire-name">{{ selectedCirculaire()!.name }}</span>
-              <span class="separator">→</span>
-              <span class="circulaire-color-name">{{ item.circulaireColor.name }}</span>
-              <span class="separator">→</span>
-              <span class="colors">
-                @for (color of item.colors; track color.id) {
-                  <span class="color-badge" [style.background-color]="color.colorData">
-                    {{ color.name }}
-                  </span>
-                }
-              </span>
-            </div>
-          }
-        </div>
-      }
     } @else {
       <button mat-raised-button color="primary" (click)="openCirculaireDialog()">
         <mat-icon>add</mat-icon>

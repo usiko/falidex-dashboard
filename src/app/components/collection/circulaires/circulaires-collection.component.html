@@ -1,9 +1,17 @@
 <div class="collection">
-  @for (circulaire of circulaires(); track circulaire.id) {
+  @for (item of circulaires(); track item.circulaire.id) {
     <div class="collection-item" 
          [class.selectable]="selectable()"
-         (click)="onSelect(circulaire)">
-      {{ circulaire.name }}
+         (click)="onSelect(item.circulaire)">
+      <div class="circulaire-info">
+        <span class="circulaire-name">{{ item.circulaire.name }}</span>
+      </div>
+      <div class="circulaire-colors">
+        {{item.colors|json}}
+        @for (color of item.colors; track $index) {
+          <app-color-badge [color]="color" [matiere]="item.circulaire.matiere" />
+        }
+      </div>
     </div>
   }
 </div>
