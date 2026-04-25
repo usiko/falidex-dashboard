@@ -5,8 +5,25 @@
       <mat-select 
         [value]="selectedRelationId()" 
         (selectionChange)="onRelationChange($event.value)">
+        <mat-select-trigger>
+          @if (selectedRelation()) {
+            <span class="relation-option">
+              <span>{{ selectedRelation()!.name}} - {{selectedRelation()!.annee}}</span>
+              @if (!selectedRelation()!.editable) {
+                <mat-icon class="lock-icon">lock</mat-icon>
+              }
+            </span>
+          }
+        </mat-select-trigger>
         @for (relation of relations(); track relation.id) {
-          <mat-option [value]="relation.id">{{ relation.name}} - {{relation.annee}}</mat-option>
+          <mat-option [value]="relation.id">
+            <span class="relation-option">
+              <span>{{ relation.name}} - {{relation.annee}}</span>
+              @if (!relation.editable) {
+                <mat-icon class="lock-icon">lock</mat-icon>
+              }
+            </span>
+          </mat-option>
         }
       </mat-select>
     </mat-form-field>

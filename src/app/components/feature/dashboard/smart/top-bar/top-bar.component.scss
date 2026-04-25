@@ -5,6 +5,22 @@
   gap: 12px;
 }
 
+.relation-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 8px;
+
+  .lock-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    color: #ff9800;
+    flex-shrink: 0;
+  }
+}
+
 .spacer {
   flex: 1;
 }

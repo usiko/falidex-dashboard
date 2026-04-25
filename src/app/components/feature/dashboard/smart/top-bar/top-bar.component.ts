@@ -35,6 +35,11 @@ export class TopBarComponent implements OnInit {
 
   protected readonly relations = this.relationStore.entities;
   protected readonly selectedRelationId = this.selectedRelationStore.selectedRelationId;
+  protected readonly selectedRelation = computed(() => {
+    const id = this.selectedRelationId();
+    if (!id) return null;
+    return this.relationStore.entityMap()[id];
+  });
 
   ngOnInit(): void {
     // Sélectionner la première relation par défaut
