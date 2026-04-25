@@ -1,5 +1,5 @@
-@if (relation() && filiere()) {
-  <app-filiere-edit-form [relation]="relation()!" [filiere]="filiere()!" />
+@if (filiere()) {
+  <app-filiere-edit-form [relation]="relation()" [filiere]="filiere()!" />
 } @else {
-  <div class="loading">Chargement de la relation...</div>
+  <div class="loading">Chargement...</div>
 }

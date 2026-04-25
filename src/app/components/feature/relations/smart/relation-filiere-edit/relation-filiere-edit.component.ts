@@ -15,7 +15,8 @@ import { FiliereEditFormComponent } from '../../../filieres/dumb/filiere-edit-fo
   styleUrl: './relation-filiere-edit.component.scss'
 })
 export class RelationFiliereEditComponent {
-  id = input<string>();
+  id = input<string | null>();
+  filiereId = input<string | null>();
   
   private readonly linksStore = inject(linkStore);
   private readonly filiereStore = inject(FiliereStore);
@@ -27,8 +28,18 @@ export class RelationFiliereEditComponent {
   });
   
   protected readonly filiere = computed(() => {
+    // Si on a une relation, récupérer la filière depuis la relation
     const relation = this.relation();
-    if (!relation?.filiereId) return undefined;
-    return this.filiereStore.getById(relation.filiereId)();
+    if (relation?.filiereId) {
+      return this.filiereStore.getById(relation.filiereId)();
+    }
+    
+    // Sinon, utiliser le filiereId passé en input (mode création)
+    const directFiliereId = this.filiereId();
+    if (directFiliereId) {
+      return this.filiereStore.getById(directFiliereId)();
+    }
+    
+    return undefined;
   });
 }

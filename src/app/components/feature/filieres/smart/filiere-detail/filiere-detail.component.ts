@@ -62,15 +62,11 @@ export class FiliereDetailComponent {
   
   onAddLink() {
     const filiereId = this.id();
-    if (!filiereId) return;
-    
-    // Créer une nouvelle relation avec le filiereId
-    const newRelationId = this.linksStore.create({
-      filiereId: filiereId,
-      // Les autres champs seront remplis dans le formulaire
-    });
-    
+    if (!filiereId) return;    
     // Naviguer vers le formulaire d'édition de la nouvelle relation
-    this.router.navigate(['/relation', newRelationId, 'filiere', 'edit']);
+    
+    this.router.navigate(['/relation','filiere', 'new'], {
+      queryParams: { filiereId }
+    });
   }
 }

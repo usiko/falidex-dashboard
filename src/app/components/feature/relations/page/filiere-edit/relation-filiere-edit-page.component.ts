@@ -23,4 +23,10 @@ export class RelationFiliereEditPageComponent {
       map(params => params.get('id'))
     )
   );
+  
+  protected readonly filiereId = toSignal(
+    this.route.queryParamMap.pipe(
+      map(params => params.get('filiereId'))
+    )
+  );
 }
