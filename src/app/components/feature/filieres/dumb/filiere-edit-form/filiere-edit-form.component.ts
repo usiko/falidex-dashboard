@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject, input, signal } from '@angular/core';
+import { Component, computed, effect, inject, input, output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
@@ -35,6 +35,9 @@ import { CirculaireStore } from '../../../../../stores/circulaires/circulaires.s
 export class FiliereEditFormComponent {
   filiere = input<IBaseFiliere>();
   relation = input<IRelationItem>();
+  
+  // Output pour la validation
+  validated = output<IRelationItem | null>();
   
   // Valeurs fixes non modifiables
   protected readonly position = 'sur circulaire';
@@ -195,5 +198,37 @@ export class FiliereEditFormComponent {
   
   protected clearSymboleAccessory(): void {
     this.selectedSymboleAccessory.set(null);
+  }
+  
+  // Gestion de la validation du formulaire
+  protected onSubmit(): void {
+    const symbole = this.selectedSymbole();
+    const circulaire = this.selectedCirculaire();
+    const filiere = this.filiere();
+    
+    // Validation : symbole et circulaire sont obligatoires
+    if (!symbole || !circulaire || !filiere) {
+      return;
+    }
+    
+    const relationData: IRelationItem = {
+      id: this.relation()?.id || '', // Garder l'id existant ou chaîne vide pour création
+      filiereId: filiere.id,
+      symboleId: symbole.id,
+      circulaireId: circulaire.id,
+      symboleSensId: this.selectedSymboleSens()?.id,
+      symboleAccessoryId: this.selectedSymboleAccessory()?.id,
+      positionId: undefined, // Peut être ajouté plus tard si nécessaire
+      placementId: undefined,
+      significationId: undefined,
+      spe: false,
+      note: undefined
+    };
+    
+    this.validated.emit(relationData);
+  }
+  
+  protected onCancel(): void {
+    this.validated.emit(null);
   }
 }

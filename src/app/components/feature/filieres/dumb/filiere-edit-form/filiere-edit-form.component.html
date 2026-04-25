@@ -120,8 +120,8 @@
   
   <!-- Actions -->
   <div class="form-actions">
-    <button type="button" class="btn-cancel">Annuler</button>
-    <button type="submit" class="btn-save" [disabled]="!selectedSymbole() || !selectedCirculaire()">
+    <button type="button" class="btn-cancel" (click)="onCancel()">Annuler</button>
+    <button type="button" class="btn-save" [disabled]="!selectedSymbole() || !selectedCirculaire()" (click)="onSubmit()">
       Enregistrer
     </button>
   </div>
