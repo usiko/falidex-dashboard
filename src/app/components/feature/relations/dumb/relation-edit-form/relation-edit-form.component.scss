@@ -93,6 +93,11 @@
       align-items: center;
       justify-content: space-between;
       margin-bottom: 16px;
+
+      button[mat-mini-fab]:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
     }
 
     .section-title {
@@ -127,18 +132,42 @@
     .specificite-card {
       position: relative;
       padding: 16px;
+      padding-top: 48px;
       background: white;
       border-radius: 6px;
       border: 1px solid #ddd;
 
-      .delete-button {
+      .card-actions {
         position: absolute;
         top: 8px;
         right: 8px;
+        display: flex;
+        gap: 4px;
+      }
+
+      .edit-button {
+        color: #1976d2;
+
+        &:hover:not(:disabled) {
+          background-color: #e3f2fd;
+        }
+
+        &:disabled {
+          color: #bdbdbd;
+          cursor: not-allowed;
+        }
+      }
+
+      .delete-button {
         color: #d32f2f;
 
-        &:hover {
+        &:hover:not(:disabled) {
           background-color: #ffebee;
+        }
+
+        &:disabled {
+          color: #bdbdbd;
+          cursor: not-allowed;
         }
       }
 

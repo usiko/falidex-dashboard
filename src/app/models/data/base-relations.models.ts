@@ -31,7 +31,7 @@ export interface IRelationData {
     visible:boolean;
     editable:boolean;
     national:boolean;
-    ville:string
+    ville?:string
     relations: IRelationItem[];
     specificites?: IBaseCodeSpe[];
 }

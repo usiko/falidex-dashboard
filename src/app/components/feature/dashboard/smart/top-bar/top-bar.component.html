@@ -6,7 +6,7 @@
         [value]="selectedRelationId()" 
         (selectionChange)="onRelationChange($event.value)">
         @for (relation of relations(); track relation.id) {
-          <mat-option [value]="relation.id">{{ relation.name }}</mat-option>
+          <mat-option [value]="relation.id">{{ relation.name}} - {{relation.annee}}</mat-option>
         }
       </mat-select>
     </mat-form-field>

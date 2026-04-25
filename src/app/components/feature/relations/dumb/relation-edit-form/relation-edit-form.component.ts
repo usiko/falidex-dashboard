@@ -1,4 +1,4 @@
-import { Component, input, output, effect } from '@angular/core';
+import { Component, input, output, effect, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -7,8 +7,11 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatDialog } from '@angular/material/dialog';
 import { IRelationData } from '../../../../../models/data/base-relations.models';
 import { IBaseCodeSpe } from '../../../../../models/data/base-data-models';
+import { ConfirmDialogComponent, ConfirmDialogData } from '../../../../shared/confirm-dialog/confirm-dialog.component';
+import { CodeSpeEditDialogComponent, CodeSpeEditDialogData } from '../../../../shared/code-spe-edit-dialog/code-spe-edit-dialog.component';
 
 @Component({
   selector: 'app-relation-edit-form',
@@ -32,6 +35,9 @@ export class RelationEditFormComponent {
   // Output pour la validation
   validated = output<IRelationData | null>();
   
+  // Inject MatDialog
+  private dialog = inject(MatDialog);
+  
   // Propriétés pour les champs du formulaire
   protected name = '';
   protected annee = new Date().getFullYear();
@@ -40,7 +46,7 @@ export class RelationEditFormComponent {
   protected defaultRelation = false;
   protected visible = true;
   protected editable = true;
-  protected specificites: IBaseCodeSpe[] = [];
+  protected specificites = signal<IBaseCodeSpe[]>([]);
   
   constructor() {
     // Initialiser les champs à partir de la relation
@@ -55,7 +61,7 @@ export class RelationEditFormComponent {
       this.defaultRelation = rel.default || false;
       this.visible = rel.visible ?? true;
       this.editable = rel.editable ?? true;
-      this.specificites = rel.specificites ? [...rel.specificites] : [];
+      this.specificites.set(rel.specificites ? [...rel.specificites] : []);
     });
   }
   
@@ -72,7 +78,7 @@ export class RelationEditFormComponent {
       default: this.defaultRelation,
       visible: this.visible,
       editable: this.editable,
-      specificites: this.specificites
+      specificites: this.specificites()
     };
     
     this.validated.emit(relationData);
@@ -82,16 +88,65 @@ export class RelationEditFormComponent {
     this.national = value;
     if (value) {
       this.name = 'national';
+      this.ville = '';
     }
   }
   
   protected onDeleteSpecificite(id: string): void {
-    this.specificites = this.specificites.filter(spe => spe.id !== id);
+    const dialogData: ConfirmDialogData = {
+      title: 'Confirmation de suppression',
+      message: 'Êtes-vous sûr de vouloir supprimer cette spécificité ?',
+      confirmText: 'Supprimer',
+      cancelText: 'Annuler'
+    };
+    
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: dialogData,
+      width: '400px'
+    });
+    
+    dialogRef.afterClosed().subscribe(confirmed => {
+      if (confirmed) {
+        this.specificites.update(list => list.filter(spe => spe.id !== id));
+      }
+    });
+  }
+  
+  protected onEditSpecificite(spe: IBaseCodeSpe): void {
+    const dialogData: CodeSpeEditDialogData = {
+      codeSpe: spe,
+      mode: 'edit'
+    };
+    
+    const dialogRef = this.dialog.open(CodeSpeEditDialogComponent, {
+      data: dialogData,
+      width: '600px'
+    });
+    
+    dialogRef.afterClosed().subscribe((result: IBaseCodeSpe | null) => {
+      if (result) {
+        // Remplacer la spécificité modifiée en créant un nouveau tableau
+        this.specificites.update(list => list.map(s => s.id === spe.id ? result : s));
+      }
+    });
   }
   
   protected onAddSpecificite(): void {
-    // TODO: Ouvrir un dialog pour ajouter une spécificité
-    console.log('Ajouter une spécificité');
+    const dialogData: CodeSpeEditDialogData = {
+      mode: 'add'
+    };
+    
+    const dialogRef = this.dialog.open(CodeSpeEditDialogComponent, {
+      data: dialogData,
+      width: '600px'
+    });
+    
+    dialogRef.afterClosed().subscribe((result: IBaseCodeSpe | null) => {
+      if (result) {
+        // Ajouter la nouvelle spécificité
+        this.specificites.update(list => [...list, result]);
+      }
+    });
   }
   
   protected onCancel(): void {

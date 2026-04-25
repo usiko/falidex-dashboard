@@ -1,0 +1,19 @@
+.code-spe-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px 0;
+  min-width: 500px;
+
+  .full-width {
+    width: 100%;
+  }
+}
+
+mat-dialog-content {
+  padding: 0 24px;
+}
+
+mat-dialog-actions {
+  padding: 16px 24px;
+}
