@@ -1,0 +1,8 @@
+@if (symbole()) {
+  <app-symbole-edit-form 
+    [relation]="relation()" 
+    [symbole]="symbole()!" 
+    (validated)="onValidated($event)" />
+} @else {
+  <div class="loading">Chargement...</div>
+}

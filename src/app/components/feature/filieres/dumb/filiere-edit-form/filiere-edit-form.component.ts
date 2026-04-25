@@ -218,8 +218,8 @@ export class FiliereEditFormComponent {
       circulaireId: circulaire.id,
       symboleSensId: this.selectedSymboleSens()?.id,
       symboleAccessoryId: this.selectedSymboleAccessory()?.id,
-      positionId: undefined, // Peut être ajouté plus tard si nécessaire
-      placementId: undefined,
+      positionId: 'position-3', // sur circulaire (valeur fixe)
+      placementId: 'placement-1', // libre sous conditions (valeur fixe)
       significationId: undefined,
       spe: false,
       note: undefined

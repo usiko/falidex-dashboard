@@ -23,6 +23,14 @@ export const routes: Routes = [
     loadComponent: () => import('./components/feature/symbols/page/detail/symbol-detail-page.component').then(m => m.SymbolDetailPageComponent)
   },
   {
+    path: 'relation/:id/symbole/edit',
+    loadComponent: () => import('./components/feature/relations/page/symbole-edit/relation-symbole-edit-page.component').then(m => m.RelationSymboleEditPageComponent)
+  },
+  {
+    path: 'relation/symbole/new',
+    loadComponent: () => import('./components/feature/relations/page/symbole-edit/relation-symbole-edit-page.component').then(m => m.RelationSymboleEditPageComponent)
+  },
+  {
     path: 'relation/:id/edit',
     loadComponent: () => import('./components/feature/relations/page/edit/relation-edit-page.component').then(m => m.RelationEditPageComponent)
   },

@@ -38,7 +38,7 @@ export class SymbolDetailComponent {
   });
   
   onEditLink(linkId: string) {
-    this.router.navigate(['/relation', linkId, 'edit']);
+    this.router.navigate(['/relation', linkId, 'symbole', 'edit']);
   }
   
   onDeleteLink(linkId: string) {
@@ -63,7 +63,12 @@ export class SymbolDetailComponent {
   }
   
   onAddLink() {
-    console.log('Ajouter une relation pour le symbole:', this.id());
-    // TODO: Implémenter la logique d'ajout
+    const symboleId = this.id();
+    if (!symboleId) return;
+    
+    // Naviguer vers le formulaire de création de la nouvelle relation
+    this.router.navigate(['/relation', 'symbole', 'new'], {
+      queryParams: { symboleId }
+    });
   }
 }
