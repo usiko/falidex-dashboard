@@ -1,0 +1,21 @@
+{
+     "urls": {
+        "dataServer": "/mockdata",
+        "pictureServer": "https://resources.falidex.fr/index.php"
+    },
+     "paths": {
+        "circulaires": "items/circulaires.json",
+        "circulaireColors": "items/circulaires-colors.json",
+        "symbols": "items/symboles.json",
+        "symbolSens": "items/symboles-sens.json",
+        "symbolAccessories": "items/symbole-accessoire.json",
+        "significations": "items/significations.json",
+        "filieres": "items/filieres.json",
+        "colors": "items/colors.json",
+        "placements": "items/placements.json",
+        "positions": "items/positions.json",
+        "dataLink": "relations/list-relations.json",
+        "dataLinkItem": "relations/national.json",
+        "token": "token/token.json"
+    }
+}

@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { forkJoin } from 'rxjs';
+import { forkJoin, mergeMap } from 'rxjs';
 import { TopBarComponent } from './components/feature/dashboard/smart/top-bar/top-bar.component';
 import { DataService } from './services/data/data.service';
 import { CirculaireColorStore } from './stores/circulaires-colors/circulaires-colors.store';
@@ -17,6 +17,7 @@ import { SignificationStore } from './stores/significations/significations.store
 import { SymbolAccessoryStore } from './stores/symbols-accessory/symbols-accessory.store';
 import { SymbolSensStore } from './stores/symbols-sens/symbols-sens.store';
 import { SymbolStore } from './stores/symbols/symbols.store';
+import { AuthService } from './services/auth/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -42,6 +43,7 @@ export class App implements OnInit {
   private readonly relationDataStore = inject(RelationDataStore);
   private readonly linkStore = inject(linkStore);
   private readonly selectedRelationStore = inject(SelectedRelationStore);
+  private readonly authService = inject(AuthService);
 
 
   ngOnInit(): void {
@@ -50,7 +52,8 @@ export class App implements OnInit {
 
   private loadAllData(): void {
     // Charger toutes les données en parallèle
-    forkJoin({
+    this.authService.authToken().pipe(mergeMap(()=>{
+        return     forkJoin({
       circulaires: this.dataService.getCirculaires(),
       filieres: this.dataService.getFilieres(),
       symbols: this.dataService.getSymboles(),
@@ -64,7 +67,8 @@ export class App implements OnInit {
       listRelations: this.dataService.getListRelations(),
       relationNational: this.dataService.getRelationNational(),
       relationToulon: this.dataService.getRelationToulon()
-    }).subscribe({
+    })
+    })).subscribe({
       next: (data) => {
         // Remplir les stores avec les données
         this.circulaireStore.set(data.circulaires);

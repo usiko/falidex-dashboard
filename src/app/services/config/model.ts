@@ -5,7 +5,7 @@ export interface IAppConfig {
 	};
     paths: {
 		circulaires: string;
-		circualireColors: string;
+		circulaireColors: string;
 		symbols: string;
 		symbolSens: string;
 		symbolAccessories: string;
