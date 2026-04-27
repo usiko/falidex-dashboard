@@ -17,7 +17,6 @@ import { SignificationStore } from './stores/significations/significations.store
 import { SymbolAccessoryStore } from './stores/symbols-accessory/symbols-accessory.store';
 import { SymbolSensStore } from './stores/symbols-sens/symbols-sens.store';
 import { SymbolStore } from './stores/symbols/symbols.store';
-import { ConfigService } from './services/config/config.service';
 
 @Component({
   selector: 'app-root',
@@ -43,11 +42,9 @@ export class App implements OnInit {
   private readonly relationDataStore = inject(RelationDataStore);
   private readonly linkStore = inject(linkStore);
   private readonly selectedRelationStore = inject(SelectedRelationStore);
-  private readonly config = inject(ConfigService)
 
 
   ngOnInit(): void {
-    this.config.load().subscribe()
     this.loadAllData();
   }
 
