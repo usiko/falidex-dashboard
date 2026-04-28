@@ -1,4 +1,4 @@
-import { Component, inject, signal, computed, OnInit } from '@angular/core';
+import { Component, inject, computed, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSelectModule } from '@angular/material/select';
@@ -13,7 +13,9 @@ import { Router, RouterModule } from '@angular/router';
 import { RelationDataStore } from '../../../../../stores/relations/relations.store';
 import { linkStore } from '../../../../../stores/links/links.store';
 import { SelectedRelationStore } from '../../../../../stores/selected-relation/selected-relation.store';
-import { LoginDialogComponent, LoginDialogResult } from '../../../../shared/login-dialog/login-dialog.component';
+import { CurrentUserStore } from '../../../../../stores/current-user/current-user.store';
+import { LoginDialogComponent } from '../../../../shared/login-dialog/login-dialog.component';
+import { AuthService } from '../../../../../services/auth/auth.service';
 
 @Component({
   selector: 'app-top-bar',
@@ -39,9 +41,12 @@ export class TopBarComponent implements OnInit {
   private readonly linkStore = inject(linkStore);
   private readonly router = inject(Router);
   private readonly dialog = inject(MatDialog);
+  private readonly authService = inject(AuthService);
+  private readonly currentUserStore = inject(CurrentUserStore);
 
-  protected readonly isLoggedIn = signal(false);
-  protected readonly username = signal<string | null>(null);
+  // Utiliser le store pour l'utilisateur courant
+  protected readonly currentUser = this.currentUserStore.user;
+  protected readonly isLoggedIn = computed(() => !!this.currentUser());
 
   protected readonly relations = this.relationStore.entities;
   protected readonly selectedRelationId = this.selectedRelationStore.selectedRelationId;
@@ -74,23 +79,21 @@ export class TopBarComponent implements OnInit {
   protected onLogin(): void {
     const dialogRef = this.dialog.open(LoginDialogComponent, {
       width: '400px',
-      data: { title: 'Connexion' }
+      data: { title: 'Connexion' },
+      disableClose: false
     });
 
-    dialogRef.afterClosed().subscribe((result: LoginDialogResult | null) => {
-      if (result) {
-        // TODO: Appeler le service d'authentification
-        console.log('Login:', result.username);
-        this.isLoggedIn.set(true);
-        this.username.set(result.username);
+    dialogRef.afterClosed().subscribe(() => {
+      // Le store est automatiquement mis à jour dans le service login
+      if (this.currentUser()) {
+        console.log('✅ Connexion réussie:', this.currentUser()?.username);
       }
     });
   }
 
   protected onLogout(): void {
-    // TODO: Appeler le service de déconnexion
-    this.isLoggedIn.set(false);
-    this.username.set(null);
-    console.log('Déconnecté');
+    this.authService.logout().subscribe(() => {
+      console.log('✅ Déconnexion réussie');
+    });
   }
 }

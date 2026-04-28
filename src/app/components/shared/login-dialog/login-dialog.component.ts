@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, effect } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
@@ -50,6 +50,15 @@ export class LoginDialogComponent {
     this.loginForm = this.fb.group({
       username: [this.data?.username || '', [Validators.required]],
       password: ['', [Validators.required, Validators.minLength(4)]]
+    });
+
+    // Gérer l'état disabled des controls via le FormControl
+    effect(() => {
+      if (this.isLoading()) {
+        this.loginForm.disable();
+      } else {
+        this.loginForm.enable();
+      }
     });
   }
 

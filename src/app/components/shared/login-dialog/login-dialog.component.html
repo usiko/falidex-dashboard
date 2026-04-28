@@ -8,7 +8,6 @@
         matInput 
         formControlName="username"
         autocomplete="username"
-        [disabled]="isLoading()"
         required>
       @if (usernameControl?.hasError('required') && usernameControl?.touched) {
         <mat-error>Le nom d'utilisateur est requis</mat-error>
@@ -22,14 +21,12 @@
         [type]="hidePassword ? 'password' : 'text'"
         formControlName="password"
         autocomplete="current-password"
-        [disabled]="isLoading()"
         required>
       <button 
         mat-icon-button 
         matSuffix 
         type="button"
         (click)="togglePasswordVisibility()"
-        [disabled]="isLoading()"
         [attr.aria-label]="'Toggle password visibility'">
         <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
       </button>

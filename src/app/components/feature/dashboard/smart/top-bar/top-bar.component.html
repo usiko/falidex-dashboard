@@ -64,21 +64,10 @@
         Connexion
       </button>
     } @else {
-      <button mat-button [matMenuTriggerFor]="userMenu">
-        <mat-icon>account_circle</mat-icon>
-        {{ username() }}
+      <span class="username-display">{{ currentUser()?.username }}</span>
+      <button mat-icon-button (click)="onLogout()" matTooltip="Déconnexion">
+        <mat-icon>logout</mat-icon>
       </button>
-      <mat-menu #userMenu="matMenu">
-        <button mat-menu-item disabled>
-          <mat-icon>person</mat-icon>
-          <span>{{ username() }}</span>
-        </button>
-        <mat-divider></mat-divider>
-        <button mat-menu-item (click)="onLogout()">
-          <mat-icon>logout</mat-icon>
-          <span>Déconnexion</span>
-        </button>
-      </mat-menu>
     }
   </div>
 </mat-toolbar>

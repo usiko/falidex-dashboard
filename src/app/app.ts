@@ -47,6 +47,10 @@ export class App implements OnInit {
 
 
   ngOnInit(): void {
+    // Initialiser l'utilisateur depuis le storage au démarrage
+    this.authService.initializeUser().subscribe();
+    
+    // Charger les données (pas besoin d'être loggé)
     this.loadAllData();
   }
 
