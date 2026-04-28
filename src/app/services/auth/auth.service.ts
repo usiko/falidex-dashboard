@@ -18,39 +18,20 @@ export class AuthService {
     private configService= inject(AppConfigService);
     private storageService= inject(StorageService);
 
-
-    private token:{
-        value:string,
-        date:Date
-    }|undefined;
-
-    login() {
-        const login = 'user';
-        const password = 'password';
+    login(user_name:string,password:string) {
         const url = this.configService.getConfig()?.urls?.dataServer;
-        return of({ access_token: 'test'})
-        //return throwError(null);
         return this.http
-            .post<{ access_token: string }>(url + '/auth/login', {
-                username: 'john',
-                password: 'changeme',
+            .post<{ access_token: string }>(`${url}/${this.configService.getConfig()?.paths.login}`, {
+                user_name,
+                password,
             })
             .pipe(
                 tap((data) => {
-                    this.setToken(data.access_token);
+                    this.setAuthToken(data.access_token);
                 }),
                 catchError((error) => {
-                    //const isAllStored = this.httpData.isAllStored();
-                    const isAllStored = false;
-                    if (!isAllStored)
-                    {
-                        this.setToken(undefined);
-                        return throwError(error);
-                    }
-                    else {
-                        return of(null);
-                    }
-                    
+                    this.setAuthToken(undefined);
+                    return throwError(()=>error);
                 })
             );
     }
@@ -69,6 +50,20 @@ export class AuthService {
         this.storageService.remove("token").subscribe()
        }
     }
+    private setAuthToken(token: string|undefined):void {
+        
+       if(token)
+       {
+        const data = {
+            value:token,
+            date:new Date()
+        }
+        this.storageService.set("auth-token",data,"date").subscribe()
+       }
+       else{
+        this.storageService.remove("auth-token").subscribe()
+       }
+    }
 
     getToken(): Observable<string|undefined> {
        return this.storageService.get("token",undefined,'date', 23 * 60 * 60 * 1000).pipe(
@@ -83,6 +78,13 @@ export class AuthService {
              switchMap(() => this.storageService.get("token",undefined,'date', 23 * 60 * 60 * 1000)),
              map((newData:{value:string,date:Date}|undefined) => newData?.value)
            );
+         })
+       )
+    }
+    getCurrentAuthToken(): Observable<string|undefined> {
+       return this.storageService.get("auth-token",undefined,'date', 23 * 60 * 60 * 1000).pipe(
+         switchMap((data:{value:string,date:Date}|undefined)=>{
+            return of(data?.value);
          })
        )
     }

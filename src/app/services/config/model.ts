@@ -17,6 +17,7 @@ export interface IAppConfig {
 		dataLink: string;
 		dataLinkItem: string;
 		token: string;
+        login:string;
 	};
     pictureServerSalt: string;
 }
