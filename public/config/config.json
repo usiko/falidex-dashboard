@@ -1,7 +1,22 @@
 {
     "urls": {
-        "dataServer": "https://dev-falidex-server.herokuapp.com",
+        "dataServer": "http://localhost:3000",
         "pictureServer": "https://resources.falidex.fr/index.php"
+    },
+     "paths": {
+        "circulaires": "collection/circulaires",
+        "circulaireColors": "collection/circulaires-colors",
+        "symbols": "collection/symboles",
+        "symbolSens": "collection/symboles-sens",
+        "symbolAccessories": "collection/symbole-accessoires",
+        "significations": "collection/significations",
+        "filieres": "collection/filieres",
+        "colors": "collection/colors",
+        "placements": "collection/placements",
+        "positions": "collection/positions",
+        "dataLink": "collection/links",
+        "dataLinkItem": "collection/link",
+        "token": "token"
     },
     "pictureServerSalt": "iBhodGT6GTqS6Bb"
 }
