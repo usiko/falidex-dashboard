@@ -15,6 +15,7 @@ export interface IAppConfig {
 		positions: string;
 		colors: string;
 		dataLink: string;
+		dataLinkItem: string;
 		token: string;
 	};
     pictureServerSalt: string;

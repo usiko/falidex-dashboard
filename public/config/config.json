@@ -1,6 +1,6 @@
 {
     "urls": {
-        "dataServer": "https://dev-falidex-server.herokuapp.com",
+        "dataServer": "http://localhost:3000",
         "pictureServer": "https://resources.falidex.fr/index.php"
     },
      "paths": {

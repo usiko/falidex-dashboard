@@ -125,32 +125,15 @@ export class DataService {
    * Récupère la liste des relations disponibles
    */
   getListRelations(): Observable<{ name: string; id: string; lastUpdate: string }[]> {
-    return this.http.get<{ name: string; id: string; lastUpdate: string }[]>(`${this.configService.getConfig()?.urls.dataServer}/relations/list-relations.json`);
+    return this.http.get<{ name: string; id: string; lastUpdate: string }[]>(`${this.configService.getConfig()?.urls.dataServer}/${this.configService.getConfig()?.paths.dataLink}`);
   }
 
-  /**
-   * Récupère les données de relation nationale
-   */
-  getRelationNational(): Observable<IRelationData> {
-    return this.http.get<IRelationData>(`${this.configService.getConfig()?.urls.dataServer}/relations/national.json`).pipe(
-      map(data => this.ensureRelationItemIds(data))
-    );
-  }
-
-  /**
-   * Récupère les données de relation Toulon
-   */
-  getRelationToulon(): Observable<IRelationData> {
-    return this.http.get<IRelationData>(`${this.configService.getConfig()?.urls.dataServer}/relations/toulon.json`).pipe(
-      map(data => this.ensureRelationItemIds(data))
-    );
-  }
 
   /**
    * Récupère les données d'une relation spécifique par son ID
    */
   getRelationById(relationId: string): Observable<IRelationData> {
-    return this.http.get<IRelationData>(`${this.configService.getConfig()?.urls.dataServer}/relations/${relationId}.json`).pipe(
+    return this.http.get<IRelationData>(`${this.configService.getConfig()?.urls.dataServer}/${this.configService.getConfig()?.paths.dataLinkItem}/${relationId}`).pipe(
       map(data => this.ensureRelationItemIds(data))
     );
   }

@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { forkJoin, mergeMap } from 'rxjs';
+import { forkJoin, map, mergeMap, pipe } from 'rxjs';
 import { TopBarComponent } from './components/feature/dashboard/smart/top-bar/top-bar.component';
 import { DataService } from './services/data/data.service';
 import { CirculaireColorStore } from './stores/circulaires-colors/circulaires-colors.store';
@@ -65,10 +65,21 @@ export class App implements OnInit {
       symbolsSens: this.dataService.getSymbolesSens(),
       symbolsAccessory: this.dataService.getSymbolesAccessoires(),
       listRelations: this.dataService.getListRelations(),
-      relationNational: this.dataService.getRelationNational(),
-      relationToulon: this.dataService.getRelationToulon()
+            
     })
-    })).subscribe({
+    }))
+    .pipe(mergeMap((data)=>{
+        const obs = data.listRelations.map(item=>{
+            return this.dataService.getRelationById(item.id)
+        })
+        return forkJoin(obs).pipe(map((relations)=>{
+            return {
+                ...data,
+                relations
+            }
+        }))
+    }))
+    .subscribe({
       next: (data) => {
         // Remplir les stores avec les données
         this.circulaireStore.set(data.circulaires);
@@ -81,10 +92,10 @@ export class App implements OnInit {
         this.circulaireColorStore.set(data.circulairesColors);
         this.symbolSensStore.set(data.symbolsSens);
         this.symbolAccessoryStore.set(data.symbolsAccessory);
-        this.relationDataStore.set([data.relationNational, data.relationToulon]);
+        this.relationDataStore.set(data.relations);
 
         // Initialiser la relation sélectionnée par défaut avec la première relation
-        const relations = [data.relationNational, data.relationToulon];
+        const relations = data.relations;
         if (relations.length > 0 && relations[0].id) {
           this.selectedRelationStore.setSelectedRelationId(relations[0].id,!!relations[0].editable,!!relations[0].national);
           this.linkStore.set(relations[0].relations);
