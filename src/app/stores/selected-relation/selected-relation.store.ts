@@ -14,8 +14,9 @@ export const SelectedRelationStore = signalStore(
     isNational:false
   }),
   withMethods((store) => ({
-    setSelectedRelationId(relationId: string,isEditable:boolean, isNational:boolean): void {
-      patchState(store, { selectedRelationId: relationId,isEditable,isNational });
+    setSelectedRelationId(relationId: string,isEditable:boolean|undefined, isNational:boolean|undefined): void {
+        
+      patchState(store, { selectedRelationId: relationId,isEditable:isEditable!==undefined?isEditable:true,isNational:isNational!==undefined?isNational:false });
     },
     clearSelection(): void {
       patchState(store, { selectedRelationId: null });

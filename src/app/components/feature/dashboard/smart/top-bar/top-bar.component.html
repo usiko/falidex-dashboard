@@ -40,12 +40,8 @@
     <button mat-mini-fab color="accent" (click)="onAddRelation()" matTooltip="Ajouter une relation">
       <mat-icon>add</mat-icon>
     </button>
-  </div>
-
-  <span class="spacer"></span>
-
-  <div class="right-section">
-     <button mat-button routerLink="/relation/current/edit" routerLinkActive="active">
+    
+    <button mat-button routerLink="/relation/current/edit" routerLinkActive="active">
       <mat-icon>info</mat-icon>
       Relation Info
     </button>
@@ -57,6 +53,21 @@
       <mat-icon>star</mat-icon>
       Symboles
     </button>
+  </div>
 
+  <span class="spacer"></span>
+
+  <div class="right-section">
+    @if (!isLoggedIn()) {
+      <button mat-button (click)="onLogin()">
+        <mat-icon>login</mat-icon>
+        Connexion
+      </button>
+    } @else {
+      <span class="username-display">{{ currentUser()?.username }}</span>
+      <button mat-icon-button (click)="onLogout()" matTooltip="Déconnexion">
+        <mat-icon>logout</mat-icon>
+      </button>
+    }
   </div>
 </mat-toolbar>

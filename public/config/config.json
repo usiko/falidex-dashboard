@@ -16,7 +16,8 @@
         "positions": "collection/positions",
         "dataLink": "collection/links",
         "dataLinkItem": "collection/link",
-        "token": "token"
+        "token": "token",
+        "login":"auth"
     },
     "pictureServerSalt": "iBhodGT6GTqS6Bb"
 }

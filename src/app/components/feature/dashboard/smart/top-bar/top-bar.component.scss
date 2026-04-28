@@ -3,6 +3,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
+  flex-wrap: wrap;
 }
 .relation-select{
     width: 250px;
@@ -49,6 +50,11 @@
 
 .right-section {
   display: flex;
+  align-items: center;
   gap: 8px;
-  
+}
+
+.username-display {
+  font-weight: 500;
+  padding: 0 8px;
 }

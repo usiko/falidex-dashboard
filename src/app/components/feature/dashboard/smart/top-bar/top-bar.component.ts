@@ -1,4 +1,4 @@
-import { Component, inject, signal, computed, OnInit } from '@angular/core';
+import { Component, inject, computed, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSelectModule } from '@angular/material/select';
@@ -6,10 +6,16 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatDialog } from '@angular/material/dialog';
 import { Router, RouterModule } from '@angular/router';
 import { RelationDataStore } from '../../../../../stores/relations/relations.store';
 import { linkStore } from '../../../../../stores/links/links.store';
 import { SelectedRelationStore } from '../../../../../stores/selected-relation/selected-relation.store';
+import { CurrentUserStore } from '../../../../../stores/current-user/current-user.store';
+import { LoginDialogComponent } from '../../../../shared/login-dialog/login-dialog.component';
+import { AuthService } from '../../../../../services/auth/auth.service';
 
 @Component({
   selector: 'app-top-bar',
@@ -22,6 +28,8 @@ import { SelectedRelationStore } from '../../../../../stores/selected-relation/s
     MatButtonModule,
     MatIconModule,
     MatTooltipModule,
+    MatMenuModule,
+    MatDividerModule,
     RouterModule
   ],
   templateUrl: './top-bar.component.html',
@@ -32,6 +40,13 @@ export class TopBarComponent implements OnInit {
   private readonly selectedRelationStore = inject(SelectedRelationStore);
   private readonly linkStore = inject(linkStore);
   private readonly router = inject(Router);
+  private readonly dialog = inject(MatDialog);
+  private readonly authService = inject(AuthService);
+  private readonly currentUserStore = inject(CurrentUserStore);
+
+  // Utiliser le store pour l'utilisateur courant
+  protected readonly currentUser = this.currentUserStore.user;
+  protected readonly isLoggedIn = computed(() => !!this.currentUser());
 
   protected readonly relations = this.relationStore.entities;
   protected readonly selectedRelationId = this.selectedRelationStore.selectedRelationId;
@@ -51,7 +66,7 @@ export class TopBarComponent implements OnInit {
   protected onRelationChange(relationId: string): void {
     const relation = this.relationStore.entityMap()[relationId];
     if (relation) {
-      this.selectedRelationStore.setSelectedRelationId(relationId,!!relation.editable,!!relation.national);
+      this.selectedRelationStore.setSelectedRelationId(relationId,relation.editable,relation.national);
       this.linkStore.set(relation.relations);
       console.log('Relation sélectionnée:', relationId, '- Liens chargés:', relation.relations.length);
     }
@@ -59,5 +74,26 @@ export class TopBarComponent implements OnInit {
   
   protected onAddRelation(): void {
     this.router.navigate(['/relation/new']);
+  }
+
+  protected onLogin(): void {
+    const dialogRef = this.dialog.open(LoginDialogComponent, {
+      width: '400px',
+      data: { title: 'Connexion' },
+      disableClose: false
+    });
+
+    dialogRef.afterClosed().subscribe(() => {
+      // Le store est automatiquement mis à jour dans le service login
+      if (this.currentUser()) {
+        console.log('✅ Connexion réussie:', this.currentUser()?.username);
+      }
+    });
+  }
+
+  protected onLogout(): void {
+    this.authService.logout().subscribe(() => {
+      console.log('✅ Déconnexion réussie');
+    });
   }
 }

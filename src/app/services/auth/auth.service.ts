@@ -5,9 +5,9 @@ import { catchError, map, mergeMap, retry, switchMap, tap } from 'rxjs/operators
 import { AppConfigService } from '../config/app.config.service';
 import { StorageService } from '../storage/storage.service';
 import { environment } from '../../../environments/environment';
+import { CurrentUserStore } from '../../stores/current-user/current-user.store';
+import { IUser } from '../../models/user.model';
 
-// Déclaration pour accéder aux variables d'environnement
-declare const process: any;
 
 @Injectable({
     providedIn: 'root',
@@ -17,40 +17,40 @@ export class AuthService {
     private http= inject(HttpClient);
     private configService= inject(AppConfigService);
     private storageService= inject(StorageService);
+    private currentUserStore = inject(CurrentUserStore);
 
-
-    private token:{
-        value:string,
-        date:Date
-    }|undefined;
-
-    login() {
-        const login = 'user';
-        const password = 'password';
+    login(user_name:string,password:string) {
         const url = this.configService.getConfig()?.urls?.dataServer;
-        return of({ access_token: 'test'})
-        //return throwError(null);
         return this.http
-            .post<{ access_token: string }>(url + '/auth/login', {
-                username: 'john',
-                password: 'changeme',
+            .post<{ token: string; user?: IUser }>(`${url}/${this.configService.getConfig()?.paths.login}`, {
+                user_name,
+                password,
             })
             .pipe(
                 tap((data) => {
-                    this.setToken(data.access_token);
-                }),
-                catchError((error) => {
-                    //const isAllStored = this.httpData.isAllStored();
-                    const isAllStored = false;
-                    if (!isAllStored)
-                    {
-                        this.setToken(undefined);
-                        return throwError(error);
-                    }
-                    else {
-                        return of(null);
+                    let user: IUser;
+                    // Si l'API retourne l'utilisateur, on l'utilise
+                    if (data.user) {
+                        user = data.user;
+                    } else {
+                        // Sinon, on crée un utilisateur avec le username fourni
+                        // TODO: Décoder le JWT pour extraire l'ID et le username
+                        user = {
+                            id: '', // Sera rempli par décodage du token ou appel API
+                            username: user_name
+                        };
                     }
                     
+                    // Stocker le token avec les infos utilisateur
+                    this.setAuthToken(data.token, user);
+                    
+                    // Mettre à jour le store
+                    this.currentUserStore.setUser(user);
+                }),
+                catchError((error) => {
+                    this.setAuthToken(undefined);
+                    this.currentUserStore.clearUser();
+                    return throwError(()=>error);
                 })
             );
     }
@@ -69,6 +69,34 @@ export class AuthService {
         this.storageService.remove("token").subscribe()
        }
     }
+    private setAuthToken(token: string|undefined, user?: IUser):void {
+        
+       if(token && user)
+       {
+        const data = {
+            value: token,
+            date: new Date(),
+            user: {
+                id: user.id,
+                username: user.username
+            }
+        }
+        this.storageService.set("auth-token",data,"date").subscribe()
+       }
+       else{
+        this.storageService.remove("auth-token").subscribe()
+       }
+    }
+
+
+    /**
+     * Récupère l'utilisateur depuis le storage auth-token
+     */
+    private getCurrentUser(): Observable<IUser|undefined> {
+       return this.storageService.get("auth-token",undefined,'date', 23 * 60 * 60 * 1000).pipe(
+         map((data:{value:string, date:Date, user: IUser}|undefined) => data?.user)
+       );
+    }
 
     getToken(): Observable<string|undefined> {
        return this.storageService.get("token",undefined,'date', 23 * 60 * 60 * 1000).pipe(
@@ -83,6 +111,13 @@ export class AuthService {
              switchMap(() => this.storageService.get("token",undefined,'date', 23 * 60 * 60 * 1000)),
              map((newData:{value:string,date:Date}|undefined) => newData?.value)
            );
+         })
+       )
+    }
+    getCurrentAuthToken(): Observable<string|undefined> {
+       return this.storageService.get("auth-token",undefined,'date', 23 * 60 * 60 * 1000).pipe(
+         switchMap((data:{value:string,date:Date}|undefined)=>{
+            return of(data?.value);
          })
        )
     }
@@ -187,5 +222,58 @@ export class AuthService {
         const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
         
         return hashHex;
+    }
+
+    /**
+     * Vérifie si l'utilisateur est authentifié
+     * Retourne true si un token d'authentification valide existe
+     * Nettoie le store si le token n'est pas valide
+     */
+    isAuth(): Observable<boolean> {
+        return this.getCurrentAuthToken().pipe(
+            map(token => {
+                const isAuthenticated = !!token;
+                // Si pas de token valide, nettoyer le store utilisateur
+                if (!isAuthenticated) {
+                    this.currentUserStore.clearUser();
+                }
+                return isAuthenticated;
+            })
+        );
+    }
+
+    /**
+     * Initialise l'utilisateur depuis le storage au démarrage de l'application
+     * Si un token existe, restaure l'utilisateur
+     */
+    initializeUser(): Observable<void> {
+        return this.getCurrentAuthToken().pipe(
+            switchMap(token => {
+                if (token) {
+                    // Si un token existe, charger l'utilisateur depuis le storage
+                    return this.getCurrentUser().pipe(
+                        tap(user => {
+                            if (user) {
+                                this.currentUserStore.setUser(user);
+                            }
+                        }),
+                        map(() => void 0)
+                    );
+                } else {
+                    // Pas de token, s'assurer que le store est vide
+                    this.currentUserStore.clearUser();
+                    return of(void 0);
+                }
+            })
+        );
+    }
+
+    /**
+     * Déconnecte l'utilisateur en supprimant le token d'authentification et en vidant le store
+     */
+    logout(): Observable<void> {
+        this.setAuthToken(undefined);
+        this.currentUserStore.clearUser();
+        return of(void 0);
     }
 }
