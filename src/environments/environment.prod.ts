@@ -1,7 +1,8 @@
 export const environment = {
     prod:true,
     configPaths:['/config/config.json'],
-    tokenHeader:'test-header',
-    tokenKey:'testTokenKey',
-    derivationTokenKey:'testDerivationTokenKey'
+    tokenKey: "{ENV:TOKEN_HASH_KEY}",
+    token: "token",
+    derivationTokenKey: "{ENV:DERIVATED_TOKEN_HASH_KEY}",
+    tokenHeader: "X-Token"
 };
