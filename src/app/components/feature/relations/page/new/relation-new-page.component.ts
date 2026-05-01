@@ -89,7 +89,7 @@ export class RelationNewPageComponent {
     }
 
     // Ajout de la nouvelle relation
-    this.relationStore.add(relationData);
+    this.relationStore.create(relationData);
     
     console.log('Nouvelle relation créée:', relationData);
     

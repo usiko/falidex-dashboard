@@ -52,6 +52,12 @@ export class App implements OnInit {
     
     // Charger les données (pas besoin d'être loggé)
     this.loadAllData();
+    
+    // Écouter les événements du relation store
+    this.setupRelationStoreListeners();
+    
+    // Écouter les événements du link store
+    this.setupLinkStoreListeners();
   }
 
   private loadAllData(): void {
@@ -109,6 +115,118 @@ export class App implements OnInit {
       },
       error: (error) => {
         console.error('❌ Erreur lors du chargement des données:', error);
+      }
+    });
+  }
+
+  private setupRelationStoreListeners(): void {
+    const events = this.relationDataStore.getEvents();
+
+    // Écouter les événements de création
+    events.onCreate$?.subscribe(({ id, entity, send }) => {
+      if (send) {
+        this.dataService.createRelation(entity).subscribe({
+          next: () => {
+            console.log('✅ Relation créée:', id);
+          },
+          error: (err) => {
+            console.error('❌ Erreur lors de la création de la relation:', err);
+            // Annuler l'ajout local si l'API échoue
+            this.relationDataStore.remove(id,false);
+          }
+        });
+      }
+    });
+
+    // Écouter les événements de suppression
+    events.onRemove$?.subscribe(({ id, send }) => {
+      if (send) {
+        this.dataService.deleteRelation(id).subscribe({
+          next: () => {
+            console.log('✅ Relation supprimée:', id);
+          },
+          error: (err) => {
+            console.error('❌ Erreur lors de la suppression de la relation:', err);
+          }
+        });
+      }
+    });
+
+    // Écouter les événements de mise à jour
+    events.onUpdate$?.subscribe(({ id, changes, old,send }) => {
+      const updatedRelation = { ...old, ...changes };
+      if(send)
+      {
+        this.dataService.updateRelation(updatedRelation).subscribe({
+        next: () => {
+          console.log('✅ Relation mise à jour:', id);
+        },
+        error: (err) => {
+          console.error('❌ Erreur lors de la mise à jour de la relation:', err);
+          // Restaurer l'ancienne valeur si l'API échoue
+          this.relationDataStore.update(id, old,false);
+        }
+      });
+      }
+    });
+  }
+
+  private setupLinkStoreListeners(): void {
+    const events = this.linkStore.getEvents();
+
+    // Écouter les événements de création
+    events.onCreate$?.subscribe(({ id, entity, send }) => {
+      if (send) {
+        const relationId = this.selectedRelationStore.selectedRelationId();
+        if (relationId) {
+          this.dataService.createRelationItem(relationId, entity).subscribe({
+            next: () => {
+              console.log('✅ Relation item créé:', id);
+            },
+            error: (err) => {
+              console.error('❌ Erreur lors de la création du relation item:', err);
+              // Annuler l'ajout local si l'API échoue
+              this.linkStore.remove(id,false);
+            }
+          });
+        }
+      }
+    });
+
+    // Écouter les événements de suppression
+    events.onRemove$?.subscribe(({ id, send }) => {
+      if (send) {
+        const relationId = this.selectedRelationStore.selectedRelationId();
+        if (relationId) {
+          this.dataService.deleteRelationItem(relationId, id).subscribe({
+            next: () => {
+              console.log('✅ Relation item supprimé:', id);
+            },
+            error: (err) => {
+              console.error('❌ Erreur lors de la suppression du relation item:', err);
+            }
+          });
+        }
+      }
+    });
+
+    // Écouter les événements de mise à jour
+    events.onUpdate$?.subscribe(({ id, changes, old, send }) => {
+      if (send) {
+        const relationId = this.selectedRelationStore.selectedRelationId();
+        if (relationId) {
+          const updatedItem = { ...old, ...changes };
+          this.dataService.updateRelationItem(relationId, updatedItem).subscribe({
+            next: () => {
+              console.log('✅ Relation item mis à jour:', id);
+            },
+            error: (err) => {
+              console.error('❌ Erreur lors de la mise à jour du relation item:', err);
+              // Restaurer l'ancienne valeur si l'API échoue
+              this.linkStore.update(id, old,false);
+            }
+          });
+        }
       }
     });
   }

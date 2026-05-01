@@ -31,42 +31,75 @@ export const httpInterceptor: HttpInterceptorFn = (
     // Sinon, on applique la logique d'authentification
     return authService.getToken().pipe(
         switchMap(token => {
-            // Cloner la requête avec le token dans le header configuré
-            const clonedRequest = token 
-                ? request.clone({ headers: request.headers.set(tokenHeader, token) })
-                : request;
-            
-            return next(clonedRequest).pipe(
-                catchError((error: any) => {
-                    if (error instanceof HttpErrorResponse) {
-                        // Vérifier si l'erreur correspond à 'Missing X-Token header'
-                        if (error.error?.error === 'UNAUTHORIZED' && 
-                            (error.error?.message === 'Missing X-Token header'|| error.error?.message === 'Invalid or expired token')) {
-                            console.error('🔒 Erreur détectée: Token X-Token manquant, retry...', {
-                                url: request.url,
-                                status: error.status
-                            });
-                            
-                            // Refaire getToken() et retry la requête
-                            return authService.authToken().pipe(
-                                switchMap(()=>{
-                                    return authService.getToken()
-                                }),
-                                switchMap(newToken => {
-                                    if(!newToken)
-                                    {
-                                        console.error("no token")
-                                        return throwError(() => "no token")
-                                    }
-                                    const retryRequest = newToken
-                                        ? request.clone({ headers: request.headers.set(tokenHeader, newToken) })
-                                        : request;
-                                    return next(retryRequest);
-                                })
-                            );
-                        }
+            return authService.getCurrentAuthToken().pipe(
+                switchMap(authToken => {
+                    // Cloner la requête avec les tokens dans les headers
+                    let clonedRequest = request;
+                    
+                    // Ajouter le X-Token si disponible
+                    if (token) {
+                        clonedRequest = clonedRequest.clone({ 
+                            headers: clonedRequest.headers.set(tokenHeader, token) 
+                        });
                     }
-                    return throwError(() => error);
+                    
+                    // Ajouter le JWT dans Authorization si disponible
+                    if (authToken) {
+                        clonedRequest = clonedRequest.clone({ 
+                            headers: clonedRequest.headers.set('Authorization', `Bearer ${authToken}`) 
+                        });
+                    }
+                    
+                    return next(clonedRequest).pipe(
+                        catchError((error: any) => {
+                            if (error instanceof HttpErrorResponse) {
+                                // Vérifier si l'erreur correspond à 'Missing X-Token header'
+                                if (error.error?.error === 'UNAUTHORIZED' && 
+                                    (error.error?.message === 'Missing X-Token header'|| error.error?.message === 'Invalid or expired token')) {
+                                    console.error('🔒 Erreur détectée: Token X-Token manquant, retry...', {
+                                        url: request.url,
+                                        status: error.status
+                                    });
+                                    
+                                    // Refaire getToken() et retry la requête
+                                    return authService.authToken().pipe(
+                                        switchMap(()=>{
+                                            return authService.getToken()
+                                        }),
+                                        switchMap(newToken => {
+                                            if(!newToken)
+                                            {
+                                                console.error("no token")
+                                                return throwError(() => "no token")
+                                            }
+                                            return authService.getCurrentAuthToken().pipe(
+                                                switchMap(newAuthToken => {
+                                                    let retryRequest = request;
+                                                    
+                                                    // Ajouter le X-Token si disponible
+                                                    if (newToken) {
+                                                        retryRequest = retryRequest.clone({ 
+                                                            headers: retryRequest.headers.set(tokenHeader, newToken) 
+                                                        });
+                                                    }
+                                                    
+                                                    // Ajouter le JWT si disponible
+                                                    if (newAuthToken) {
+                                                        retryRequest = retryRequest.clone({ 
+                                                            headers: retryRequest.headers.set('Authorization', `Bearer ${newAuthToken}`) 
+                                                        });
+                                                    }
+                                                    
+                                                    return next(retryRequest);
+                                                })
+                                            );
+                                        })
+                                    );
+                                }
+                            }
+                            return throwError(() => error);
+                        })
+                    );
                 })
             );
         })
