@@ -197,7 +197,7 @@ export class DataService {
    */
   deleteRelationItem(relationId: string, itemId: string): Observable<void> {
     return this.http.delete(
-        `${this.configService.getConfig()?.urls.dataServer}/${this.configService.getConfig()?.paths.dataLinkItem}/${relationId}/delete/${itemId}`
+        `${this.configService.getConfig()?.urls.dataServer}/${this.configService.getConfig()?.paths.dataLinkItem}/${relationId}/relation-item/${itemId}`
     ).pipe(
       map(data =>void 0)
     );
