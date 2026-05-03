@@ -128,11 +128,11 @@ export class App implements OnInit {
         this.dataService.createRelation(entity).subscribe({
           next: () => {
             console.log('✅ Relation créée:', id);
-            this.reloadCurrentLink()
+            this.reloadCurrentRelation()
           },
           error: (err) => {
             console.error('❌ Erreur lors de la création de la relation:', err);
-            this.reloadCurrentLink()
+            this.reloadCurrentRelation()
           }
         });
       }
@@ -144,11 +144,11 @@ export class App implements OnInit {
         this.dataService.deleteRelation(id).subscribe({
           next: () => {
             console.log('✅ Relation supprimée:', id);
-            this.reloadCurrentLink()
+            this.reloadCurrentRelation()
           },
           error: (err) => {
             console.error('❌ Erreur lors de la suppression de la relation:', err);
-            this.reloadCurrentLink()
+            this.reloadCurrentRelation()
           }
         });
       }
@@ -162,11 +162,11 @@ export class App implements OnInit {
         this.dataService.updateRelation(updatedRelation).subscribe({
         next: () => {
           console.log('✅ Relation mise à jour:', id);
-          this.reloadCurrentLink()
+          this.reloadCurrentRelation()
         },
         error: (err) => {
           console.error('❌ Erreur lors de la mise à jour de la relation:', err);
-          this.reloadCurrentLink()
+          this.reloadCurrentRelation()
         }
       });
       }
@@ -243,6 +243,25 @@ export class App implements OnInit {
     {
         this.dataService.getRelationById(currentId).subscribe((data)=>{
             this.linkStore.set(data.relations)
+        })
+    }
+
+  }
+  reloadCurrentRelation()
+  {
+    let currentId = this.selectedRelationStore.selectedRelationId();
+    if (currentId)
+    {
+        this.dataService.getRelationById(currentId).subscribe((data)=>{
+            this.relationDataStore.update(currentId,{
+                annee:data.annee,
+                editable:data.editable,
+                name:data.name,
+                national:data.national,
+                ville:data.ville,
+                specificites:data.specificites,
+                default:data.default
+            },false)
         })
     }
 
