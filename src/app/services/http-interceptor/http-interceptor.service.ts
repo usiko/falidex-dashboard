@@ -53,6 +53,19 @@ export const httpInterceptor: HttpInterceptorFn = (
                     return next(clonedRequest).pipe(
                         catchError((error: any) => {
                             if (error instanceof HttpErrorResponse) {
+                                // Vérifier si JWT invalide (401 + JWT_ERROR)
+                                if (error.status === 401 && error.error?.error === 'JWT_ERROR') {
+                                    console.error('🔒 JWT invalide détecté, déconnexion...', {
+                                        url: request.url,
+                                        status: error.status
+                                    });
+                                    
+                                    // Supprimer le token d'authentification
+                                    return authService.logout().pipe(
+                                        switchMap(() => throwError(() => error))
+                                    );
+                                }
+                                
                                 // Vérifier si l'erreur correspond à 'Missing X-Token header'
                                 if (error.error?.error === 'UNAUTHORIZED' && 
                                     (error.error?.message === 'Missing X-Token header'|| error.error?.message === 'Invalid or expired token')) {

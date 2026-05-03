@@ -128,11 +128,11 @@ export class App implements OnInit {
         this.dataService.createRelation(entity).subscribe({
           next: () => {
             console.log('✅ Relation créée:', id);
+            this.reloadCurrentLink()
           },
           error: (err) => {
             console.error('❌ Erreur lors de la création de la relation:', err);
-            // Annuler l'ajout local si l'API échoue
-            this.relationDataStore.remove(id,false);
+            this.reloadCurrentLink()
           }
         });
       }
@@ -144,9 +144,11 @@ export class App implements OnInit {
         this.dataService.deleteRelation(id).subscribe({
           next: () => {
             console.log('✅ Relation supprimée:', id);
+            this.reloadCurrentLink()
           },
           error: (err) => {
             console.error('❌ Erreur lors de la suppression de la relation:', err);
+            this.reloadCurrentLink()
           }
         });
       }
@@ -160,11 +162,11 @@ export class App implements OnInit {
         this.dataService.updateRelation(updatedRelation).subscribe({
         next: () => {
           console.log('✅ Relation mise à jour:', id);
+          this.reloadCurrentLink()
         },
         error: (err) => {
           console.error('❌ Erreur lors de la mise à jour de la relation:', err);
-          // Restaurer l'ancienne valeur si l'API échoue
-          this.relationDataStore.update(id, old,false);
+          this.reloadCurrentLink()
         }
       });
       }
@@ -182,11 +184,11 @@ export class App implements OnInit {
           this.dataService.createRelationItem(relationId, entity).subscribe({
             next: () => {
               console.log('✅ Relation item créé:', id);
+              this.reloadCurrentLink()
             },
             error: (err) => {
               console.error('❌ Erreur lors de la création du relation item:', err);
-              // Annuler l'ajout local si l'API échoue
-              this.linkStore.remove(id,false);
+              this.reloadCurrentLink()
             }
           });
         }
@@ -201,9 +203,11 @@ export class App implements OnInit {
           this.dataService.deleteRelationItem(relationId, id).subscribe({
             next: () => {
               console.log('✅ Relation item supprimé:', id);
+              this.reloadCurrentLink()
             },
             error: (err) => {
               console.error('❌ Erreur lors de la suppression du relation item:', err);
+              this.reloadCurrentLink()
             }
           });
         }
@@ -219,15 +223,28 @@ export class App implements OnInit {
           this.dataService.updateRelationItem(relationId, updatedItem).subscribe({
             next: () => {
               console.log('✅ Relation item mis à jour:', id);
+               this.reloadCurrentLink()
             },
             error: (err) => {
               console.error('❌ Erreur lors de la mise à jour du relation item:', err);
               // Restaurer l'ancienne valeur si l'API échoue
-              this.linkStore.update(id, old,false);
+               this.reloadCurrentLink()
             }
           });
         }
       }
     });
+  }
+
+  reloadCurrentLink()
+  {
+    let currentId = this.selectedRelationStore.selectedRelationId();
+    if (currentId)
+    {
+        this.dataService.getRelationById(currentId).subscribe((data)=>{
+            this.linkStore.set(data.relations)
+        })
+    }
+
   }
 }
