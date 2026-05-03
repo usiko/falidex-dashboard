@@ -1,10 +1,11 @@
 import { HttpErrorResponse, HttpEvent, HttpHandlerFn, HttpInterceptorFn, HttpRequest } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
-import { catchError, switchMap } from 'rxjs/operators';
+import { catchError, switchMap, tap } from 'rxjs/operators';
 import { AuthService } from '../auth/auth.service';
 import { AppConfigService } from '../config/app.config.service';
 import { environment } from '../../../environments/environment';
+import { SnackbarService } from '../snackbar/snackbar.service';
 
 
 export const httpInterceptor: HttpInterceptorFn = (
@@ -13,6 +14,7 @@ export const httpInterceptor: HttpInterceptorFn = (
 ): Observable<HttpEvent<unknown>> => {
     const authService = inject(AuthService);
     const configService = inject(AppConfigService);
+    const snackbarService = inject(SnackbarService);
     const tokenHeader = environment.tokenHeader;
     const dataBaseUrl = configService.getConfig()?.urls.dataServer;
     const tokenPath = configService.getConfig()?.paths.token;
@@ -60,6 +62,8 @@ export const httpInterceptor: HttpInterceptorFn = (
                                         status: error.status
                                     });
                                     
+                                    snackbarService.error('Session expirée, veuillez vous reconnecter');
+                                    
                                     // Supprimer le token d'authentification
                                     return authService.logout().pipe(
                                         switchMap(() => throwError(() => error))
@@ -83,6 +87,7 @@ export const httpInterceptor: HttpInterceptorFn = (
                                             if(!newToken)
                                             {
                                                 console.error("no token")
+                                                snackbarService.error('Vous n\'avez pas les droits pour effectuer cette action');
                                                 return throwError(() => "no token")
                                             }
                                             return authService.getCurrentAuthToken().pipe(
@@ -108,6 +113,11 @@ export const httpInterceptor: HttpInterceptorFn = (
                                             );
                                         })
                                     );
+                                }
+                                
+                                // Autres erreurs 401/403 - Pas de droits
+                                if (error.status === 401 || error.status === 403) {
+                                    snackbarService.error('Vous n\'avez pas les droits pour effectuer cette action');
                                 }
                             }
                             return throwError(() => error);

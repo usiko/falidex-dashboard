@@ -18,6 +18,7 @@ import { SymbolAccessoryStore } from './stores/symbols-accessory/symbols-accesso
 import { SymbolSensStore } from './stores/symbols-sens/symbols-sens.store';
 import { SymbolStore } from './stores/symbols/symbols.store';
 import { AuthService } from './services/auth/auth.service';
+import { SnackbarService } from './services/snackbar/snackbar.service';
 
 @Component({
   selector: 'app-root',
@@ -44,6 +45,7 @@ export class App implements OnInit {
   private readonly linkStore = inject(linkStore);
   private readonly selectedRelationStore = inject(SelectedRelationStore);
   private readonly authService = inject(AuthService);
+  private readonly snackbarService = inject(SnackbarService);
 
 
   ngOnInit(): void {
@@ -128,10 +130,12 @@ export class App implements OnInit {
         this.dataService.createRelation(entity).subscribe({
           next: () => {
             console.log('✅ Relation créée:', id);
+            this.snackbarService.success('Relation créée avec succès');
             this.reloadCurrentRelation()
           },
           error: (err) => {
             console.error('❌ Erreur lors de la création de la relation:', err);
+            this.snackbarService.error('Erreur lors de la création de la relation');
             this.reloadCurrentRelation()
           }
         });
@@ -144,10 +148,12 @@ export class App implements OnInit {
         this.dataService.deleteRelation(id).subscribe({
           next: () => {
             console.log('✅ Relation supprimée:', id);
+            this.snackbarService.success('Relation supprimée avec succès');
             this.reloadCurrentRelation()
           },
           error: (err) => {
             console.error('❌ Erreur lors de la suppression de la relation:', err);
+            this.snackbarService.error('Erreur lors de la suppression de la relation');
             this.reloadCurrentRelation()
           }
         });
@@ -162,10 +168,12 @@ export class App implements OnInit {
         this.dataService.updateRelation(updatedRelation).subscribe({
         next: () => {
           console.log('✅ Relation mise à jour:', id);
+          this.snackbarService.success('Relation mise à jour avec succès');
           this.reloadCurrentRelation()
         },
         error: (err) => {
           console.error('❌ Erreur lors de la mise à jour de la relation:', err);
+          this.snackbarService.error('Erreur lors de la mise à jour de la relation');
           this.reloadCurrentRelation()
         }
       });
@@ -184,10 +192,12 @@ export class App implements OnInit {
           this.dataService.createRelationItem(relationId, entity).subscribe({
             next: () => {
               console.log('✅ Relation item créé:', id);
+              this.snackbarService.success('Lien créé avec succès');
               this.reloadCurrentLink()
             },
             error: (err) => {
               console.error('❌ Erreur lors de la création du relation item:', err);
+              this.snackbarService.error('Erreur lors de la création du lien');
               this.reloadCurrentLink()
             }
           });
@@ -203,10 +213,12 @@ export class App implements OnInit {
           this.dataService.deleteRelationItem(relationId, id).subscribe({
             next: () => {
               console.log('✅ Relation item supprimé:', id);
+              this.snackbarService.success('Lien supprimé avec succès');
               this.reloadCurrentLink()
             },
             error: (err) => {
               console.error('❌ Erreur lors de la suppression du relation item:', err);
+              this.snackbarService.error('Erreur lors de la suppression du lien');
               this.reloadCurrentLink()
             }
           });
@@ -223,10 +235,12 @@ export class App implements OnInit {
           this.dataService.updateRelationItem(relationId, updatedItem).subscribe({
             next: () => {
               console.log('✅ Relation item mis à jour:', id);
+              this.snackbarService.success('Lien mis à jour avec succès');
                this.reloadCurrentLink()
             },
             error: (err) => {
               console.error('❌ Erreur lors de la mise à jour du relation item:', err);
+              this.snackbarService.error('Erreur lors de la mise à jour du lien');
               // Restaurer l'ancienne valeur si l'API échoue
                this.reloadCurrentLink()
             }
