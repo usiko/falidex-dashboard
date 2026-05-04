@@ -6,6 +6,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { FormsModule } from '@angular/forms';
 import { SymbolStore } from '../../../../stores/symbols/symbols.store';
 import { SymbolItemComponent } from '../smart/symbol-item/symbol-item.component';
@@ -18,6 +19,8 @@ import { ColorStore } from '../../../../stores/colors/colors.store';
 import { SymbolSensStore } from '../../../../stores/symbols-sens/symbols-sens.store';
 import { SymbolAccessoryStore } from '../../../../stores/symbols-accessory/symbols-accessory.store';
 
+type BlameFilter = 'all' | 'with-blame' | 'without-blame';
+
 @Component({
   selector: 'app-symbols-list-page',
   standalone: true,
@@ -29,6 +32,7 @@ import { SymbolAccessoryStore } from '../../../../stores/symbols-accessory/symbo
     MatIconModule,
     MatChipsModule,
     MatSlideToggleModule,
+    MatButtonToggleModule,
     FormsModule,
     SymbolItemComponent
   ],
@@ -48,10 +52,12 @@ export class SymbolsListPageComponent {
 
   protected readonly symbols = this.symbolStore.entities;
   protected readonly searchTerm = signal('');
+  protected readonly blameFilter = signal<BlameFilter>('all');
   protected readonly hideWithoutRelation = signal(false);
 
   protected readonly filteredSymbols = computed(() => {
     const search = this.searchTerm().toLowerCase().trim();
+    const blameFilterValue = this.blameFilter();
     const hideNoRelation = this.hideWithoutRelation();
     
     let filtered = this.symbols();
@@ -61,6 +67,15 @@ export class SymbolsListPageComponent {
       filtered = filtered.filter(symbol => {
         const links = this.linkStoreInstance.getBySymboleId(symbol.id)();
         return links.length > 0;
+      });
+    }
+    
+    // Filtre Blame
+    if (blameFilterValue !== 'all') {
+      filtered = filtered.filter(symbol => {
+        const links = this.linkStoreInstance.getBySymboleId(symbol.id)();
+        const hasBlame = links.some(link => link.blame === true);
+        return blameFilterValue === 'with-blame' ? hasBlame : !hasBlame;
       });
     }
     

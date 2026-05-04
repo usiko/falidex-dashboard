@@ -46,6 +46,14 @@
     display: flex;
     align-items: center;
   }
+  
+  .blame-filter {
+    mat-button-toggle {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+  }
 }
 
 .symbols-grid {
