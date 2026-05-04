@@ -8,6 +8,20 @@
         </div>
       }
       
+      @if (data.link.absent) {
+        <div class="detail-item absent-badge">
+          <span class="label">Absent:</span>
+          <span class="value absent-true">oui</span>
+        </div>
+      }
+      
+      @if (data.link.blame) {
+        <div class="detail-item blame-badge">
+          <span class="label">Blame:</span>
+          <span class="value blame-true">oui</span>
+        </div>
+      }
+      
       @if (data.position) {
         <div class="detail-item">
           <span class="label">Position:</span>

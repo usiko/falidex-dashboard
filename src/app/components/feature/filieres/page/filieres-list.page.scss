@@ -42,7 +42,13 @@
     max-width: 100%;
   }
   
-  .spe-filter {
+  .toggle-filters {
+    display: flex;
+    align-items: center;
+  }
+  
+  .spe-filter,
+  .blame-filter {
     mat-button-toggle {
       display: flex;
       align-items: center;

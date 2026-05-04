@@ -54,6 +54,12 @@ export class SymboleEditFormComponent {
   // Spécificité
   protected isSpecificite = signal<boolean>(false);
   
+  // Absent (pour filière)
+  protected isAbsent = signal<boolean>(false);
+  
+  // Blame (pour signification)
+  protected isBlame = signal<boolean>(false);
+  
   // Sélections communes
   protected selectedSymboleSens = signal<IBaseSymbolSens | null>(null);
   protected selectedSymboleAccessory = signal<IBaseSymbolAcessory | null>(null);
@@ -103,6 +109,12 @@ export class SymboleEditFormComponent {
       
       // Initialiser la spécificité
       this.isSpecificite.set(relation.spe ?? false);
+      
+      // Initialiser absent
+      this.isAbsent.set(relation.absent ?? false);
+      
+      // Initialiser blame
+      this.isBlame.set(relation.blame ?? false);
       
       // Déterminer le mode en fonction de la relation
       if (relation.filiereId) {
@@ -190,6 +202,7 @@ export class SymboleEditFormComponent {
   protected clearFiliere(): void {
     this.selectedFiliere.set(null);
     this.selectedCirculaire.set(null);
+    this.isAbsent.set(false); // Réinitialiser le toggle absent
   }
   
   // Méthode pour retirer la sélection de signification
@@ -197,6 +210,7 @@ export class SymboleEditFormComponent {
     this.selectedSignification.set(null);
     this.selectedPosition.set(null);
     this.selectedPlacement.set(null);
+    this.isBlame.set(false); // Réinitialiser le toggle blame
   }
   
   // Handlers de sélection pour le mode filière
@@ -394,6 +408,8 @@ export class SymboleEditFormComponent {
       // Pour mode filière, envoyer les valeurs fixes
       relationData.positionId = 'position-3'; // sur circulaire
       relationData.placementId = 'placement-1'; // libre sous conditions
+      // Ajouter le champ absent uniquement pour mode filière
+      relationData.absent = this.isAbsent();
     } else {
       relationData.significationId = this.selectedSignification()?.id;
       relationData.filiereId = undefined;
@@ -401,6 +417,8 @@ export class SymboleEditFormComponent {
       // Pour mode signification, on envoie les sélections
       relationData.positionId = this.selectedPosition()?.id;
       relationData.placementId = this.selectedPlacement()?.id;
+      // Ajouter le champ blame uniquement pour mode signification
+      relationData.blame = this.isBlame();
     }
     
     this.validated.emit(relationData);

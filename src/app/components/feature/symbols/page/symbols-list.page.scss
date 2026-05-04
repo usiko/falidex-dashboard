@@ -32,10 +32,19 @@
 
 .filters {
   margin-bottom: 24px;
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  flex-wrap: wrap;
   
   .search-field {
     width: 400px;
     max-width: 100%;
+  }
+  
+  .toggle-filters {
+    display: flex;
+    align-items: center;
   }
 }
 

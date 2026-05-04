@@ -5,6 +5,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { FormsModule } from '@angular/forms';
 import { SymbolStore } from '../../../../stores/symbols/symbols.store';
 import { SymbolItemComponent } from '../smart/symbol-item/symbol-item.component';
@@ -27,6 +28,7 @@ import { SymbolAccessoryStore } from '../../../../stores/symbols-accessory/symbo
     MatInputModule,
     MatIconModule,
     MatChipsModule,
+    MatSlideToggleModule,
     FormsModule,
     SymbolItemComponent
   ],
@@ -46,14 +48,28 @@ export class SymbolsListPageComponent {
 
   protected readonly symbols = this.symbolStore.entities;
   protected readonly searchTerm = signal('');
+  protected readonly hideWithoutRelation = signal(false);
 
   protected readonly filteredSymbols = computed(() => {
     const search = this.searchTerm().toLowerCase().trim();
-    if (!search) {
-      return this.symbols();
+    const hideNoRelation = this.hideWithoutRelation();
+    
+    let filtered = this.symbols();
+    
+    // Filtre masquer sans relation
+    if (hideNoRelation) {
+      filtered = filtered.filter(symbol => {
+        const links = this.linkStoreInstance.getBySymboleId(symbol.id)();
+        return links.length > 0;
+      });
     }
     
-    return this.symbols().filter(symbol => {
+    // Filtre de recherche
+    if (!search) {
+      return filtered;
+    }
+    
+    return filtered.filter(symbol => {
       // Recherche dans le nom du symbole
       if (symbol.name?.toLowerCase().includes(search)) {
         return true;

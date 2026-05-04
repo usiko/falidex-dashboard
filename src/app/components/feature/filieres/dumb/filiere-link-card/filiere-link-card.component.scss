@@ -75,6 +75,13 @@
         font-weight: 600;
       }
     }
+    
+    .absent-badge {
+      .absent-true {
+        color: #f44336; // Material warn color
+        font-weight: 600;
+      }
+    }
   }
   
   .action-buttons {

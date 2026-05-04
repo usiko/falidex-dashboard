@@ -18,6 +18,12 @@
         </button>
       }
     </mat-form-field>
+    
+    <div class="toggle-filters">
+      <mat-slide-toggle [(ngModel)]="hideWithoutRelation" color="primary">
+        Masquer sans relation
+      </mat-slide-toggle>
+    </div>
   </div>
 
   <div class="symbols-grid">
