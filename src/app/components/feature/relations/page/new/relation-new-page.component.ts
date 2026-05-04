@@ -66,9 +66,20 @@ export class RelationNewPageComponent {
     if (relationId) {
       const relationToCopy = this.relationStore.entityMap()[relationId];
       if (relationToCopy) {
+        // Copier le statut national de la relation source
+        const isNational = relationToCopy.national || false;
+        
+        // Si la nouvelle relation sera nationale, retirer spe et absent
+        const relations = relationToCopy.relations
+          ? isNational
+            ? relationToCopy.relations.map(({ spe, absent, ...rest }) => rest)
+            : [...relationToCopy.relations]
+          : [];
+        
         return {
           ...baseRelation,
-          relations: relationToCopy.relations ? [...relationToCopy.relations] : [],
+          national: isNational,
+          relations,
           specificites: relationToCopy.specificites ? [...relationToCopy.specificites] : []
         };
       }

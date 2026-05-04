@@ -4,9 +4,18 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { FormsModule } from '@angular/forms';
 import { FiliereStore } from '../../../../stores/filieres/filieres.store';
 import { FiliereItemComponent } from '../smart/filiere-item/filiere-item.component';
+import { linkStore } from '../../../../stores/links/links.store';
+import { SymbolStore } from '../../../../stores/symbols/symbols.store';
+import { CirculaireStore } from '../../../../stores/circulaires/circulaires.store';
+import { CirculaireColorStore } from '../../../../stores/circulaires-colors/circulaires-colors.store';
+import { ColorStore } from '../../../../stores/colors/colors.store';
+import { SelectedRelationStore } from '../../../../stores/selected-relation/selected-relation.store';
+
+type SpeFilter = 'all' | 'with-spe' | 'without-spe';
 
 @Component({
   selector: 'app-filieres-list-page',
@@ -17,6 +26,7 @@ import { FiliereItemComponent } from '../smart/filiere-item/filiere-item.compone
     MatFormFieldModule,
     MatInputModule,
     MatIconModule,
+    MatButtonToggleModule,
     FormsModule,
     FiliereItemComponent
   ],
@@ -25,18 +35,93 @@ import { FiliereItemComponent } from '../smart/filiere-item/filiere-item.compone
 })
 export class FilieresListPageComponent {
   private readonly filiereStore = inject(FiliereStore);
+  private readonly linkStoreInstance = inject(linkStore);
+  private readonly symbolStore = inject(SymbolStore);
+  private readonly circulaireStore = inject(CirculaireStore);
+  private readonly circulaireColorStore = inject(CirculaireColorStore);
+  private readonly colorStore = inject(ColorStore);
+  private readonly selectedRelationStore = inject(SelectedRelationStore);
 
   protected readonly filieres = this.filiereStore.entities;
   protected readonly searchTerm = signal('');
+  protected readonly speFilter = signal<SpeFilter>('all');
+  protected readonly isNational = this.selectedRelationStore.isNational;
 
   protected readonly filteredFilieres = computed(() => {
     const search = this.searchTerm().toLowerCase().trim();
-    if (!search) {
-      return this.filieres();
+    const speFilterValue = this.speFilter();
+    
+    let filtered = this.filieres();
+    
+    // Filtre SPE
+    if (speFilterValue !== 'all') {
+      filtered = filtered.filter(filiere => {
+        const links = this.linkStoreInstance.getByFiliereId(filiere.id)();
+        const hasSpe = links.some(link => link.spe === true);
+        return speFilterValue === 'with-spe' ? hasSpe : !hasSpe;
+      });
     }
-    return this.filieres().filter(f => 
-      f.name?.toLowerCase().includes(search)
-    );
+    
+    // Filtre de recherche
+    if (!search) {
+      return filtered;
+    }
+    
+    return filtered.filter(filiere => {
+      // Recherche dans le nom de la filière
+      if (filiere.name?.toLowerCase().includes(search)) {
+        return true;
+      }
+      
+      // Récupérer les liens de cette filière
+      const links = this.linkStoreInstance.getByFiliereId(filiere.id)();
+      
+      // Recherche dans les noms de symboles
+      const symboleIds = [...new Set(links.map(link => link.symboleId).filter(Boolean))];
+      const hasMatchingSymbol = symboleIds.some(id => {
+        const symbol = this.symbolStore.getById(id!)();
+        return symbol?.name?.toLowerCase().includes(search);
+      });
+      
+      if (hasMatchingSymbol) {
+        return true;
+      }
+      
+      // Recherche dans les circulaires (nom et matière) et leurs couleurs
+      const circulaireIds = [...new Set(links.map(link => link.circulaireId).filter(Boolean))];
+      const hasMatchingCirculaire = circulaireIds.some(id => {
+        const circulaire = this.circulaireStore.getById(id!)();
+        
+        // Recherche dans le nom de la circulaire
+        if (circulaire?.name?.toLowerCase().includes(search)) {
+          return true;
+        }
+        
+        // Recherche dans la matière (velours/satin)
+        if (circulaire?.matiere?.toLowerCase().includes(search)) {
+          return true;
+        }
+        
+        // Recherche dans les couleurs de cette circulaire
+        if (circulaire) {
+          const circulaireColors = this.circulaireColorStore.getByCirculaireId(circulaire.id)();
+          const hasMatchingColor = circulaireColors.some(cc => {
+            return cc.colorIds.some(colorId => {
+              const color = this.colorStore.getById(colorId)();
+              return color?.name?.toLowerCase().includes(search);
+            });
+          });
+          
+          if (hasMatchingColor) {
+            return true;
+          }
+        }
+        
+        return false;
+      });
+      
+      return hasMatchingCirculaire;
+    });
   });
 
   protected clearSearch(): void {

@@ -32,10 +32,28 @@
 
 .filters {
   margin-bottom: 24px;
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  flex-wrap: wrap;
   
   .search-field {
     width: 400px;
     max-width: 100%;
+  }
+  
+  .spe-filter {
+    mat-button-toggle {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      
+      mat-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+      }
+    }
   }
 }
 

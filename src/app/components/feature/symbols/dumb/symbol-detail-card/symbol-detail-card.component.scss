@@ -57,10 +57,39 @@
       margin: 0 0 16px 0;
     }
     
-    .relations-container {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
+    .relations-groups {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      
+      @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    .relations-group {
+      .group-title {
+        font-size: 16px;
+        font-weight: 500;
+        color: #555;
+        margin: 0 0 12px 0;
+        padding-bottom: 8px;
+        border-bottom: 1px solid #ddd;
+      }
+      
+      .relations-container {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      
+      .empty-group {
+        text-align: center;
+        color: #999;
+        font-style: italic;
+        padding: 16px;
+        font-size: 14px;
+      }
     }
   }
   
