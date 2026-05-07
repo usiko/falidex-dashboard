@@ -1,4 +1,4 @@
-import { Component, inject, input, output } from '@angular/core';
+import { Component, computed, inject, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PositionStore } from '../../../stores/positions/positions.store';
 import { IBasePosition } from '../../../models/data/base-data-models';
@@ -12,10 +12,23 @@ import { IBasePosition } from '../../../models/data/base-data-models';
 })
 export class PositionsCollectionComponent {
   selectable = input<boolean>(false);
+  searchTerm = input<string>('');
   selection = output<IBasePosition>();
   
   private positionStore = inject(PositionStore);
-  protected positions = this.positionStore.entities;
+  
+  protected positions = computed(() => {
+    const term = this.searchTerm().toLowerCase().trim();
+    const allPositions = this.positionStore.entities();
+    
+    if (!term) {
+      return allPositions;
+    }
+    
+    return allPositions.filter(position => 
+      position.name?.toLowerCase().includes(term)
+    );
+  });
   
   protected onSelect(position: IBasePosition): void {
     if (this.selectable()) {

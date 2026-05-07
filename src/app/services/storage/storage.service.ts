@@ -21,6 +21,8 @@ export class StorageService {
             let date = value[ageProperty];
             if (!date) {
                 date = new Date().toISOString();
+            } else if (date instanceof Date) {
+                date = date.toISOString();
             }
             this.saveAge(key, date);
             return of(value);
@@ -38,7 +40,7 @@ export class StorageService {
                 return of(emptyValue);
             } else {
                 const storedAge = this.getAge(key);
-                
+                console.log('[STORAGE] get',key,emptyValue,ageProperty)
                 if(maxAge && storedAge)
                 {
                     const ageDate = new Date(storedAge);
@@ -46,6 +48,7 @@ export class StorageService {
                     const diffInMs = now.getTime() - ageDate.getTime();
                     
                     // Si la donnée est trop vieille (maxAge en millisecondes)
+                    console.log('[STORAGE] get',now.getTime(),ageDate.getTime(), diffInMs,maxAge)
                     if (diffInMs > maxAge) {
                         console.log(`⏰ Donnée expirée pour la clé "${key}" (${diffInMs}ms > ${maxAge}ms)`);
                         return of(emptyValue);
@@ -68,6 +71,9 @@ export class StorageService {
     public remove(key: string): Observable<any> {
         try {
             localStorage.removeItem(key);
+            // Supprimer aussi l'entrée de l'ageIndex
+            delete this.ages[key];
+            this.set('ageIndex', this.ages).subscribe();
             return of(null);
         } catch (error) {
             return throwError(() => error);
@@ -81,7 +87,9 @@ export class StorageService {
 
     public loadAges() {
         return this.get('ageIndex', {}).pipe(
+           
             tap((data) => {
+                 console.log('loaded ages',data)
                 this.ages = data;
             })
         );

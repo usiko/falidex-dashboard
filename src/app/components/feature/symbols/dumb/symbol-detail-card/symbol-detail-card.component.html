@@ -24,15 +24,42 @@
   @if (links().length > 0) {
     <div class="relations-section">
       <h2 class="section-title">Relations</h2>
-      <div class="relations-container">
-        @for (link of links(); track link.id) {
-          <app-symbol-relation-item 
-            [linkId]="link.id" 
-            [hideSymbol]="true" 
-            [editable]="editable()" 
-            (editLink)="editLink.emit($event)" 
-            (deleteLink)="deleteLink.emit($event)" />
-        }
+      <div class="relations-groups">
+        <div class="relations-group">
+          <h3 class="group-title">Filières</h3>
+          <div class="relations-container">
+            @if (filiereLinks().length > 0) {
+              @for (link of filiereLinks(); track link.id) {
+                <app-symbol-relation-item 
+                  [linkId]="link.id" 
+                  [hideSymbol]="true" 
+                  [editable]="editable()" 
+                  (editLink)="editLink.emit($event)" 
+                  (deleteLink)="deleteLink.emit($event)" />
+              }
+            } @else {
+              <p class="empty-group">Aucune relation avec filière</p>
+            }
+          </div>
+        </div>
+        
+        <div class="relations-group">
+          <h3 class="group-title">Significations</h3>
+          <div class="relations-container">
+            @if (significationLinks().length > 0) {
+              @for (link of significationLinks(); track link.id) {
+                <app-symbol-relation-item 
+                  [linkId]="link.id" 
+                  [hideSymbol]="true" 
+                  [editable]="editable()" 
+                  (editLink)="editLink.emit($event)" 
+                  (deleteLink)="deleteLink.emit($event)" />
+              }
+            } @else {
+              <p class="empty-group">Aucune relation avec signification</p>
+            }
+          </div>
+        </div>
       </div>
     </div>
   } @else {

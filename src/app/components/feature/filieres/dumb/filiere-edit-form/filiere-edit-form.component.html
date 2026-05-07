@@ -17,6 +17,14 @@
         </mat-slide-toggle>
       </div>
     }
+    <div class="absent-toggle">
+      <mat-slide-toggle 
+        [(ngModel)]="isAbsent" 
+        [disabled]="!editable()"
+        color="accent">
+        Absent
+      </mat-slide-toggle>
+    </div>
   </div>
   
   @if (filiere()) {

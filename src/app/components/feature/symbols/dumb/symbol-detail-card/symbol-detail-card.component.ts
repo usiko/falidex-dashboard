@@ -1,4 +1,4 @@
-import { Component, input, output, inject } from '@angular/core';
+import { Component, input, output, inject, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
@@ -30,6 +30,15 @@ export class SymbolDetailCardComponent {
   deleteLink = output<string>();
   
   private readonly dialog = inject(MatDialog);
+  
+  // Séparer les relations en deux groupes
+  protected readonly filiereLinks = computed(() => {
+    return this.links().filter(link => link.filiereId);
+  });
+  
+  protected readonly significationLinks = computed(() => {
+    return this.links().filter(link => link.significationId && !link.filiereId);
+  });
   
   openImageCarousel(index: number) {
     const symbol = this.symbol();

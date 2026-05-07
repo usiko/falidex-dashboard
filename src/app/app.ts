@@ -18,6 +18,7 @@ import { SymbolAccessoryStore } from './stores/symbols-accessory/symbols-accesso
 import { SymbolSensStore } from './stores/symbols-sens/symbols-sens.store';
 import { SymbolStore } from './stores/symbols/symbols.store';
 import { AuthService } from './services/auth/auth.service';
+import { SnackbarService } from './services/snackbar/snackbar.service';
 
 @Component({
   selector: 'app-root',
@@ -44,6 +45,7 @@ export class App implements OnInit {
   private readonly linkStore = inject(linkStore);
   private readonly selectedRelationStore = inject(SelectedRelationStore);
   private readonly authService = inject(AuthService);
+  private readonly snackbarService = inject(SnackbarService);
 
 
   ngOnInit(): void {
@@ -52,6 +54,12 @@ export class App implements OnInit {
     
     // Charger les données (pas besoin d'être loggé)
     this.loadAllData();
+    
+    // Écouter les événements du relation store
+    this.setupRelationStoreListeners();
+    
+    // Écouter les événements du link store
+    this.setupLinkStoreListeners();
   }
 
   private loadAllData(): void {
@@ -111,5 +119,165 @@ export class App implements OnInit {
         console.error('❌ Erreur lors du chargement des données:', error);
       }
     });
+  }
+
+  private setupRelationStoreListeners(): void {
+    const events = this.relationDataStore.getEvents();
+
+    // Écouter les événements de création
+    events.onCreate$?.subscribe(({ id, entity, send }) => {
+      if (send) {
+        this.dataService.createRelation(entity).subscribe({
+          next: () => {
+            console.log('✅ Relation créée:', id);
+            this.snackbarService.success('Relation créée avec succès');
+            this.reloadCurrentRelation()
+          },
+          error: (err) => {
+            console.error('❌ Erreur lors de la création de la relation:', err);
+            this.snackbarService.error('Erreur lors de la création de la relation');
+            this.reloadCurrentRelation()
+          }
+        });
+      }
+    });
+
+    // Écouter les événements de suppression
+    events.onRemove$?.subscribe(({ id, send }) => {
+      if (send) {
+        this.dataService.deleteRelation(id).subscribe({
+          next: () => {
+            console.log('✅ Relation supprimée:', id);
+            this.snackbarService.success('Relation supprimée avec succès');
+            this.reloadCurrentRelation()
+          },
+          error: (err) => {
+            console.error('❌ Erreur lors de la suppression de la relation:', err);
+            this.snackbarService.error('Erreur lors de la suppression de la relation');
+            this.reloadCurrentRelation()
+          }
+        });
+      }
+    });
+
+    // Écouter les événements de mise à jour
+    events.onUpdate$?.subscribe(({ id, changes, old,send }) => {
+      const updatedRelation = { ...old, ...changes };
+      if(send)
+      {
+        this.dataService.updateRelation(updatedRelation).subscribe({
+        next: () => {
+          console.log('✅ Relation mise à jour:', id);
+          this.snackbarService.success('Relation mise à jour avec succès');
+          this.reloadCurrentRelation()
+        },
+        error: (err) => {
+          console.error('❌ Erreur lors de la mise à jour de la relation:', err);
+          this.snackbarService.error('Erreur lors de la mise à jour de la relation');
+          this.reloadCurrentRelation()
+        }
+      });
+      }
+    });
+  }
+
+  private setupLinkStoreListeners(): void {
+    const events = this.linkStore.getEvents();
+
+    // Écouter les événements de création
+    events.onCreate$?.subscribe(({ id, entity, send }) => {
+      if (send) {
+        const relationId = this.selectedRelationStore.selectedRelationId();
+        if (relationId) {
+          this.dataService.createRelationItem(relationId, entity).subscribe({
+            next: () => {
+              console.log('✅ Relation item créé:', id);
+              this.snackbarService.success('Lien créé avec succès');
+              this.reloadCurrentLink()
+            },
+            error: (err) => {
+              console.error('❌ Erreur lors de la création du relation item:', err);
+              this.snackbarService.error('Erreur lors de la création du lien');
+              this.reloadCurrentLink()
+            }
+          });
+        }
+      }
+    });
+
+    // Écouter les événements de suppression
+    events.onRemove$?.subscribe(({ id, send }) => {
+      if (send) {
+        const relationId = this.selectedRelationStore.selectedRelationId();
+        if (relationId) {
+          this.dataService.deleteRelationItem(relationId, id).subscribe({
+            next: () => {
+              console.log('✅ Relation item supprimé:', id);
+              this.snackbarService.success('Lien supprimé avec succès');
+              this.reloadCurrentLink()
+            },
+            error: (err) => {
+              console.error('❌ Erreur lors de la suppression du relation item:', err);
+              this.snackbarService.error('Erreur lors de la suppression du lien');
+              this.reloadCurrentLink()
+            }
+          });
+        }
+      }
+    });
+
+    // Écouter les événements de mise à jour
+    events.onUpdate$?.subscribe(({ id, changes, old, send }) => {
+      if (send) {
+        const relationId = this.selectedRelationStore.selectedRelationId();
+        if (relationId) {
+          const updatedItem = { ...old, ...changes };
+          this.dataService.updateRelationItem(relationId, updatedItem).subscribe({
+            next: () => {
+              console.log('✅ Relation item mis à jour:', id);
+              this.snackbarService.success('Lien mis à jour avec succès');
+               this.reloadCurrentLink()
+            },
+            error: (err) => {
+              console.error('❌ Erreur lors de la mise à jour du relation item:', err);
+              this.snackbarService.error('Erreur lors de la mise à jour du lien');
+              // Restaurer l'ancienne valeur si l'API échoue
+               this.reloadCurrentLink()
+            }
+          });
+        }
+      }
+    });
+  }
+
+  reloadCurrentLink()
+  {
+    let currentId = this.selectedRelationStore.selectedRelationId();
+    if (currentId)
+    {
+        this.dataService.getRelationById(currentId).subscribe((data)=>{
+            this.linkStore.set(data.relations)
+        })
+    }
+
+  }
+  reloadCurrentRelation()
+  {
+    let currentId = this.selectedRelationStore.selectedRelationId();
+    if (currentId)
+    {
+        this.dataService.getRelationById(currentId).subscribe((data)=>{
+            this.relationDataStore.update(currentId,{
+                annee:data.annee,
+                editable:data.editable,
+                name:data.name,
+                national:data.national,
+                ville:data.ville,
+                specificites:data.specificites,
+                default:data.default
+            },false)
+        })
+    }
+
   }
 }

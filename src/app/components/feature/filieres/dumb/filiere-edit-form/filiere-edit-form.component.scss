@@ -20,9 +20,11 @@
       border: none;
     }
 
-    .specificite-toggle {
+    .specificite-toggle,
+    .absent-toggle {
       display: flex;
       align-items: center;
+      margin-left: 16px;
     }
   }
   

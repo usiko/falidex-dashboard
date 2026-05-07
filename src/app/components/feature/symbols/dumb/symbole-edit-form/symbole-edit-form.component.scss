@@ -20,7 +20,15 @@
       border: none;
     }
 
-    .specificite-toggle {
+    .toggles-container {
+      display: flex;
+      gap: 24px;
+      align-items: center;
+    }
+
+    .specificite-toggle,
+    .absent-toggle,
+    .blame-toggle {
       display: flex;
       align-items: center;
     }

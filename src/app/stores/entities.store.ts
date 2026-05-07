@@ -8,10 +8,10 @@ import { BehaviorSubject, Subject } from 'rxjs';
  * Interface pour les subjects d'événements CRUD
  */
 export interface EntityEventSubjects<T> {
-  onAdd$?: Subject<{ id: string; entity: T }>;
-  onCreate$?: Subject<{ id: string; entity: T }>;
-  onRemove$?: Subject<{ id: string }>;
-  onUpdate$?: Subject<{ id: string; changes: Partial<T>, old:T }>;
+  onAdd$?: Subject<{ id: string; entity: T; send:boolean }>;
+  onCreate$?: Subject<{ id: string; entity: T; send:boolean }>;
+  onRemove$?: Subject<{ id: string; send:boolean }>;
+  onUpdate$?: Subject<{ id: string; changes: Partial<T>, old:T,send:boolean}>;
   onSet$?: Subject<{ entities: T[] }>;
   onClear$?: Subject<void>;
   onLoadIdsChange$: BehaviorSubject<string[]>;
@@ -23,10 +23,10 @@ export interface EntityEventSubjects<T> {
 export function createEntityMethods<T extends { id: string }, TAdditional = any>(additionalSubjects?: TAdditional) {
   // Créer les subjects directement dans la fonction
   const subjects: EntityEventSubjects<T> = {
-    onAdd$: new Subject<{ id: string; entity: T }>(),
-    onCreate$: new Subject<{ id: string; entity: T }>(),
-    onRemove$: new Subject<{ id: string }>(),
-    onUpdate$: new Subject<{ id: string; changes: Partial<T>, old:T }>(),
+    onAdd$: new Subject<{ id: string; entity: T,send:boolean }>(),
+    onCreate$: new Subject<{ id: string; entity: T,send:boolean }>(),
+    onRemove$: new Subject<{ id: string,send:boolean }>(),
+    onUpdate$: new Subject<{ id: string; changes: Partial<T>, old:T,send:boolean }>(),
     onSet$: new Subject<{ entities: T[] }>(),
     onClear$: new Subject<void>(),
     onLoadIdsChange$: new BehaviorSubject<string[]>([]),
@@ -103,29 +103,26 @@ export function createEntityMethods<T extends { id: string }, TAdditional = any>
     /**
      * Ajoute une entité existante au store
      */
-    add(item: T) {
+    add(item: T, send:boolean=true) {
       patchState(store, addEntity(item));
-      subjects.onAdd$?.next({ id: item.id, entity: item });
-    },
-    add__whithoutStore(item: T) {
-      subjects.onAdd$?.next({ id: item.id, entity: item });
+      subjects.onAdd$?.next({ id: item.id, entity: item, send:!!send });
     },
 
     /**
      * Crée et ajoute une nouvelle entité avec un ID généré
      */
-    create(item: Omit<T, 'id'>) {
+    create(item: Omit<T, 'id'>, send:boolean=true) {
       const id = v6();
       const newItem = { id, ...item } as T;
       patchState(store, addEntity(newItem));
-      subjects.onCreate$?.next({ id, entity: newItem });
+      subjects.onCreate$?.next({ id, entity: newItem, send:!!send });
       return id;
     },
 
-    create_whithoutStore(item: Omit<T, 'id'>) {
+    create_whithoutStore(item: Omit<T, 'id'>, send:boolean=true) {
       const id = v6();
       const newItem = { id, ...item } as T;
-      subjects.onCreate$?.next({ id, entity: newItem });
+      subjects.onCreate$?.next({ id, entity: newItem, send:!!send });
       return id;
     },
 
@@ -144,15 +141,15 @@ export function createEntityMethods<T extends { id: string }, TAdditional = any>
     /**
      * Supprime une entité par son ID
      */
-    remove(id: string) {
+    remove(id: string, send:boolean=true) {
       patchState(store, removeEntity(id));
-      subjects.onRemove$?.next({ id });
+      subjects.onRemove$?.next({ id, send:!!send });
     },
 
     /**
      * Met à jour une entité existante
      */
-    update(id: string, item: Partial<T>) {
+    update(id: string, item: Partial<T>,send:boolean=true) {
       const old = this.getById(id)();
       if(old)
       {
@@ -163,7 +160,7 @@ export function createEntityMethods<T extends { id: string }, TAdditional = any>
             changes: item,
             }),
         );
-        subjects.onUpdate$?.next({ id, changes: item, old });
+        subjects.onUpdate$?.next({ id, changes: item, old,send:!!send });
       }
       
       
@@ -185,12 +182,6 @@ export function createEntityMethods<T extends { id: string }, TAdditional = any>
       patchState(store, setAllEntities([]));
     },
 
-    /**
-     * delete only on store
-     */
-    removeFromStore(id: string) {
-      patchState(store, removeEntity(id));
-    },
 
     /**
      * Compte le nombre total d'entités

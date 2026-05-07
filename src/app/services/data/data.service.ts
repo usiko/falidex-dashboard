@@ -16,7 +16,7 @@ import {
   IBaseSymbolAcessory,
   IBaseCodeSpe
 } from '../../models/data/base-data-models';
-import { IRelationData } from '../../models/data/base-relations.models';
+import { IRelationData, IRelationItem } from '../../models/data/base-relations.models';
 import { PictureService } from '../picture/picture.service';
 import { ConfigService } from '../config/config.service';
 import { AppConfigService } from '../config/app.config.service';
@@ -135,6 +135,71 @@ export class DataService {
   getRelationById(relationId: string): Observable<IRelationData> {
     return this.http.get<IRelationData>(`${this.configService.getConfig()?.urls.dataServer}/${this.configService.getConfig()?.paths.dataLinkItem}/${relationId}`).pipe(
       map(data => this.ensureRelationItemIds(data))
+    );
+  }
+  /**
+   * creer une relation item
+   */
+  createRelation(item:Omit<IRelationData,'id'>): Observable<void> {
+    return this.http.post<IRelationData>(
+        `${this.configService.getConfig()?.urls.dataServer}/${this.configService.getConfig()?.paths.dataLinkItem}`,
+        item
+    ).pipe(
+      map(data =>void 0)
+    );
+  }
+  /**
+   * creer une relation item
+   */
+  updateRelation(item:IRelationData): Observable<void> {
+    return this.http.put(
+        `${this.configService.getConfig()?.urls.dataServer}/${this.configService.getConfig()?.paths.dataLinkItem}`,
+        item
+    ).pipe(
+      map(data =>void 0)
+    );
+  }
+  /**
+   * creer une relation item
+   */
+  deleteRelation(id:string): Observable<void> {
+    return this.http.delete(
+        `${this.configService.getConfig()?.urls.dataServer}/${this.configService.getConfig()?.paths.dataLinkItem}/${id}`
+    ).pipe(
+      map(data =>void 0)
+    );
+  }
+  /**
+   * creer une relation item
+   */
+  createRelationItem(relationId: string,item:Omit<IRelationItem,'id'>): Observable<void> {
+    return this.http.post<IRelationData>(
+        `${this.configService.getConfig()?.urls.dataServer}/${this.configService.getConfig()?.paths.dataLinkItem}/${relationId}/create`,
+        item
+    ).pipe(
+      map(data =>void 0)
+    );
+  }
+  /**
+   * update une relation item
+   */
+  updateRelationItem(relationId: string,item:IRelationItem): Observable<void> {
+    return this.http.post<IRelationData>(
+        `${this.configService.getConfig()?.urls.dataServer}/${this.configService.getConfig()?.paths.dataLinkItem}/${relationId}/update`,
+        item
+    ).pipe(
+      map(data =>void 0)
+    );
+  }
+
+  /**
+   * delete une relation item
+   */
+  deleteRelationItem(relationId: string, itemId: string): Observable<void> {
+    return this.http.delete(
+        `${this.configService.getConfig()?.urls.dataServer}/${this.configService.getConfig()?.paths.dataLinkItem}/${relationId}/relation-item/${itemId}`
+    ).pipe(
+      map(data =>void 0)
     );
   }
 

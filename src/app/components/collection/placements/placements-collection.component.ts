@@ -1,4 +1,4 @@
-import { Component, inject, input, output } from '@angular/core';
+import { Component, computed, inject, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PlacementStore } from '../../../stores/placements/placements.store';
 import { IBasePlacement } from '../../../models/data/base-data-models';
@@ -12,10 +12,23 @@ import { IBasePlacement } from '../../../models/data/base-data-models';
 })
 export class PlacementsCollectionComponent {
   selectable = input<boolean>(false);
+  searchTerm = input<string>('');
   selection = output<IBasePlacement>();
   
   private placementStore = inject(PlacementStore);
-  protected placements = this.placementStore.entities;
+  
+  protected placements = computed(() => {
+    const term = this.searchTerm().toLowerCase().trim();
+    const allPlacements = this.placementStore.entities();
+    
+    if (!term) {
+      return allPlacements;
+    }
+    
+    return allPlacements.filter(placement => 
+      placement.name?.toLowerCase().includes(term)
+    );
+  });
   
   protected onSelect(placement: IBasePlacement): void {
     if (this.selectable()) {

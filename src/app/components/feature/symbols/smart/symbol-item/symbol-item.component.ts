@@ -87,6 +87,8 @@ export class SymbolItemComponent {
         
         // Vérifier si au moins un lien a spe=true
         const hasSpe = groupLinks.some(link => link.spe === true);
+        const hasBlame = groupLinks.some(link => link.blame === true);
+        const hasAbsent = groupLinks.some(link => link.absent === true);
         
         // Trouver les couleurs pour ce circulaire
         const colors: ColorInfo[] = [];
@@ -114,7 +116,9 @@ export class SymbolItemComponent {
             colors: colors.filter((c, index, self) => 
               index === self.findIndex((t) => t.name === c.name)
             ),
-            hasSpe
+            hasSpe,
+            hasBlame,
+            hasAbsent
           });
         }
       });
@@ -132,7 +136,9 @@ export class SymbolItemComponent {
     if (linksWithSignification.length > 0) {
       const details: PositionDetail[] = linksWithSignification.map(link => {
         const detail: PositionDetail = {
-          spe: link.spe
+          spe: link.spe,
+          blame: link.blame,
+          absent: link.absent
         };
         
         if (link.symboleSensId) {

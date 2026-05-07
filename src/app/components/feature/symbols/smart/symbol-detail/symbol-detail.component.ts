@@ -65,7 +65,7 @@ export class SymbolDetailComponent {
     dialogRef.afterClosed().subscribe(confirmed => {
       if (confirmed) {
         console.log('Suppression confirmée pour linkId:', linkId);
-        // TODO: Implémenter la logique de suppression
+        this.linksStore.remove(linkId);
       }
     });
   }

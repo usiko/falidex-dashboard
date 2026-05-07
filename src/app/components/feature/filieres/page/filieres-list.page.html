@@ -4,13 +4,13 @@
       <mat-icon>school</mat-icon>
       Filières
     </h1>
-    <p class="subtitle">{{ filieres().length }} filière(s) disponible(s)</p>
+    <p class="subtitle">{{ filteredFilieres().length }} filière(s) disponible(s)</p>
   </div>
 
   <div class="filters">
     <mat-form-field appearance="outline" class="search-field">
       <mat-label>Rechercher</mat-label>
-      <input matInput [(ngModel)]="searchTerm" placeholder="Nom de la filière..." />
+      <input matInput [(ngModel)]="searchTerm" placeholder="Nom, symbole, couleur, matière..." />
       <mat-icon matPrefix>search</mat-icon>
       @if (searchTerm()) {
         <button matSuffix mat-icon-button (click)="clearSearch()">
@@ -18,6 +18,42 @@
         </button>
       }
     </mat-form-field>
+    
+    <div class="toggle-filters">
+      <mat-slide-toggle [(ngModel)]="hideWithoutRelation" color="primary">
+        Masquer sans relation
+      </mat-slide-toggle>
+    </div>
+    
+    <mat-button-toggle-group [(ngModel)]="speFilter" class="spe-filter">
+      <mat-button-toggle value="all">
+        <mat-icon>view_list</mat-icon>
+        Toutes
+      </mat-button-toggle>
+      <mat-button-toggle value="with-spe">
+        <mat-icon>star</mat-icon>
+        Avec SPE
+      </mat-button-toggle>
+      <mat-button-toggle value="without-spe">
+        <mat-icon>star_outline</mat-icon>
+        Sans SPE
+      </mat-button-toggle>
+    </mat-button-toggle-group>
+    
+    <mat-button-toggle-group [(ngModel)]="absentFilter" class="absent-filter">
+      <mat-button-toggle value="all">
+        <mat-icon>view_list</mat-icon>
+        Toutes
+      </mat-button-toggle>
+      <mat-button-toggle value="with-absent">
+        <mat-icon>do_not_disturb</mat-icon>
+        Avec Absent
+      </mat-button-toggle>
+      <mat-button-toggle value="without-absent">
+        <mat-icon>check_circle</mat-icon>
+        Sans Absent
+      </mat-button-toggle>
+    </mat-button-toggle-group>
   </div>
 
   <div class="filieres-grid">

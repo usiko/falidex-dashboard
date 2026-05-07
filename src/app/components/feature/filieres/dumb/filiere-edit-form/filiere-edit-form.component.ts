@@ -47,6 +47,7 @@ export class FiliereEditFormComponent {
   
   // Spécificité
   protected isSpecificite = signal<boolean>(false);
+  protected isAbsent = signal<boolean>(false);
   
   // Valeurs fixes non modifiables
   protected readonly position = 'sur circulaire';
@@ -76,6 +77,7 @@ export class FiliereEditFormComponent {
       
       // Initialiser la spécificité
       this.isSpecificite.set(relation.spe ?? false);
+      this.isAbsent.set(relation.absent ?? false);
       
       // Charger le symbole
       if (relation.symboleId) {
@@ -235,6 +237,7 @@ export class FiliereEditFormComponent {
       placementId: 'placement-1', // libre sous conditions (valeur fixe)
       significationId: undefined,
       spe: this.isSpecificite(),
+      absent: this.isAbsent(),
       note: undefined
     };
     

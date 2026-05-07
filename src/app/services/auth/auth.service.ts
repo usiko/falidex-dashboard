@@ -117,8 +117,14 @@ export class AuthService {
     getCurrentAuthToken(): Observable<string|undefined> {
        return this.storageService.get("auth-token",undefined,'date', 23 * 60 * 60 * 1000).pipe(
          switchMap((data:{value:string,date:Date}|undefined)=>{
+            // Si le token est absent ou expiré, nettoyer le store et currentUserStore
+            if (!data?.value) {
+                this.storageService.remove("auth-token").subscribe();
+                this.currentUserStore.clearUser();
+            }
             return of(data?.value);
          })
+
        )
     }
 

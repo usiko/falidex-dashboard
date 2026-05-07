@@ -7,6 +7,8 @@ import { CirculaireStore } from '../../../../../stores/circulaires/circulaires.s
 import { CirculaireColorStore } from '../../../../../stores/circulaires-colors/circulaires-colors.store';
 import { ColorStore } from '../../../../../stores/colors/colors.store';
 import { SignificationStore } from '../../../../../stores/significations/significations.store';
+import { SymbolSensStore } from '../../../../../stores/symbols-sens/symbols-sens.store';
+import { SymbolAccessoryStore } from '../../../../../stores/symbols-accessory/symbols-accessory.store';
 import { SymbolRelationData } from '../../models/symbol-relation-data.model';
 import { SymbolRelationCardComponent } from '../../dumb/symbol-relation-card/symbol-relation-card.component';
 
@@ -35,6 +37,8 @@ export class SymbolRelationItemComponent {
   private readonly circulaireColorStore = inject(CirculaireColorStore);
   private readonly colorStore = inject(ColorStore);
   private readonly significationStore = inject(SignificationStore);
+  private readonly symbolSensStore = inject(SymbolSensStore);
+  private readonly symbolAccessoryStore = inject(SymbolAccessoryStore);
   
   protected readonly relationData = computed(() => {
     const linkId = this.linkId();
@@ -48,6 +52,8 @@ export class SymbolRelationItemComponent {
     const filiere = link.filiereId ? this.filiereStore.getById(link.filiereId)() : undefined;
     const circulaire = link.circulaireId ? this.circulaireStore.getById(link.circulaireId)() : undefined;
     const signification = link.significationId ? this.significationStore.getById(link.significationId)() : undefined;
+    const symbolSens = link.symboleSensId ? this.symbolSensStore.getById(link.symboleSensId)() : undefined;
+    const symbolAccessory = link.symboleAccessoryId ? this.symbolAccessoryStore.getById(link.symboleAccessoryId)() : undefined;
     
     // Charger les couleurs de la circulaire
     let circulaireColors: any[] = [];
@@ -69,6 +75,8 @@ export class SymbolRelationItemComponent {
       filiere,
       circulaire,
       signification,
+      symbolSens,
+      symbolAccessory,
       circulaireColors
     };
   });

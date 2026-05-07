@@ -15,6 +15,7 @@ import { ColorBadgeComponent, ColorBadgeData } from '../../shared/color-badge/co
 })
 export class CirculairesCollectionComponent {
   selectable = input<boolean>(false);
+  searchTerm = input<string>('');
   selection = output<IBaseCirculaire>();
   
   private circulaireStore = inject(CirculaireStore);
@@ -22,7 +23,14 @@ export class CirculairesCollectionComponent {
   private colorStore = inject(ColorStore);
   
   protected circulaires = computed(() => {
-    return this.circulaireStore.entities().map(circulaire => {
+    const term = this.searchTerm().toLowerCase().trim();
+    const allCirculaires = this.circulaireStore.entities();
+    
+    const filteredCirculaires = !term 
+      ? allCirculaires
+      : allCirculaires.filter(circ => circ.name?.toLowerCase().includes(term));
+    
+    return filteredCirculaires.map(circulaire => {
       const circulaireColors = this.circulaireColorStore.getByCirculaireId(circulaire.id)();
       const colors: ColorBadgeData[] = [];
       

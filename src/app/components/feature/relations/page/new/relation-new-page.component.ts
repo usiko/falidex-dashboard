@@ -66,9 +66,21 @@ export class RelationNewPageComponent {
     if (relationId) {
       const relationToCopy = this.relationStore.entityMap()[relationId];
       if (relationToCopy) {
+        // Copier le statut national de la relation source
+        const isNational = relationToCopy.national || false;
+        
+        // Filtrer pour exclure les relations marquées SPE
+        const filteredRelations = relationToCopy.relations
+          ? relationToCopy.relations.filter(rel => rel.spe !== true)
+          : [];
+        
+        // Retirer les propriétés spe et absent de toutes les relations copiées
+        const relations = filteredRelations.map(({ spe, absent, ...rest }) => rest);
+        
         return {
           ...baseRelation,
-          relations: relationToCopy.relations ? [...relationToCopy.relations] : [],
+          national: isNational,
+          relations,
           specificites: relationToCopy.specificites ? [...relationToCopy.specificites] : []
         };
       }
@@ -89,7 +101,7 @@ export class RelationNewPageComponent {
     }
 
     // Ajout de la nouvelle relation
-    this.relationStore.add(relationData);
+    this.relationStore.create(relationData);
     
     console.log('Nouvelle relation créée:', relationData);
     

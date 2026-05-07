@@ -4,9 +4,25 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { FormsModule } from '@angular/forms';
 import { FiliereStore } from '../../../../stores/filieres/filieres.store';
 import { FiliereItemComponent } from '../smart/filiere-item/filiere-item.component';
+import { linkStore } from '../../../../stores/links/links.store';
+import { SymbolStore } from '../../../../stores/symbols/symbols.store';
+import { CirculaireStore } from '../../../../stores/circulaires/circulaires.store';
+import { CirculaireColorStore } from '../../../../stores/circulaires-colors/circulaires-colors.store';
+import { ColorStore } from '../../../../stores/colors/colors.store';
+import { SelectedRelationStore } from '../../../../stores/selected-relation/selected-relation.store';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+
+type SpeFilter = 'all' | 'with-spe' | 'without-spe';
+type AbsentFilter = 'all' | 'with-absent' | 'without-absent';
+
+// Fonction pour normaliser les chaînes en supprimant les accents
+function normalizeString(str: string): string {
+  return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+}
 
 @Component({
   selector: 'app-filieres-list-page',
@@ -17,6 +33,8 @@ import { FiliereItemComponent } from '../smart/filiere-item/filiere-item.compone
     MatFormFieldModule,
     MatInputModule,
     MatIconModule,
+    MatButtonToggleModule,
+    MatSlideToggleModule,
     FormsModule,
     FiliereItemComponent
   ],
@@ -25,18 +43,114 @@ import { FiliereItemComponent } from '../smart/filiere-item/filiere-item.compone
 })
 export class FilieresListPageComponent {
   private readonly filiereStore = inject(FiliereStore);
+  private readonly linkStoreInstance = inject(linkStore);
+  private readonly symbolStore = inject(SymbolStore);
+  private readonly circulaireStore = inject(CirculaireStore);
+  private readonly circulaireColorStore = inject(CirculaireColorStore);
+  private readonly colorStore = inject(ColorStore);
+  private readonly selectedRelationStore = inject(SelectedRelationStore);
 
   protected readonly filieres = this.filiereStore.entities;
   protected readonly searchTerm = signal('');
+  protected readonly speFilter = signal<SpeFilter>('all');
+  protected readonly absentFilter = signal<AbsentFilter>('all');
+  protected readonly hideWithoutRelation = signal(false);
+  protected readonly isNational = this.selectedRelationStore.isNational;
 
   protected readonly filteredFilieres = computed(() => {
-    const search = this.searchTerm().toLowerCase().trim();
-    if (!search) {
-      return this.filieres();
+    const search = normalizeString(this.searchTerm().trim());
+    const speFilterValue = this.speFilter();
+    const absentFilterValue = this.absentFilter();
+    const hideNoRelation = this.hideWithoutRelation();
+    
+    let filtered = this.filieres();
+    
+    // Filtre masquer sans relation
+    if (hideNoRelation) {
+      filtered = filtered.filter(filiere => {
+        const links = this.linkStoreInstance.getByFiliereId(filiere.id)();
+        return links.length > 0;
+      });
     }
-    return this.filieres().filter(f => 
-      f.name?.toLowerCase().includes(search)
-    );
+    
+    // Filtre SPE
+    if (speFilterValue !== 'all') {
+      filtered = filtered.filter(filiere => {
+        const links = this.linkStoreInstance.getByFiliereId(filiere.id)();
+        const hasSpe = links.some(link => link.spe === true);
+        return speFilterValue === 'with-spe' ? hasSpe : !hasSpe;
+      });
+    }
+    
+    // Filtre Absent
+    if (absentFilterValue !== 'all') {
+      filtered = filtered.filter(filiere => {
+        const links = this.linkStoreInstance.getByFiliereId(filiere.id)();
+        const hasAbsent = links.some(link => link.absent === true);
+        return absentFilterValue === 'with-absent' ? hasAbsent : !hasAbsent;
+      });
+    }
+    
+    // Filtre de recherche
+    if (!search) {
+      return filtered;
+    }
+    
+    return filtered.filter(filiere => {
+      // Recherche dans le nom de la filière
+      if (normalizeString(filiere.name || '').includes(search)) {
+        return true;
+      }
+      
+      // Récupérer les liens de cette filière
+      const links = this.linkStoreInstance.getByFiliereId(filiere.id)();
+      
+      // Recherche dans les noms de symboles
+      const symboleIds = [...new Set(links.map(link => link.symboleId).filter(Boolean))];
+      const hasMatchingSymbol = symboleIds.some(id => {
+        const symbol = this.symbolStore.getById(id!)();
+        return normalizeString(symbol?.name || '').includes(search);
+      });
+      
+      if (hasMatchingSymbol) {
+        return true;
+      }
+      
+      // Recherche dans les circulaires (nom et matière) et leurs couleurs
+      const circulaireIds = [...new Set(links.map(link => link.circulaireId).filter(Boolean))];
+      const hasMatchingCirculaire = circulaireIds.some(id => {
+        const circulaire = this.circulaireStore.getById(id!)();
+        
+        // Recherche dans le nom de la circulaire
+        if (normalizeString(circulaire?.name || '').includes(search)) {
+          return true;
+        }
+        
+        // Recherche dans la matière (velours/satin)
+        if (normalizeString(circulaire?.matiere || '').includes(search)) {
+          return true;
+        }
+        
+        // Recherche dans les couleurs de cette circulaire
+        if (circulaire) {
+          const circulaireColors = this.circulaireColorStore.getByCirculaireId(circulaire.id)();
+          const hasMatchingColor = circulaireColors.some(cc => {
+            return cc.colorIds.some(colorId => {
+              const color = this.colorStore.getById(colorId)();
+              return normalizeString(color?.name || '').includes(search);
+            });
+          });
+          
+          if (hasMatchingColor) {
+            return true;
+          }
+        }
+        
+        return false;
+      });
+      
+      return hasMatchingCirculaire;
+    });
   });
 
   protected clearSearch(): void {

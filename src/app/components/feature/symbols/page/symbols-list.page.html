@@ -4,13 +4,13 @@
       <mat-icon>star</mat-icon>
       Symboles
     </h1>
-    <p class="subtitle">{{ symbols().length }} symbole(s) disponible(s)</p>
+    <p class="subtitle">{{ filteredSymbols().length }} symbole(s) disponible(s)</p>
   </div>
 
   <div class="filters">
     <mat-form-field appearance="outline" class="search-field">
       <mat-label>Rechercher</mat-label>
-      <input matInput [(ngModel)]="searchTerm" placeholder="Nom du symbole..." />
+      <input matInput [(ngModel)]="searchTerm" placeholder="Nom, filière, signification, couleur, sens..." />
       <mat-icon matPrefix>search</mat-icon>
       @if (searchTerm()) {
         <button matSuffix mat-icon-button (click)="clearSearch()">
@@ -18,6 +18,72 @@
         </button>
       }
     </mat-form-field>
+    
+    <div class="toggle-filters">
+      <mat-slide-toggle [(ngModel)]="hideWithoutRelation" color="primary">
+        Masquer sans relation
+      </mat-slide-toggle>
+    </div>
+    
+    <mat-button-toggle-group [(ngModel)]="blameFilter" class="blame-filter">
+      <mat-button-toggle value="all">
+        <mat-icon>view_list</mat-icon>
+        Tous
+      </mat-button-toggle>
+      <mat-button-toggle value="with-blame">
+        <mat-icon>warning</mat-icon>
+        Avec Blame
+      </mat-button-toggle>
+      <mat-button-toggle value="without-blame">
+        <mat-icon>check_circle</mat-icon>
+        Sans Blame
+      </mat-button-toggle>
+    </mat-button-toggle-group>
+
+    <mat-button-toggle-group [(ngModel)]="relationFilter" class="relation-filter">
+      <mat-button-toggle value="all">
+        <mat-icon>view_list</mat-icon>
+        Tous
+      </mat-button-toggle>
+      <mat-button-toggle value="only-filiere">
+        <mat-icon>school</mat-icon>
+        Uniquement Filière
+      </mat-button-toggle>
+      <mat-button-toggle value="only-signification">
+        <mat-icon>description</mat-icon>
+        Uniquement Signification
+      </mat-button-toggle>
+    </mat-button-toggle-group>
+
+    <mat-button-toggle-group [(ngModel)]="supportFilter" class="support-filter">
+      <mat-button-toggle value="all">
+        <mat-icon>view_list</mat-icon>
+        Tous
+      </mat-button-toggle>
+      <mat-button-toggle value="circulaire">
+        <mat-icon>circle</mat-icon>
+        Sur Circulaire
+      </mat-button-toggle>
+      <mat-button-toggle value="velours">
+        <mat-icon>texture</mat-icon>
+        Sur Velours
+      </mat-button-toggle>
+    </mat-button-toggle-group>
+
+    <mat-button-toggle-group [(ngModel)]="speFilter" class="spe-filter">
+      <mat-button-toggle value="all">
+        <mat-icon>view_list</mat-icon>
+        Tous
+      </mat-button-toggle>
+      <mat-button-toggle value="with-spe">
+        <mat-icon>star</mat-icon>
+        Avec SPE
+      </mat-button-toggle>
+      <mat-button-toggle value="without-spe">
+        <mat-icon>block</mat-icon>
+        Sans SPE
+      </mat-button-toggle>
+    </mat-button-toggle-group>
   </div>
 
   <div class="symbols-grid">

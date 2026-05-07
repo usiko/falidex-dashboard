@@ -37,9 +37,6 @@ export class RelationEditComponent {
     this.relationStore.update(relationData.id, relationData);
     
     console.log('Relation mise à jour:', relationData);
-    
-    // Retour à la page précédente
-    this.router.navigate(['/filieres']);
   }
   
   protected onDeleted(): void {

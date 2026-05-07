@@ -7,6 +7,8 @@ export interface PositionDetail {
   significationName?: string;
   placementName?: string;
   spe?: boolean;
+  blame?: boolean;
+  absent?: boolean;
 }
 
 @Component({

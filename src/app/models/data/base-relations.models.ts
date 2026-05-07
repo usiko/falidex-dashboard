@@ -12,6 +12,8 @@ export interface IRelationItem {
     circulaireId?: string;
     significationId?: string;
     spe?: boolean;
+    absent?:boolean;
+    blame?:boolean;
     note?: string;
 }
 

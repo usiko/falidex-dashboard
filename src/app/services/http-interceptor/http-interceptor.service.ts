@@ -1,10 +1,11 @@
 import { HttpErrorResponse, HttpEvent, HttpHandlerFn, HttpInterceptorFn, HttpRequest } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
-import { catchError, switchMap } from 'rxjs/operators';
+import { catchError, switchMap, tap } from 'rxjs/operators';
 import { AuthService } from '../auth/auth.service';
 import { AppConfigService } from '../config/app.config.service';
 import { environment } from '../../../environments/environment';
+import { SnackbarService } from '../snackbar/snackbar.service';
 
 
 export const httpInterceptor: HttpInterceptorFn = (
@@ -13,6 +14,7 @@ export const httpInterceptor: HttpInterceptorFn = (
 ): Observable<HttpEvent<unknown>> => {
     const authService = inject(AuthService);
     const configService = inject(AppConfigService);
+    const snackbarService = inject(SnackbarService);
     const tokenHeader = environment.tokenHeader;
     const dataBaseUrl = configService.getConfig()?.urls.dataServer;
     const tokenPath = configService.getConfig()?.paths.token;
@@ -31,42 +33,96 @@ export const httpInterceptor: HttpInterceptorFn = (
     // Sinon, on applique la logique d'authentification
     return authService.getToken().pipe(
         switchMap(token => {
-            // Cloner la requête avec le token dans le header configuré
-            const clonedRequest = token 
-                ? request.clone({ headers: request.headers.set(tokenHeader, token) })
-                : request;
-            
-            return next(clonedRequest).pipe(
-                catchError((error: any) => {
-                    if (error instanceof HttpErrorResponse) {
-                        // Vérifier si l'erreur correspond à 'Missing X-Token header'
-                        if (error.error?.error === 'UNAUTHORIZED' && 
-                            (error.error?.message === 'Missing X-Token header'|| error.error?.message === 'Invalid or expired token')) {
-                            console.error('🔒 Erreur détectée: Token X-Token manquant, retry...', {
-                                url: request.url,
-                                status: error.status
-                            });
-                            
-                            // Refaire getToken() et retry la requête
-                            return authService.authToken().pipe(
-                                switchMap(()=>{
-                                    return authService.getToken()
-                                }),
-                                switchMap(newToken => {
-                                    if(!newToken)
-                                    {
-                                        console.error("no token")
-                                        return throwError(() => "no token")
-                                    }
-                                    const retryRequest = newToken
-                                        ? request.clone({ headers: request.headers.set(tokenHeader, newToken) })
-                                        : request;
-                                    return next(retryRequest);
-                                })
-                            );
-                        }
+            return authService.getCurrentAuthToken().pipe(
+                switchMap(authToken => {
+                    // Cloner la requête avec les tokens dans les headers
+                    let clonedRequest = request;
+                    
+                    // Ajouter le X-Token si disponible
+                    if (token) {
+                        clonedRequest = clonedRequest.clone({ 
+                            headers: clonedRequest.headers.set(tokenHeader, token) 
+                        });
                     }
-                    return throwError(() => error);
+                    
+                    // Ajouter le JWT dans Authorization si disponible
+                    if (authToken) {
+                        clonedRequest = clonedRequest.clone({ 
+                            headers: clonedRequest.headers.set('Authorization', `Bearer ${authToken}`) 
+                        });
+                    }
+                    
+                    return next(clonedRequest).pipe(
+                        catchError((error: any) => {
+                            if (error instanceof HttpErrorResponse) {
+                                // Vérifier si JWT invalide (401 + JWT_ERROR)
+                                if (error.status === 401 && error.error?.error === 'JWT_ERROR') {
+                                    console.error('🔒 JWT invalide détecté, déconnexion...', {
+                                        url: request.url,
+                                        status: error.status
+                                    });
+                                    
+                                    snackbarService.error('Session expirée, veuillez vous reconnecter');
+                                    
+                                    // Supprimer le token d'authentification
+                                    return authService.logout().pipe(
+                                        switchMap(() => throwError(() => error))
+                                    );
+                                }
+                                
+                                // Vérifier si l'erreur correspond à 'Missing X-Token header'
+                                if (error.error?.error === 'UNAUTHORIZED' && 
+                                    (error.error?.message === 'Missing X-Token header'|| error.error?.message === 'Invalid or expired token')) {
+                                    console.error('🔒 Erreur détectée: Token X-Token manquant, retry...', {
+                                        url: request.url,
+                                        status: error.status
+                                    });
+                                    
+                                    // Refaire getToken() et retry la requête
+                                    return authService.authToken().pipe(
+                                        switchMap(()=>{
+                                            return authService.getToken()
+                                        }),
+                                        switchMap(newToken => {
+                                            if(!newToken)
+                                            {
+                                                console.error("no token")
+                                                snackbarService.error('Vous n\'avez pas les droits pour effectuer cette action');
+                                                return throwError(() => "no token")
+                                            }
+                                            return authService.getCurrentAuthToken().pipe(
+                                                switchMap(newAuthToken => {
+                                                    let retryRequest = request;
+                                                    
+                                                    // Ajouter le X-Token si disponible
+                                                    if (newToken) {
+                                                        retryRequest = retryRequest.clone({ 
+                                                            headers: retryRequest.headers.set(tokenHeader, newToken) 
+                                                        });
+                                                    }
+                                                    
+                                                    // Ajouter le JWT si disponible
+                                                    if (newAuthToken) {
+                                                        retryRequest = retryRequest.clone({ 
+                                                            headers: retryRequest.headers.set('Authorization', `Bearer ${newAuthToken}`) 
+                                                        });
+                                                    }
+                                                    
+                                                    return next(retryRequest);
+                                                })
+                                            );
+                                        })
+                                    );
+                                }
+                                
+                                // Autres erreurs 401/403 - Pas de droits
+                                if (error.status === 401 || error.status === 403) {
+                                    snackbarService.error('Vous n\'avez pas les droits pour effectuer cette action');
+                                }
+                            }
+                            return throwError(() => error);
+                        })
+                    );
                 })
             );
         })

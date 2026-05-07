@@ -18,6 +18,13 @@
         </div>
       }
       
+      @if (data.link.absent) {
+        <div class="detail-item absent-badge">
+          <span class="label">Absent:</span>
+          <span class="value absent-true">oui</span>
+        </div>
+      }
+      
       @if (data.symbole) {
         <div class="detail-item">
           <span class="label">Symbole:</span>

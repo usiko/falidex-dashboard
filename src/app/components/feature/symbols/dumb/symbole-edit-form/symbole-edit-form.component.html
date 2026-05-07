@@ -7,16 +7,38 @@
         Nouvelle relation pour le symbole
       }
     </h1>
-    @if (!selectedRelationStore.isNational()) {
-      <div class="specificite-toggle">
-        <mat-slide-toggle 
-          [(ngModel)]="isSpecificite" 
-          [disabled]="!editable()"
-          color="primary">
-          Spécificité
-        </mat-slide-toggle>
-      </div>
-    }
+    <div class="toggles-container">
+      @if (!selectedRelationStore.isNational()) {
+        <div class="specificite-toggle">
+          <mat-slide-toggle 
+            [(ngModel)]="isSpecificite" 
+            [disabled]="!editable()"
+            color="primary">
+            Spécificité
+          </mat-slide-toggle>
+        </div>
+      }
+      @if (selectedFiliere()) {
+        <div class="absent-toggle">
+          <mat-slide-toggle 
+            [(ngModel)]="isAbsent" 
+            [disabled]="!editable()"
+            color="warn">
+            Absent
+          </mat-slide-toggle>
+        </div>
+      }
+      @if (selectedSignification()) {
+        <div class="blame-toggle">
+          <mat-slide-toggle 
+            [(ngModel)]="isBlame" 
+            [disabled]="!editable()"
+            color="accent">
+            Blame
+          </mat-slide-toggle>
+        </div>
+      }
+    </div>
   </div>
   
   @if (symbole()) {

@@ -8,6 +8,20 @@
         </div>
       }
       
+      @if (data.link.absent) {
+        <div class="detail-item absent-badge">
+          <span class="label">Absent:</span>
+          <span class="value absent-true">oui</span>
+        </div>
+      }
+      
+      @if (data.link.blame) {
+        <div class="detail-item blame-badge">
+          <span class="label">Blame:</span>
+          <span class="value blame-true">oui</span>
+        </div>
+      }
+      
       @if (data.position) {
         <div class="detail-item">
           <span class="label">Position:</span>
@@ -26,6 +40,20 @@
         <div class="detail-item">
           <span class="label">Signification:</span>
           <span class="value">{{ data.signification.content }}</span>
+        </div>
+      }
+      
+      @if (data.symbolSens) {
+        <div class="detail-item">
+          <span class="label">Symbole Sens:</span>
+          <span class="value">{{ data.symbolSens.name }}</span>
+        </div>
+      }
+      
+      @if (data.symbolAccessory) {
+        <div class="detail-item">
+          <span class="label">Symbole Accessoire:</span>
+          <span class="value">{{ data.symbolAccessory.name }}</span>
         </div>
       }
       
