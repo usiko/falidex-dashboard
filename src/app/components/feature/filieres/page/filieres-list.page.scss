@@ -47,7 +47,8 @@
     align-items: center;
   }
   
-  .spe-filter {
+  .spe-filter,
+  .absent-filter {
     mat-button-toggle {
       display: flex;
       align-items: center;

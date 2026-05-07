@@ -69,12 +69,13 @@ export class RelationNewPageComponent {
         // Copier le statut national de la relation source
         const isNational = relationToCopy.national || false;
         
-        // Si la nouvelle relation sera nationale, retirer spe et absent
-        const relations = relationToCopy.relations
-          ? isNational
-            ? relationToCopy.relations.map(({ spe, absent, ...rest }) => rest)
-            : [...relationToCopy.relations]
+        // Filtrer pour exclure les relations marquées SPE
+        const filteredRelations = relationToCopy.relations
+          ? relationToCopy.relations.filter(rel => rel.spe !== true)
           : [];
+        
+        // Retirer les propriétés spe et absent de toutes les relations copiées
+        const relations = filteredRelations.map(({ spe, absent, ...rest }) => rest);
         
         return {
           ...baseRelation,

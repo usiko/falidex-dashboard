@@ -17,6 +17,7 @@ import { SelectedRelationStore } from '../../../../stores/selected-relation/sele
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 type SpeFilter = 'all' | 'with-spe' | 'without-spe';
+type AbsentFilter = 'all' | 'with-absent' | 'without-absent';
 
 // Fonction pour normaliser les chaînes en supprimant les accents
 function normalizeString(str: string): string {
@@ -52,12 +53,14 @@ export class FilieresListPageComponent {
   protected readonly filieres = this.filiereStore.entities;
   protected readonly searchTerm = signal('');
   protected readonly speFilter = signal<SpeFilter>('all');
+  protected readonly absentFilter = signal<AbsentFilter>('all');
   protected readonly hideWithoutRelation = signal(false);
   protected readonly isNational = this.selectedRelationStore.isNational;
 
   protected readonly filteredFilieres = computed(() => {
     const search = normalizeString(this.searchTerm().trim());
     const speFilterValue = this.speFilter();
+    const absentFilterValue = this.absentFilter();
     const hideNoRelation = this.hideWithoutRelation();
     
     let filtered = this.filieres();
@@ -76,6 +79,15 @@ export class FilieresListPageComponent {
         const links = this.linkStoreInstance.getByFiliereId(filiere.id)();
         const hasSpe = links.some(link => link.spe === true);
         return speFilterValue === 'with-spe' ? hasSpe : !hasSpe;
+      });
+    }
+    
+    // Filtre Absent
+    if (absentFilterValue !== 'all') {
+      filtered = filtered.filter(filiere => {
+        const links = this.linkStoreInstance.getByFiliereId(filiere.id)();
+        const hasAbsent = links.some(link => link.absent === true);
+        return absentFilterValue === 'with-absent' ? hasAbsent : !hasAbsent;
       });
     }
     
