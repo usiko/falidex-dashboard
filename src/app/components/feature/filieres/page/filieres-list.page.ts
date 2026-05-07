@@ -18,6 +18,11 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 type SpeFilter = 'all' | 'with-spe' | 'without-spe';
 
+// Fonction pour normaliser les chaînes en supprimant les accents
+function normalizeString(str: string): string {
+  return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+}
+
 @Component({
   selector: 'app-filieres-list-page',
   standalone: true,
@@ -51,7 +56,7 @@ export class FilieresListPageComponent {
   protected readonly isNational = this.selectedRelationStore.isNational;
 
   protected readonly filteredFilieres = computed(() => {
-    const search = this.searchTerm().toLowerCase().trim();
+    const search = normalizeString(this.searchTerm().trim());
     const speFilterValue = this.speFilter();
     const hideNoRelation = this.hideWithoutRelation();
     
@@ -81,7 +86,7 @@ export class FilieresListPageComponent {
     
     return filtered.filter(filiere => {
       // Recherche dans le nom de la filière
-      if (filiere.name?.toLowerCase().includes(search)) {
+      if (normalizeString(filiere.name || '').includes(search)) {
         return true;
       }
       
@@ -92,7 +97,7 @@ export class FilieresListPageComponent {
       const symboleIds = [...new Set(links.map(link => link.symboleId).filter(Boolean))];
       const hasMatchingSymbol = symboleIds.some(id => {
         const symbol = this.symbolStore.getById(id!)();
-        return symbol?.name?.toLowerCase().includes(search);
+        return normalizeString(symbol?.name || '').includes(search);
       });
       
       if (hasMatchingSymbol) {
@@ -105,12 +110,12 @@ export class FilieresListPageComponent {
         const circulaire = this.circulaireStore.getById(id!)();
         
         // Recherche dans le nom de la circulaire
-        if (circulaire?.name?.toLowerCase().includes(search)) {
+        if (normalizeString(circulaire?.name || '').includes(search)) {
           return true;
         }
         
         // Recherche dans la matière (velours/satin)
-        if (circulaire?.matiere?.toLowerCase().includes(search)) {
+        if (normalizeString(circulaire?.matiere || '').includes(search)) {
           return true;
         }
         
@@ -120,7 +125,7 @@ export class FilieresListPageComponent {
           const hasMatchingColor = circulaireColors.some(cc => {
             return cc.colorIds.some(colorId => {
               const color = this.colorStore.getById(colorId)();
-              return color?.name?.toLowerCase().includes(search);
+              return normalizeString(color?.name || '').includes(search);
             });
           });
           

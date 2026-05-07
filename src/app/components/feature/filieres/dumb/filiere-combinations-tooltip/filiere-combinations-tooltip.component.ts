@@ -13,6 +13,8 @@ export interface FiliereCombination {
   matiere?: string;
   colors: ColorInfo[];
   hasSpe?: boolean;
+  hasBlame?: boolean;
+  hasAbsent?: boolean;
 }
 
 @Component({

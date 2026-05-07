@@ -47,7 +47,10 @@
     align-items: center;
   }
   
-  .blame-filter {
+  .blame-filter,
+  .relation-filter,
+  .support-filter,
+  .spe-filter {
     mat-button-toggle {
       display: flex;
       align-items: center;

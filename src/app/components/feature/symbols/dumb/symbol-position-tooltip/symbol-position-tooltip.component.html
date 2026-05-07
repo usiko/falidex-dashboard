@@ -19,6 +19,12 @@
             @if (detail.spe) {
               <span class="spe-badge">SPE</span>
             }
+            @if (detail.blame) {
+              <span class="blame-badge">BLAME</span>
+            }
+            @if (detail.absent) {
+              <span class="absent-badge">ABSENT</span>
+            }
           </div>
           @if (detail.placementName) {
             <div class="placement-line">

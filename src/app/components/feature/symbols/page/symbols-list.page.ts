@@ -18,8 +18,17 @@ import { CirculaireColorStore } from '../../../../stores/circulaires-colors/circ
 import { ColorStore } from '../../../../stores/colors/colors.store';
 import { SymbolSensStore } from '../../../../stores/symbols-sens/symbols-sens.store';
 import { SymbolAccessoryStore } from '../../../../stores/symbols-accessory/symbols-accessory.store';
+import { CiculaireMatiereEnum } from '../../../../models/data/circulaire-matiere.enum';
 
 type BlameFilter = 'all' | 'with-blame' | 'without-blame';
+type RelationFilter = 'all' | 'only-filiere' | 'only-signification';
+type SupportFilter = 'all' | 'circulaire' | 'velours';
+type SpeFilter = 'all' | 'with-spe' | 'without-spe';
+
+// Fonction pour normaliser les chaînes en supprimant les accents
+function normalizeString(str: string): string {
+  return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+}
 
 @Component({
   selector: 'app-symbols-list-page',
@@ -54,11 +63,17 @@ export class SymbolsListPageComponent {
   protected readonly searchTerm = signal('');
   protected readonly blameFilter = signal<BlameFilter>('all');
   protected readonly hideWithoutRelation = signal(false);
+  protected readonly relationFilter = signal<RelationFilter>('all');
+  protected readonly supportFilter = signal<SupportFilter>('all');
+  protected readonly speFilter = signal<SpeFilter>('all');
 
   protected readonly filteredSymbols = computed(() => {
-    const search = this.searchTerm().toLowerCase().trim();
+    const search = normalizeString(this.searchTerm().trim());
     const blameFilterValue = this.blameFilter();
     const hideNoRelation = this.hideWithoutRelation();
+    const relationFilterValue = this.relationFilter();
+    const supportFilterValue = this.supportFilter();
+    const speFilterValue = this.speFilter();
     
     let filtered = this.symbols();
     
@@ -79,6 +94,42 @@ export class SymbolsListPageComponent {
       });
     }
     
+    // Filtre Relation (Filière ou Signification)
+    if (relationFilterValue !== 'all') {
+      filtered = filtered.filter(symbol => {
+        const links = this.linkStoreInstance.getBySymboleId(symbol.id)();
+        if (relationFilterValue === 'only-filiere') {
+          return links.some(link => link.filiereId && !link.significationId);
+        } else {
+          return links.some(link => link.significationId && !link.filiereId);
+        }
+      });
+    }
+    
+    // Filtre Support (Position: Circulaire/Velours)
+    if (supportFilterValue !== 'all') {
+      filtered = filtered.filter(symbol => {
+        const links = this.linkStoreInstance.getBySymboleId(symbol.id)();
+        
+        return links.some(link => {
+          if (supportFilterValue === 'circulaire') {
+            return link.positionId === 'position-3'; // sur circulaire
+          } else {
+            return link.positionId === 'position-4'; // sur velours
+          }
+        });
+      });
+    }
+    
+    // Filtre SPE
+    if (speFilterValue !== 'all') {
+      filtered = filtered.filter(symbol => {
+        const links = this.linkStoreInstance.getBySymboleId(symbol.id)();
+        const hasSpe = links.some(link => link.spe === true);
+        return speFilterValue === 'with-spe' ? hasSpe : !hasSpe;
+      });
+    }
+    
     // Filtre de recherche
     if (!search) {
       return filtered;
@@ -86,7 +137,7 @@ export class SymbolsListPageComponent {
     
     return filtered.filter(symbol => {
       // Recherche dans le nom du symbole
-      if (symbol.name?.toLowerCase().includes(search)) {
+      if (normalizeString(symbol.name || '').includes(search)) {
         return true;
       }
       
@@ -97,7 +148,7 @@ export class SymbolsListPageComponent {
       const filiereIds = [...new Set(links.map(link => link.filiereId).filter(Boolean))];
       const hasMatchingFiliere = filiereIds.some(id => {
         const filiere = this.filiereStore.getById(id!)();
-        return filiere?.name?.toLowerCase().includes(search);
+        return normalizeString(filiere?.name || '').includes(search);
       });
       
       if (hasMatchingFiliere) {
@@ -108,7 +159,7 @@ export class SymbolsListPageComponent {
       const significationIds = [...new Set(links.map(link => link.significationId).filter(Boolean))];
       const hasMatchingSignification = significationIds.some(id => {
         const signification = this.significationStore.getById(id!)();
-        return signification?.content?.toLowerCase().includes(search);
+        return normalizeString(signification?.content || '').includes(search);
       });
       
       if (hasMatchingSignification) {
@@ -121,12 +172,12 @@ export class SymbolsListPageComponent {
         const circulaire = this.circulaireStore.getById(id!)();
         
         // Recherche dans le nom de la circulaire
-        if (circulaire?.name?.toLowerCase().includes(search)) {
+        if (normalizeString(circulaire?.name || '').includes(search)) {
           return true;
         }
         
         // Recherche dans la matière (velours/satin)
-        if (circulaire?.matiere?.toLowerCase().includes(search)) {
+        if (normalizeString(circulaire?.matiere || '').includes(search)) {
           return true;
         }
         
@@ -136,7 +187,7 @@ export class SymbolsListPageComponent {
           const hasMatchingColor = circulaireColors.some(cc => {
             return cc.colorIds.some(colorId => {
               const color = this.colorStore.getById(colorId)();
-              return color?.name?.toLowerCase().includes(search);
+              return normalizeString(color?.name || '').includes(search);
             });
           });
           
@@ -156,7 +207,7 @@ export class SymbolsListPageComponent {
       const symbolSensIds = [...new Set(links.map(link => link.symboleSensId).filter(Boolean))];
       const hasMatchingSymbolSens = symbolSensIds.some(id => {
         const symbolSens = this.symbolSensStore.getById(id!)();
-        return symbolSens?.name?.toLowerCase().includes(search);
+        return normalizeString(symbolSens?.name || '').includes(search);
       });
       
       if (hasMatchingSymbolSens) {
@@ -167,7 +218,7 @@ export class SymbolsListPageComponent {
       const symbolAccessoryIds = [...new Set(links.map(link => link.symboleAccessoryId).filter(Boolean))];
       const hasMatchingSymbolAccessory = symbolAccessoryIds.some(id => {
         const symbolAccessory = this.symbolAccessoryStore.getById(id!)();
-        return symbolAccessory?.name?.toLowerCase().includes(search);
+        return normalizeString(symbolAccessory?.name || '').includes(search);
       });
       
       return hasMatchingSymbolAccessory;

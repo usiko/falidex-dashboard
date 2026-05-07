@@ -9,6 +9,11 @@ import { CirculaireStore } from '../../../../stores/circulaires/circulaires.stor
 import { CirculaireCardComponent } from '../dumb/circulaire-card/circulaire-card.component';
 import { signal } from '@angular/core';
 
+// Fonction pour normaliser les chaînes en supprimant les accents
+function normalizeString(str: string): string {
+  return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+}
+
 @Component({
   selector: 'app-circulaires-list-page',
   standalone: true,
@@ -28,7 +33,7 @@ import { signal } from '@angular/core';
           <mat-icon>circle</mat-icon>
           Circulaires
         </h1>
-        <p class="subtitle">{{ circulaires().length }} circulaire(s) disponible(s)</p>
+        <p class="subtitle">{{ filteredCirculaires().length }} circulaire(s) disponible(s)</p>
       </div>
 
       <div class="filters">
@@ -136,13 +141,13 @@ export class CirculairesListPageComponent {
   protected readonly searchTerm = signal('');
 
   protected readonly filteredCirculaires = computed(() => {
-    const search = this.searchTerm().toLowerCase().trim();
+    const search = normalizeString(this.searchTerm().trim());
     if (!search) {
       return this.circulaires();
     }
     return this.circulaires().filter(c => 
-      c.name?.toLowerCase().includes(search) ||
-      c.matiere?.toLowerCase().includes(search)
+      normalizeString(c.name || '').includes(search) ||
+      normalizeString(c.matiere || '').includes(search)
     );
   });
 
