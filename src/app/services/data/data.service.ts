@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { v4 as uuidv4 } from 'uuid';
 import {
@@ -20,6 +20,7 @@ import { IRelationData, IRelationItem } from '../../models/data/base-relations.m
 import { PictureService } from '../picture/picture.service';
 import { ConfigService } from '../config/config.service';
 import { AppConfigService } from '../config/app.config.service';
+import { IFiliere, ISymbol } from '../../models/data/linked-data-models';
 
 @Injectable({
   providedIn: 'root'
@@ -201,6 +202,125 @@ export class DataService {
     ).pipe(
       map(data =>void 0)
     );
+  }
+
+  deleteSymbole(id:string)
+  {
+    return of(void 0)
+  }
+
+  editSymbol(symbol:Partial<ISymbol>)
+  {
+    return of(void 0)
+  }
+
+  createSymbole(symbol:Omit<IBaseSymbol,'id'>)
+  {
+    return of(void 0)
+  }
+
+  deleteFiliere(id:string)
+  {
+    return of(void 0)
+  }
+
+  editFiliere(filiere:Partial<IFiliere>)
+  {
+    return of(void 0)
+  }
+
+  createFiliere(filiere:Omit<IBaseFiliere,'id'>)
+  {
+    return of(void 0)
+  }
+
+  // Signification
+  createSignification(signification:Omit<IBaseSignification,'id'>)
+  {
+    return of(void 0)
+  }
+
+  editSignification(signification:Partial<IBaseSignification>)
+  {
+    return of(void 0)
+  }
+
+  deleteSignification(id:string)
+  {
+    return of(void 0)
+  }
+
+  // Position
+  createPosition(position:Omit<IBasePosition,'id'>)
+  {
+    return of(void 0)
+  }
+
+  editPosition(position:Partial<IBasePosition>)
+  {
+    return of(void 0)
+  }
+
+  deletePosition(id:string)
+  {
+    return of(void 0)
+  }
+
+  // Placement
+  createPlacement(placement:Omit<IBasePlacement,'id'>)
+  {
+    return of(void 0)
+  }
+
+  editPlacement(placement:Partial<IBasePlacement>)
+  {
+    return of(void 0)
+  }
+
+  deletePlacement(id:string)
+  {
+    return of(void 0)
+  }
+
+  // Symbole Accessoire
+  createSymboleAccessoire(symboleAccessoire:Omit<IBaseSymbolAcessory,'id'>)
+  {
+    return of(void 0)
+  }
+
+  editSymboleAccessoire(symboleAccessoire:Partial<IBaseSymbolAcessory>)
+  {
+    return of(void 0)
+  }
+
+  deleteSymboleAccessoire(id:string)
+  {
+    return of(void 0)
+  }
+
+  getCountRelationFiliere(id:string)
+  {
+    
+  }
+  getCountRelationSymbole(id:string)
+  {
+
+  }
+  getCountRelationSignification(id:string)
+  {
+
+  }
+  getCountRelationPosition(id:string)
+  {
+
+  }
+  getCountRelationPlacement(id:string)
+  {
+
+  }
+  getCountRelationSymbolaccessoir(id:string)
+  {
+
   }
 
   /**
