@@ -58,6 +58,30 @@
   <span class="spacer"></span>
 
   <div class="right-section">
+    <button mat-button [matMenuTriggerFor]="collectionsMenu">
+      <mat-icon>folder</mat-icon>
+      Collections
+      <mat-icon>arrow_drop_down</mat-icon>
+    </button>
+    <mat-menu #collectionsMenu="matMenu">
+      <button mat-menu-item routerLink="/significations">
+        <mat-icon>label</mat-icon>
+        <span>Significations</span>
+      </button>
+      <button mat-menu-item routerLink="/placements">
+        <mat-icon>place</mat-icon>
+        <span>Décernements</span>
+      </button>
+      <button mat-menu-item routerLink="/symbols-accessory">
+        <mat-icon>auto_awesome</mat-icon>
+        <span>Symboles accessoires</span>
+      </button>
+      <button mat-menu-item routerLink="/positions">
+        <mat-icon>location_on</mat-icon>
+        <span>Positions</span>
+      </button>
+    </mat-menu>
+    
     @if (!isLoggedIn()) {
       <button mat-button (click)="onLogin()">
         <mat-icon>login</mat-icon>

@@ -1,0 +1,39 @@
+<div class="symbols-accessory-list">
+  <div class="header">
+    <div class="title-section">
+      <h1>Symboles accessoires ({{ filteredSymbolsAccessory().length }})</h1>
+    </div>
+    <button mat-raised-button color="primary" (click)="onAdd()">
+      <mat-icon>add</mat-icon>
+      Ajouter
+    </button>
+  </div>
+
+  <mat-form-field appearance="outline" class="search-field">
+    <mat-label>Rechercher</mat-label>
+    <input matInput [(ngModel)]="searchTerm" placeholder="Rechercher un symbole accessoire...">
+    <mat-icon matPrefix>search</mat-icon>
+  </mat-form-field>
+
+  <div class="list-container">
+    @for (symbolAccessory of filteredSymbolsAccessory(); track symbolAccessory.id) {
+      <mat-card class="item-card">
+        <mat-card-content>
+          <div class="item-content">
+            <span class="item-name">{{ symbolAccessory.name }}</span>
+            <div class="item-actions">
+              <button mat-icon-button (click)="onEdit(symbolAccessory.id, symbolAccessory.name)" matTooltip="Modifier">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button color="warn" (click)="onDelete(symbolAccessory.id, symbolAccessory.name)" matTooltip="Supprimer">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    } @empty {
+      <p class="no-results">Aucun symbole accessoire trouvé</p>
+    }
+  </div>
+</div>

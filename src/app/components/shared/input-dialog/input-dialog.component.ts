@@ -13,6 +13,7 @@ export interface InputDialogData {
   initialValue?: string;
   confirmText?: string;
   cancelText?: string;
+  multiline?: boolean;
 }
 
 @Component({
@@ -53,6 +54,10 @@ export class InputDialogComponent {
 
   get cancelText(): string {
     return this.data.cancelText || 'Annuler';
+  }
+
+  get multiline(): boolean {
+    return this.data.multiline || false;
   }
 
   onConfirm(): void {

@@ -1,0 +1,109 @@
+import { Component, inject, signal, computed } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatDialog } from '@angular/material/dialog';
+import { FormsModule } from '@angular/forms';
+import { PositionStore } from '../../../../../stores/positions/positions.store';
+import { InputDialogComponent } from '../../../../shared/input-dialog/input-dialog.component';
+import { ConfirmDialogComponent } from '../../../../shared/confirm-dialog/confirm-dialog.component';
+
+@Component({
+  selector: 'app-positions-list',
+  standalone: true,
+  imports: [
+    CommonModule,
+    MatProgressSpinnerModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatIconModule,
+    MatButtonModule,
+    MatCardModule,
+    FormsModule
+  ],
+  templateUrl: './positions-list.component.html',
+  styleUrl: './positions-list.component.scss'
+})
+export class PositionsListComponent {
+  private readonly positionStore = inject(PositionStore);
+  private readonly dialog = inject(MatDialog);
+  private readonly router = inject(Router);
+
+  protected readonly positions = this.positionStore.entities;
+  protected readonly searchTerm = signal('');
+
+  // Fonction pour normaliser les chaînes (retirer les accents)
+  private normalizeString(str: string): string {
+    return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+  }
+
+  protected readonly filteredPositions = computed(() => {
+    const term = this.normalizeString(this.searchTerm());
+    const allPositions = this.positions();
+
+    if (!term) {
+      return allPositions;
+    }
+
+    return allPositions.filter(position =>
+      this.normalizeString(position.name || '').includes(term)
+    );
+  });
+
+  protected onAdd(): void {
+    const dialogRef = this.dialog.open(InputDialogComponent, {
+      width: '400px',
+      data: {
+        title: 'Nouvelle position',
+        placeholder: 'Nom'
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.positionStore.create({ name: result });
+      }
+    });
+  }
+
+  protected onEdit(id: string, currentName: string | undefined): void {
+    const dialogRef = this.dialog.open(InputDialogComponent, {
+      width: '400px',
+      data: {
+        title: 'Modifier position',
+        placeholder: 'Nom',
+        initialValue: currentName || '',
+        confirmText: 'Modifier'
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.positionStore.update(id, { name: result });
+      }
+    });
+  }
+
+  protected onDelete(id: string, name: string | undefined): void {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '400px',
+      data: {
+        title: 'Supprimer la position',
+        message: `Êtes-vous sûr de vouloir supprimer "${name || ''}" ?`,
+        confirmText: 'Supprimer',
+        cancelText: 'Annuler'
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.positionStore.remove(id);
+      }
+    });
+  }
+}

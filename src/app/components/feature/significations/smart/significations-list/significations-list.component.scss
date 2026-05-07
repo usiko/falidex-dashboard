@@ -1,0 +1,65 @@
+.significations-list {
+  padding: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+
+    .title-section {
+      h1 {
+        margin: 0;
+        font-size: 28px;
+        font-weight: 500;
+      }
+    }
+
+    button {
+      mat-icon {
+        margin-right: 8px;
+      }
+    }
+  }
+
+  .search-field {
+    width: 100%;
+    margin-bottom: 24px;
+  }
+
+  .list-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    .item-card {
+      mat-card-content {
+        padding: 16px;
+
+        .item-content {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+
+          .item-name {
+            font-size: 16px;
+            flex: 1;
+          }
+
+          .item-actions {
+            display: flex;
+            gap: 8px;
+          }
+        }
+      }
+    }
+
+    .no-results {
+      text-align: center;
+      color: #666;
+      padding: 32px;
+    }
+  }
+}
