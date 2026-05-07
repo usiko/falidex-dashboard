@@ -270,6 +270,17 @@ export class SymboleEditFormComponent {
       dialogRef.close(signification);
       subscription.unsubscribe();
     });
+    
+    const createSubscription = dialogRef.componentInstance.itemCreated.subscribe((searchTerm: string) => {
+      // Créer une nouvelle signification avec le terme recherché
+      const newId = this.significationStore.create({ content: searchTerm });
+      const newSignification = this.significationStore.getById(newId)();
+      if (newSignification) {
+        this.selectedSignification.set(newSignification);
+        dialogRef.close(newSignification);
+      }
+      createSubscription.unsubscribe();
+    });
   }
   
   // Handlers de sélection pour position et placement (mode signification)
@@ -308,6 +319,17 @@ export class SymboleEditFormComponent {
       this.selectedPlacement.set(placement);
       dialogRef.close(placement);
       subscription.unsubscribe();
+    });
+    
+    const createSubscription = dialogRef.componentInstance.itemCreated.subscribe((searchTerm: string) => {
+      // Créer un nouveau décernement avec le terme recherché
+      const newId = this.placementStore.create({ name: searchTerm });
+      const newPlacement = this.placementStore.getById(newId)();
+      if (newPlacement) {
+        this.selectedPlacement.set(newPlacement);
+        dialogRef.close(newPlacement);
+      }
+      createSubscription.unsubscribe();
     });
   }
   
@@ -363,6 +385,17 @@ export class SymboleEditFormComponent {
       this.selectedSymboleAccessory.set(symboleAccessory);
       dialogRef.close(symboleAccessory);
       subscription.unsubscribe();
+    });
+    
+    const createSubscription = dialogRef.componentInstance.itemCreated.subscribe((searchTerm: string) => {
+      // Créer un nouveau symbole accessoire avec le terme recherché
+      const newId = this.symbolAccessoryStore.create({ name: searchTerm });
+      const newSymbolAccessory = this.symbolAccessoryStore.getById(newId)();
+      if (newSymbolAccessory) {
+        this.selectedSymboleAccessory.set(newSymbolAccessory);
+        dialogRef.close(newSymbolAccessory);
+      }
+      createSubscription.unsubscribe();
     });
   }
   

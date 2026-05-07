@@ -5,5 +5,17 @@
          (click)="onSelect(signification)">
       {{ signification.content }}
     </div>
+  } @empty {
+    @if (searchTerm().trim()) {
+      <div class="empty-state">
+        <p>Aucune signification trouvée</p>
+        @if (selectable()) {
+          <button mat-raised-button color="primary" (click)="onCreate()">
+            <mat-icon>add</mat-icon>
+            Ajouter la recherche
+          </button>
+        }
+      </div>
+    }
   }
 </div>

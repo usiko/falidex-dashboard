@@ -41,6 +41,9 @@ export class CollectionDialogComponent<T> implements AfterViewInit, OnDestroy {
   // Output pour émettre la sélection
   @Output() itemSelected = new EventEmitter<T>();
   
+  // Output pour émettre la création d'un nouvel item
+  @Output() itemCreated = new EventEmitter<string>();
+  
   private componentRef?: ComponentRef<any>;
 
   ngAfterViewInit(): void {
@@ -57,6 +60,13 @@ export class CollectionDialogComponent<T> implements AfterViewInit, OnDestroy {
         this.onItemSelected(item);
       });
     }
+    
+    // S'abonner à l'output create
+    if (this.componentRef.instance.create) {
+      this.componentRef.instance.create.subscribe((searchTerm: string) => {
+        this.onItemCreate(searchTerm);
+      });
+    }
   }
   
   onSearchChange(term: string): void {
@@ -70,6 +80,10 @@ export class CollectionDialogComponent<T> implements AfterViewInit, OnDestroy {
   onItemSelected(item: T): void {
     this.selectedItem.set(item);
     this.itemSelected.emit(item);
+  }
+  
+  onItemCreate(searchTerm: string): void {
+    this.itemCreated.emit(searchTerm);
   }
   
   ngOnDestroy(): void {
