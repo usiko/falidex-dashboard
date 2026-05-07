@@ -4,9 +4,11 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatDialog } from '@angular/material/dialog';
 import { FormsModule } from '@angular/forms';
 import { SymbolStore } from '../../../../stores/symbols/symbols.store';
 import { SymbolItemComponent } from '../smart/symbol-item/symbol-item.component';
@@ -19,6 +21,7 @@ import { ColorStore } from '../../../../stores/colors/colors.store';
 import { SymbolSensStore } from '../../../../stores/symbols-sens/symbols-sens.store';
 import { SymbolAccessoryStore } from '../../../../stores/symbols-accessory/symbols-accessory.store';
 import { CiculaireMatiereEnum } from '../../../../models/data/circulaire-matiere.enum';
+import { InputDialogComponent, InputDialogData } from '../../../../components/shared/input-dialog/input-dialog.component';
 
 type BlameFilter = 'all' | 'with-blame' | 'without-blame';
 type RelationFilter = 'all' | 'only-filiere' | 'only-signification';
@@ -39,6 +42,7 @@ function normalizeString(str: string): string {
     MatFormFieldModule,
     MatInputModule,
     MatIconModule,
+    MatButtonModule,
     MatChipsModule,
     MatSlideToggleModule,
     MatButtonToggleModule,
@@ -58,6 +62,7 @@ export class SymbolsListPageComponent {
   private readonly colorStore = inject(ColorStore);
   private readonly symbolSensStore = inject(SymbolSensStore);
   private readonly symbolAccessoryStore = inject(SymbolAccessoryStore);
+  private readonly dialog = inject(MatDialog);
 
   protected readonly symbols = this.symbolStore.entities;
   protected readonly searchTerm = signal('');
@@ -224,6 +229,27 @@ export class SymbolsListPageComponent {
       return hasMatchingSymbolAccessory;
     });
   });
+
+  protected onAddSymbol(): void {
+    const dialogData: InputDialogData = {
+      title: 'Ajouter un symbole',
+      message: 'Entrez le nom du nouveau symbole',
+      placeholder: 'Nom du symbole',
+      confirmText: 'Ajouter',
+      cancelText: 'Annuler'
+    };
+
+    const dialogRef = this.dialog.open(InputDialogComponent, {
+      data: dialogData,
+      width: '400px'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.symbolStore.create({ name: result });
+      }
+    });
+  }
 
   protected clearSearch(): void {
     this.searchTerm.set('');

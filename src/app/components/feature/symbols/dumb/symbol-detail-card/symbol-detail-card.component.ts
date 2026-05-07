@@ -28,6 +28,8 @@ export class SymbolDetailCardComponent {
   addLink = output<void>();
   editLink = output<string>();
   deleteLink = output<string>();
+  editSymbol = output<void>();
+  deleteSymbol = output<void>();
   
   private readonly dialog = inject(MatDialog);
   

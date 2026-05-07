@@ -5,6 +5,7 @@ import { FiliereStore } from '../../../../../stores/filieres/filieres.store';
 import { linkStore } from '../../../../../stores/links/links.store';
 import { FiliereDetailCardComponent } from '../../dumb/filiere-detail-card/filiere-detail-card.component';
 import { ConfirmDialogComponent, ConfirmDialogData } from '../../../../shared/confirm-dialog/confirm-dialog.component';
+import { InputDialogComponent, InputDialogData } from '../../../../shared/input-dialog/input-dialog.component';
 import { SelectedRelationStore } from '../../../../../stores/selected-relation/selected-relation.store';
 import { CurrentUserStore } from '../../../../../stores/current-user/current-user.store';
 
@@ -75,6 +76,58 @@ export class FiliereDetailComponent {
     
     this.router.navigate(['/relation','filiere', 'new'], {
       queryParams: { filiereId }
+    });
+  }
+  
+  onEditFiliere() {
+    const filiere = this.filiere();
+    if (!filiere) return;
+    
+    const dialogData: InputDialogData = {
+      title: 'Éditer la filière',
+      message: 'Modifier le nom de la filière',
+      placeholder: 'Nom de la filière',
+      initialValue: filiere.name,
+      confirmText: 'Enregistrer',
+      cancelText: 'Annuler'
+    };
+    
+    const dialogRef = this.dialog.open(InputDialogComponent, {
+      data: dialogData,
+      width: '400px'
+    });
+    
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && filiere.id) {
+        this.filiereStore.update(filiere.id, { name: result });
+      }
+    });
+  }
+  
+  onDeleteFiliere() {
+    const filiere = this.filiere();
+    if (!filiere) return;
+    
+    const dialogData: ConfirmDialogData = {
+      title: 'Confirmation de suppression',
+      message: `Êtes-vous sûr de vouloir supprimer la filière "${filiere.name}" ?`,
+      confirmText: 'Supprimer',
+      cancelText: 'Annuler'
+    };
+    
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: dialogData,
+      width: '400px'
+    });
+    
+    dialogRef.afterClosed().subscribe(confirmed => {
+      if (confirmed && filiere.id) {
+        // Supprimer la filière
+        this.filiereStore.remove(filiere.id);
+        
+        // Rediriger vers la liste des filières
+        this.router.navigate(['/filieres']);
+      }
     });
   }
 }

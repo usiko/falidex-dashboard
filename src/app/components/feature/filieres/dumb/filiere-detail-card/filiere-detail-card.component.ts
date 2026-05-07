@@ -26,4 +26,6 @@ export class FiliereDetailCardComponent {
   addLink = output<void>();
   editLink = output<string>();
   deleteLink = output<string>();
+  editFiliere = output<void>();
+  deleteFiliere = output<void>();
 }

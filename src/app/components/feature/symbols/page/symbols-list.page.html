@@ -1,9 +1,15 @@
 <div class="page-container">
   <div class="page-header">
-    <h1>
-      <mat-icon>star</mat-icon>
-      Symboles
-    </h1>
+    <div class="header-top">
+      <h1>
+        <mat-icon>star</mat-icon>
+        Symboles
+      </h1>
+      <button mat-raised-button color="primary" (click)="onAddSymbol()">
+        <mat-icon>add</mat-icon>
+        Ajouter
+      </button>
+    </div>
     <p class="subtitle">{{ filteredSymbols().length }} symbole(s) disponible(s)</p>
   </div>
 

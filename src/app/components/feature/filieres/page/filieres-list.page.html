@@ -1,9 +1,15 @@
 <div class="page-container">
   <div class="page-header">
-    <h1>
-      <mat-icon>school</mat-icon>
-      Filières
-    </h1>
+    <div class="header-top">
+      <h1>
+        <mat-icon>school</mat-icon>
+        Filières
+      </h1>
+      <button mat-raised-button color="primary" (click)="onAddFiliere()">
+        <mat-icon>add</mat-icon>
+        Ajouter
+      </button>
+    </div>
     <p class="subtitle">{{ filteredFilieres().length }} filière(s) disponible(s)</p>
   </div>
 

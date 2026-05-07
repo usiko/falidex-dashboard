@@ -1,10 +1,20 @@
 <div class="filiere-detail">
   <div class="header">
     <h1 class="filiere-title">{{ filiere()?.name }}</h1>
-    <button mat-raised-button color="primary" [disabled]="!editable()" (click)="addLink.emit()">
-      <mat-icon>add</mat-icon>
-      Ajouter une relation
-    </button>
+    <div class="header-actions">
+      <button mat-raised-button color="primary" [disabled]="!editable()" (click)="addLink.emit()">
+        <mat-icon>add</mat-icon>
+        Ajouter une relation
+      </button>
+      <button mat-raised-button (click)="editFiliere.emit()">
+        <mat-icon>edit</mat-icon>
+        Éditer la filière
+      </button>
+      <button mat-raised-button color="warn" (click)="deleteFiliere.emit()">
+        <mat-icon>delete</mat-icon>
+        Supprimer la filière
+      </button>
+    </div>
   </div>
   
   @if (links().length > 0) {
