@@ -11,6 +11,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { CiculaireMatiereEnum } from '../../../models/data/circulaire-matiere.enum';
 import { ColorStore } from '../../../stores/colors/colors.store';
+import { CurrentUserStore } from '../../../stores/current-user/current-user.store';
 import { ColorEditDialogComponent } from '../color-edit-dialog/color-edit-dialog.component';
 
 export interface CirculaireEditDialogData {
@@ -50,6 +51,7 @@ export class CirculaireEditDialogComponent {
   data = inject<CirculaireEditDialogData>(MAT_DIALOG_DATA);
   dialogRef = inject(MatDialogRef<CirculaireEditDialogComponent>);
   private readonly colorStore = inject(ColorStore);
+  private readonly currentUserStore = inject(CurrentUserStore);
   private readonly dialog = inject(MatDialog);
 
   name: string = '';
@@ -58,6 +60,7 @@ export class CirculaireEditDialogComponent {
   colorSearchTerm = signal('');
   
   protected readonly allColors = this.colorStore.entities;
+  protected readonly isLoggedIn = computed(() => this.currentUserStore.user() !== null);
   
   // Résout les IDs en objets couleur complets
   protected readonly selectedColors = computed(() => {

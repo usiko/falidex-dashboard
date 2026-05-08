@@ -10,7 +10,7 @@
       <div class="empty-state">
         <p>Aucune signification trouvée</p>
         @if (selectable()) {
-          <button mat-raised-button color="primary" (click)="onCreate()">
+          <button mat-raised-button color="primary" (click)="onCreate()" [disabled]="!isLoggedIn()">
             <mat-icon>add</mat-icon>
             Ajouter la recherche
           </button>

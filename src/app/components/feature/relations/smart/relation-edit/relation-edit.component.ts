@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { linkStore } from '../../../../../stores/links/links.store';
 import { RelationEditFormComponent } from '../../dumb/relation-edit-form/relation-edit-form.component';
 import { RelationDataStore } from '../../../../../stores/relations/relations.store';
+import { CurrentUserStore } from '../../../../../stores/current-user/current-user.store';
 import { IRelationData } from '../../../../../models/data/base-relations.models';
 
 @Component({
@@ -18,12 +19,17 @@ export class RelationEditComponent {
   id = input<string>();
   
   private readonly relationStore = inject(RelationDataStore);
+  private readonly currentUserStore = inject(CurrentUserStore);
   private readonly router = inject(Router);
   
   protected readonly relation = computed(() => {
     const id = this.id();
     if (!id) return undefined;
     return this.relationStore.getById(id)();
+  });
+  
+  protected readonly editable = computed(() => {
+    return !!this.currentUserStore.user();
   });
 
   protected onValidated(relationData: IRelationData | null): void {

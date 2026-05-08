@@ -24,6 +24,7 @@ export class SymbolDetailCardComponent {
   symbol = input<IBaseSymbol>();
   links = input<IRelationItem[]>([]);
   editable = input<boolean>(true);
+  canEditEntity = input<boolean>(true);
   
   addLink = output<void>();
   editLink = output<string>();

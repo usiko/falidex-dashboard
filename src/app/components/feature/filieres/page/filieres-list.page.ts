@@ -15,6 +15,7 @@ import { SymbolStore } from '../../../../stores/symbols/symbols.store';
 import { CirculaireStore } from '../../../../stores/circulaires/circulaires.store';
 import { CirculaireColorStore } from '../../../../stores/circulaires-colors/circulaires-colors.store';
 import { ColorStore } from '../../../../stores/colors/colors.store';
+import { CurrentUserStore } from '../../../../stores/current-user/current-user.store';
 import { SelectedRelationStore } from '../../../../stores/selected-relation/selected-relation.store';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { InputDialogComponent, InputDialogData } from '../../../../components/shared/input-dialog/input-dialog.component';
@@ -52,6 +53,7 @@ export class FilieresListPageComponent {
   private readonly circulaireStore = inject(CirculaireStore);
   private readonly circulaireColorStore = inject(CirculaireColorStore);
   private readonly colorStore = inject(ColorStore);
+  private readonly currentUserStore = inject(CurrentUserStore);
   private readonly selectedRelationStore = inject(SelectedRelationStore);
   private readonly dialog = inject(MatDialog);
 
@@ -61,6 +63,7 @@ export class FilieresListPageComponent {
   protected readonly absentFilter = signal<AbsentFilter>('all');
   protected readonly hideWithoutRelation = signal(false);
   protected readonly isNational = this.selectedRelationStore.isNational;
+  protected readonly isLoggedIn = computed(() => this.currentUserStore.user() !== null);
 
   protected readonly filteredFilieres = computed(() => {
     const search = normalizeString(this.searchTerm().trim());

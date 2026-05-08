@@ -10,6 +10,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { CirculaireStore } from '../../../../stores/circulaires/circulaires.store';
 import { CirculaireColorStore } from '../../../../stores/circulaires-colors/circulaires-colors.store';
 import { ColorStore } from '../../../../stores/colors/colors.store';
+import { CurrentUserStore } from '../../../../stores/current-user/current-user.store';
 import { CirculaireCardComponent } from '../dumb/circulaire-card/circulaire-card.component';
 import { signal } from '@angular/core';
 import { CirculaireEditDialogComponent } from '../../../shared/circulaire-edit-dialog/circulaire-edit-dialog.component';
@@ -41,10 +42,12 @@ export class CirculairesListPageComponent {
   private readonly circulaireStore = inject(CirculaireStore);
   private readonly circulaireColorStore = inject(CirculaireColorStore);
   private readonly colorStore = inject(ColorStore);
+  private readonly currentUserStore = inject(CurrentUserStore);
   private readonly dialog = inject(MatDialog);
 
   protected readonly circulaires = this.circulaireStore.entities;
   protected readonly searchTerm = signal('');
+  protected readonly isLoggedIn = computed(() => this.currentUserStore.user() !== null);
 
   protected readonly filteredCirculaires = computed(() => {
     const search = normalizeString(this.searchTerm().trim());

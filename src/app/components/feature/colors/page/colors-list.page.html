@@ -8,7 +8,7 @@
         </h1>
         <p class="subtitle">{{ filteredColors().length }} couleur(s) disponible(s)</p>
       </div>
-      <button mat-raised-button color="primary" (click)="onAdd()">
+      <button mat-raised-button color="primary" (click)="onAdd()" [disabled]="!isLoggedIn()">
         <mat-icon>add</mat-icon>
         Ajouter
       </button>
@@ -48,10 +48,10 @@
             </div>
           </mat-card-content>
           <mat-card-actions align="end">
-            <button mat-icon-button (click)="onEdit(color.id, color.name, color.colorData)" matTooltip="Modifier">
+            <button mat-icon-button (click)="onEdit(color.id, color.name, color.colorData)" matTooltip="Modifier" [disabled]="!isLoggedIn()">
               <mat-icon>edit</mat-icon>
             </button>
-            <button mat-icon-button color="warn" (click)="onDelete(color.id, color.name)" matTooltip="Supprimer">
+            <button mat-icon-button color="warn" (click)="onDelete(color.id, color.name)" matTooltip="Supprimer" [disabled]="!isLoggedIn()">
               <mat-icon>delete</mat-icon>
             </button>
           </mat-card-actions>

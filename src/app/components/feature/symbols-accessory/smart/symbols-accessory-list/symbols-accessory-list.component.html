@@ -3,7 +3,7 @@
     <div class="title-section">
       <h1>Symboles accessoires ({{ filteredSymbolsAccessory().length }})</h1>
     </div>
-    <button mat-raised-button color="primary" (click)="onAdd()">
+    <button mat-raised-button color="primary" (click)="onAdd()" [disabled]="!isLoggedIn()">
       <mat-icon>add</mat-icon>
       Ajouter
     </button>
@@ -22,10 +22,10 @@
           <div class="item-content">
             <span class="item-name">{{ symbolAccessory.name }}</span>
             <div class="item-actions">
-              <button mat-icon-button (click)="onEdit(symbolAccessory.id, symbolAccessory.name)" matTooltip="Modifier">
+              <button mat-icon-button (click)="onEdit(symbolAccessory.id, symbolAccessory.name)" matTooltip="Modifier" [disabled]="!isLoggedIn()">
                 <mat-icon>edit</mat-icon>
               </button>
-              <button mat-icon-button color="warn" (click)="onDelete(symbolAccessory.id, symbolAccessory.name)" matTooltip="Supprimer">
+              <button mat-icon-button color="warn" (click)="onDelete(symbolAccessory.id, symbolAccessory.name)" matTooltip="Supprimer" [disabled]="!isLoggedIn()">
                 <mat-icon>delete</mat-icon>
               </button>
             </div>

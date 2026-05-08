@@ -37,7 +37,7 @@
         }
       </mat-select>
     </mat-form-field>
-    <button mat-mini-fab color="accent" (click)="onAddRelation()" matTooltip="Ajouter une relation">
+    <button mat-mini-fab color="accent" (click)="onAddRelation()" [disabled]="!isLoggedIn()" matTooltip="Ajouter une relation">
       <mat-icon>add</mat-icon>
     </button>
     

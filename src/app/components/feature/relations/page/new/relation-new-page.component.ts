@@ -7,6 +7,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { RelationEditFormComponent } from '../../dumb/relation-edit-form/relation-edit-form.component';
 import { RelationDataStore } from '../../../../../stores/relations/relations.store';
+import { CurrentUserStore } from '../../../../../stores/current-user/current-user.store';
 import { IRelationData } from '../../../../../models/data/base-relations.models';
 
 @Component({
@@ -25,10 +26,14 @@ import { IRelationData } from '../../../../../models/data/base-relations.models'
 })
 export class RelationNewPageComponent {
   private readonly relationStore = inject(RelationDataStore);
+  private readonly currentUserStore = inject(CurrentUserStore);
   private readonly router = inject(Router);
 
   protected readonly relations = this.relationStore.entities;
   protected readonly selectedRelationToCopy = signal<string | null>(null);
+  protected readonly editable = computed(() => {
+    return !!this.currentUserStore.user();
+  });
 
   private getDefaultYear(): number {
     const now = new Date();

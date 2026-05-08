@@ -6,11 +6,11 @@
         <mat-icon>add</mat-icon>
         Ajouter une relation
       </button>
-      <button mat-raised-button (click)="editFiliere.emit()">
+      <button mat-raised-button [disabled]="!canEditEntity()" (click)="editFiliere.emit()">
         <mat-icon>edit</mat-icon>
         Éditer la filière
       </button>
-      <button mat-raised-button color="warn" (click)="deleteFiliere.emit()">
+      <button mat-raised-button color="warn" [disabled]="!canEditEntity()" (click)="deleteFiliere.emit()">
         <mat-icon>delete</mat-icon>
         Supprimer la filière
       </button>

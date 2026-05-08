@@ -10,6 +10,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatDialog } from '@angular/material/dialog';
 import { FormsModule } from '@angular/forms';
 import { PositionStore } from '../../../../../stores/positions/positions.store';
+import { CurrentUserStore } from '../../../../../stores/current-user/current-user.store';
 import { InputDialogComponent } from '../../../../shared/input-dialog/input-dialog.component';
 import { ConfirmDialogComponent } from '../../../../shared/confirm-dialog/confirm-dialog.component';
 
@@ -31,11 +32,13 @@ import { ConfirmDialogComponent } from '../../../../shared/confirm-dialog/confir
 })
 export class PositionsListComponent {
   private readonly positionStore = inject(PositionStore);
+  private readonly currentUserStore = inject(CurrentUserStore);
   private readonly dialog = inject(MatDialog);
   private readonly router = inject(Router);
 
   protected readonly positions = this.positionStore.entities;
   protected readonly searchTerm = signal('');
+  protected readonly isLoggedIn = computed(() => this.currentUserStore.user() !== null);
 
   // Fonction pour normaliser les chaînes (retirer les accents)
   private normalizeString(str: string): string {

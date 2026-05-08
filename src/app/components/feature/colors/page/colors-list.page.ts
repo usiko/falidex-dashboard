@@ -8,6 +8,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ColorStore } from '../../../../stores/colors/colors.store';
+import { CurrentUserStore } from '../../../../stores/current-user/current-user.store';
 import { signal } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { ColorEditDialogComponent } from '../../../shared/color-edit-dialog/color-edit-dialog.component';
@@ -38,10 +39,12 @@ function normalizeString(str: string): string {
 })
 export class ColorsListPageComponent {
   private readonly colorStore = inject(ColorStore);
+  private readonly currentUserStore = inject(CurrentUserStore);
   private readonly dialog = inject(MatDialog);
 
   protected readonly colors = this.colorStore.entities;
   protected readonly searchTerm = signal('');
+  protected readonly isLoggedIn = computed(() => this.currentUserStore.user() !== null);
 
   protected readonly filteredColors = computed(() => {
     const search = normalizeString(this.searchTerm().trim());

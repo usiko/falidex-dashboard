@@ -9,7 +9,7 @@
     @if (searchTerm()) {
       <div class="empty-state">
         <p>Aucun décernement trouvé</p>
-        <button mat-raised-button color="primary" (click)="onCreate()">
+        <button mat-raised-button color="primary" (click)="onCreate()" [disabled]="!isLoggedIn()">
           <mat-icon>add</mat-icon>
           Ajouter la recherche
         </button>

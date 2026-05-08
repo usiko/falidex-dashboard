@@ -34,7 +34,7 @@
                   <div class="color-item">
                     <div class="color-preview" [style.background-color]="color?.colorData"></div>
                     <span class="color-name">{{ color?.name || 'Sans nom' }}</span>
-                    <button mat-icon-button color="warn" (click)="onRemoveColor($index)" type="button" matTooltip="Retirer">
+                    <button mat-icon-button color="warn" (click)="onRemoveColor($index)" type="button" matTooltip="Retirer" [disabled]="!isLoggedIn()">
                       <mat-icon>remove_circle</mat-icon>
                     </button>
                   </div>
@@ -48,7 +48,7 @@
       <div class="colors-section">
         <div class="section-header">
           <h3>Couleurs disponibles</h3>
-          <button mat-mini-fab color="primary" (click)="onAddColor()" type="button" matTooltip="Créer une nouvelle couleur">
+          <button mat-mini-fab color="primary" (click)="onAddColor()" type="button" matTooltip="Créer une nouvelle couleur" [disabled]="!isLoggedIn()">
             <mat-icon>add</mat-icon>
           </button>
         </div>
@@ -74,7 +74,7 @@
                   <div class="color-item">
                     <div class="color-preview" [style.background-color]="color.colorData"></div>
                     <span class="color-name">{{ color.name || 'Sans nom' }}</span>
-                    <button mat-icon-button color="primary" (click)="onSelectExistingColor(color.id)" type="button" matTooltip="Ajouter à la circulaire">
+                    <button mat-icon-button color="primary" (click)="onSelectExistingColor(color.id)" type="button" matTooltip="Ajouter à la circulaire" [disabled]="!isLoggedIn()">
                       <mat-icon>add_circle</mat-icon>
                     </button>
                   </div>

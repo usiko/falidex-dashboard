@@ -18,6 +18,7 @@ import { SignificationStore } from '../../../../stores/significations/significat
 import { CirculaireStore } from '../../../../stores/circulaires/circulaires.store';
 import { CirculaireColorStore } from '../../../../stores/circulaires-colors/circulaires-colors.store';
 import { ColorStore } from '../../../../stores/colors/colors.store';
+import { CurrentUserStore } from '../../../../stores/current-user/current-user.store';
 import { SymbolSensStore } from '../../../../stores/symbols-sens/symbols-sens.store';
 import { SymbolAccessoryStore } from '../../../../stores/symbols-accessory/symbols-accessory.store';
 import { CiculaireMatiereEnum } from '../../../../models/data/circulaire-matiere.enum';
@@ -60,6 +61,7 @@ export class SymbolsListPageComponent {
   private readonly circulaireStore = inject(CirculaireStore);
   private readonly circulaireColorStore = inject(CirculaireColorStore);
   private readonly colorStore = inject(ColorStore);
+  private readonly currentUserStore = inject(CurrentUserStore);
   private readonly symbolSensStore = inject(SymbolSensStore);
   private readonly symbolAccessoryStore = inject(SymbolAccessoryStore);
   private readonly dialog = inject(MatDialog);
@@ -71,6 +73,7 @@ export class SymbolsListPageComponent {
   protected readonly relationFilter = signal<RelationFilter>('all');
   protected readonly supportFilter = signal<SupportFilter>('all');
   protected readonly speFilter = signal<SpeFilter>('all');
+  protected readonly isLoggedIn = computed(() => this.currentUserStore.user() !== null);
 
   protected readonly filteredSymbols = computed(() => {
     const search = normalizeString(this.searchTerm().trim());

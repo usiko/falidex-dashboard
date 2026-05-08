@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { SignificationStore } from '../../../stores/significations/significations.store';
+import { CurrentUserStore } from '../../../stores/current-user/current-user.store';
 import { IBaseSignification } from '../../../models/data/base-data-models';
 
 @Component({
@@ -19,6 +20,9 @@ export class SignificationsCollectionComponent {
   create = output<string>();
   
   private significationStore = inject(SignificationStore);
+  private currentUserStore = inject(CurrentUserStore);
+  
+  protected isLoggedIn = computed(() => this.currentUserStore.user() !== null);
   
   protected significations = computed(() => {
     const term = this.searchTerm().toLowerCase().trim();

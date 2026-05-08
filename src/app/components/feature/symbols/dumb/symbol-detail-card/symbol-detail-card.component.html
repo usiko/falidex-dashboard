@@ -6,11 +6,11 @@
         <mat-icon>add</mat-icon>
         Ajouter une relation
       </button>
-      <button mat-raised-button (click)="editSymbol.emit()">
+      <button mat-raised-button [disabled]="!canEditEntity()" (click)="editSymbol.emit()">
         <mat-icon>edit</mat-icon>
         Éditer le symbole
       </button>
-      <button mat-raised-button color="warn" (click)="deleteSymbol.emit()">
+      <button mat-raised-button color="warn" [disabled]="!canEditEntity()" (click)="deleteSymbol.emit()">
         <mat-icon>delete</mat-icon>
         Supprimer le symbole
       </button>

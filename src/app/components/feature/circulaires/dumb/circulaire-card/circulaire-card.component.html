@@ -20,10 +20,10 @@
     }
   </mat-card-content>
   <mat-card-actions align="end">
-    <button mat-icon-button (click)="edit.emit(circulaire); $event.stopPropagation()" matTooltip="Modifier">
+    <button mat-icon-button (click)="edit.emit(circulaire); $event.stopPropagation()" matTooltip="Modifier" [disabled]="isEditDisabled">
       <mat-icon>edit</mat-icon>
     </button>
-    <button mat-icon-button color="warn" (click)="delete.emit(circulaire); $event.stopPropagation()" matTooltip="Supprimer">
+    <button mat-icon-button color="warn" (click)="delete.emit(circulaire); $event.stopPropagation()" matTooltip="Supprimer" [disabled]="isEditDisabled">
       <mat-icon>delete</mat-icon>
     </button>
   </mat-card-actions>

@@ -46,6 +46,10 @@ export class SymbolDetailComponent {
     return this.selectedRelationStore.isEditable() && !!this.currentUserStore.user();
   });
   
+  protected readonly canEditEntity = computed(() => {
+    return !!this.currentUserStore.user();
+  });
+  
   onEditLink(linkId: string) {
     this.router.navigate(['/relation', linkId, 'symbole', 'edit']);
   }

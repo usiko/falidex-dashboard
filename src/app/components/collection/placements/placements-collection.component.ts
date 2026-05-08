@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { PlacementStore } from '../../../stores/placements/placements.store';
+import { CurrentUserStore } from '../../../stores/current-user/current-user.store';
 import { IBasePlacement } from '../../../models/data/base-data-models';
 
 @Component({
@@ -19,6 +20,9 @@ export class PlacementsCollectionComponent {
   create = output<string>();
   
   private placementStore = inject(PlacementStore);
+  private currentUserStore = inject(CurrentUserStore);
+  
+  protected isLoggedIn = computed(() => this.currentUserStore.user() !== null);
   
   protected placements = computed(() => {
     const term = this.searchTerm().toLowerCase().trim();

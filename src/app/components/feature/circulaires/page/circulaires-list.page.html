@@ -8,7 +8,7 @@
         </h1>
         <p class="subtitle">{{ filteredCirculaires().length }} circulaire(s) disponible(s)</p>
       </div>
-      <button mat-raised-button color="primary" (click)="onAdd()">
+      <button mat-raised-button color="primary" (click)="onAdd()" [disabled]="!isLoggedIn()">
         <mat-icon>add</mat-icon>
         Ajouter
       </button>
@@ -39,6 +39,7 @@
         <app-circulaire-card 
           [circulaire]="circulaire"
           [colors]="getCirculaireColors(circulaire.id)"
+          [isEditDisabled]="!isLoggedIn()"
           (edit)="onEdit($event)"
           (delete)="onDelete($event)" />
       }

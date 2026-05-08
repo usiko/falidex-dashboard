@@ -5,7 +5,7 @@
         <mat-icon>school</mat-icon>
         Filières
       </h1>
-      <button mat-raised-button color="primary" (click)="onAddFiliere()">
+      <button mat-raised-button color="primary" (click)="onAddFiliere()" [disabled]="!isLoggedIn()">
         <mat-icon>add</mat-icon>
         Ajouter
       </button>

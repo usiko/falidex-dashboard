@@ -24,6 +24,7 @@ import { IBaseCirculaire, IBaseColor } from '../../../../../models/data/base-dat
 export class CirculaireCardComponent {
   @Input({ required: true }) circulaire!: IBaseCirculaire;
   @Input() colors: IBaseColor[] = [];
+  @Input() isEditDisabled: boolean = false;
   
   edit = output<IBaseCirculaire>();
   delete = output<IBaseCirculaire>();

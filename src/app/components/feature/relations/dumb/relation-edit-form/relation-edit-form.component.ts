@@ -31,6 +31,7 @@ import { CodeSpeEditDialogComponent, CodeSpeEditDialogData } from '../../../../s
 })
 export class RelationEditFormComponent {
   relation = input<IRelationData>();
+  editable = input<boolean>(true);
   
   // Output pour la validation
   validated = output<IRelationData | null>();
@@ -64,7 +65,7 @@ export class RelationEditFormComponent {
   protected national = false;
   protected defaultRelation = false;
   protected visible = true;
-  protected editable = true;
+  protected editableField = true;
   protected specificites = signal<IBaseCodeSpe[]>([]);
   
   constructor() {
@@ -79,7 +80,7 @@ export class RelationEditFormComponent {
       this.national = rel.national || false;
       this.defaultRelation = rel.default || false;
       this.visible = rel.visible ?? true;
-      this.editable = rel.editable ?? true;
+      this.editableField = rel.editable ?? true;
       this.specificites.set(rel.specificites ? [...rel.specificites] : []);
     });
   }
@@ -96,7 +97,7 @@ export class RelationEditFormComponent {
       national: this.national,
       default: this.defaultRelation,
       visible: this.visible,
-      editable: this.editable,
+      editable: this.editableField,
       specificites: this.specificites()
     };
     

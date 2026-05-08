@@ -11,46 +11,46 @@
         <!-- Nom -->
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Nom</mat-label>
-          <input matInput [(ngModel)]="name" name="name" [disabled]="national" required />
+          <input matInput [(ngModel)]="name" name="name" [disabled]="!editable() || national" required />
           <mat-icon matPrefix>label</mat-icon>
         </mat-form-field>
 
         <!-- Année -->
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Année</mat-label>
-          <input matInput type="number" [(ngModel)]="annee" name="annee" required />
+          <input matInput type="number" [(ngModel)]="annee" name="annee" [disabled]="!editable()" required />
           <mat-icon matPrefix>calendar_today</mat-icon>
         </mat-form-field>
 
         <!-- Ville -->
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Ville</mat-label>
-          <input matInput [(ngModel)]="ville" name="ville" [disabled]="national" required />
+          <input matInput [(ngModel)]="ville" name="ville" [disabled]="!editable() || national" required />
           <mat-icon matPrefix>location_city</mat-icon>
         </mat-form-field>
 
         <!-- Toggles -->
         <div class="toggles-section">
-          <mat-slide-toggle [ngModel]="national" (ngModelChange)="onNationalChange($event)" name="national" color="primary">
+          <mat-slide-toggle [ngModel]="national" (ngModelChange)="onNationalChange($event)" name="national" [disabled]="!editable()" color="primary">
             National
           </mat-slide-toggle>
 
-          <mat-slide-toggle [(ngModel)]="defaultRelation" name="default" color="primary">
+          <mat-slide-toggle [(ngModel)]="defaultRelation" name="default" [disabled]="!editable()" color="primary">
             Par défaut
           </mat-slide-toggle>
 
-          <mat-slide-toggle [(ngModel)]="visible" name="visible" color="primary">
+          <mat-slide-toggle [(ngModel)]="visible" name="visible" [disabled]="!editable()" color="primary">
             Visible
           </mat-slide-toggle>
 
-          <mat-slide-toggle [(ngModel)]="editable" name="editable" color="primary">
+          <mat-slide-toggle [(ngModel)]="editableField" name="editableField" [disabled]="!editable()" color="primary">
             Éditable
           </mat-slide-toggle>
         </div>
 
         <!-- Actions -->
         <div class="form-actions">
-          <button mat-raised-button color="warn" type="button" [disabled]="!editable" (click)="onDelete()" class="delete-action">
+          <button mat-raised-button color="warn" type="button" [disabled]="!editable()" (click)="onDelete()" class="delete-action">
             <mat-icon>delete</mat-icon>
             Supprimer
           </button>
@@ -58,7 +58,7 @@
             <mat-icon>close</mat-icon>
             Annuler
           </button>
-          <button mat-raised-button color="primary" type="submit">
+          <button mat-raised-button color="primary" type="submit" [disabled]="!editable()">
             <mat-icon>save</mat-icon>
             Enregistrer
           </button>
@@ -77,7 +77,7 @@
               mat-mini-fab 
               color="primary" 
               type="button"
-              [disabled]="!editable"
+              [disabled]="!editable()"
               (click)="onAddSpecificite()"
               matTooltip="Ajouter une spécificité">
               <mat-icon>add</mat-icon>
@@ -92,7 +92,7 @@
                       mat-icon-button 
                       class="edit-button" 
                       type="button"
-                      [disabled]="!editable"
+                      [disabled]="!editable()"
                       (click)="onEditSpecificite(spe)"
                       matTooltip="Éditer">
                       <mat-icon>edit</mat-icon>
@@ -101,7 +101,7 @@
                       mat-icon-button 
                       class="delete-button" 
                       type="button"
-                      [disabled]="!editable"
+                      [disabled]="!editable()"
                       (click)="onDeleteSpecificite(spe.id)"
                       matTooltip="Supprimer">
                       <mat-icon>delete</mat-icon>

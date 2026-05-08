@@ -5,7 +5,7 @@
         <mat-icon>star</mat-icon>
         Symboles
       </h1>
-      <button mat-raised-button color="primary" (click)="onAddSymbol()">
+      <button mat-raised-button color="primary" (click)="onAddSymbol()" [disabled]="!isLoggedIn()">
         <mat-icon>add</mat-icon>
         Ajouter
       </button>
