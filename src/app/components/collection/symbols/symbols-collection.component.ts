@@ -21,12 +21,14 @@ export class SymbolsCollectionComponent {
     const term = this.searchTerm().toLowerCase().trim();
     const allSymbols = this.symbolStore.entities();
     
-    if (!term) {
-      return allSymbols;
-    }
+    const filtered = !term
+      ? allSymbols
+      : allSymbols.filter(symbol => 
+          symbol.name?.toLowerCase().includes(term)
+        );
     
-    return allSymbols.filter(symbol => 
-      symbol.name?.toLowerCase().includes(term)
+    return filtered.slice().sort((a, b) => 
+      (a.name || '').toLowerCase().localeCompare((b.name || '').toLowerCase())
     );
   });
   

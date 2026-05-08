@@ -1,4 +1,4 @@
-import { Component, inject, input, output } from '@angular/core';
+import { Component, inject, input, output, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ColorStore } from '../../../stores/colors/colors.store';
 import { IBaseColor } from '../../../models/data/base-data-models';
@@ -15,7 +15,11 @@ export class ColorsCollectionComponent {
   selection = output<IBaseColor>();
   
   private colorStore = inject(ColorStore);
-  protected colors = this.colorStore.entities;
+  protected colors = computed(() => 
+    this.colorStore.entities().slice().sort((a, b) => 
+      (a.name || '').toLowerCase().localeCompare((b.name || '').toLowerCase())
+    )
+  );
   
   protected onSelect(color: IBaseColor): void {
     if (this.selectable()) {

@@ -47,7 +47,9 @@ export class PositionsListComponent {
 
   protected readonly filteredPositions = computed(() => {
     const term = this.normalizeString(this.searchTerm());
-    const allPositions = this.positions();
+    const allPositions = this.positions().slice().sort((a, b) => 
+      this.normalizeString(a.name || '').localeCompare(this.normalizeString(b.name || ''))
+    );
 
     if (!term) {
       return allPositions;

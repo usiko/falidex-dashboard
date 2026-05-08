@@ -28,12 +28,14 @@ export class SymbolsAccessoryCollectionComponent {
     const term = this.searchTerm().toLowerCase().trim();
     const allSymbolsAccessory = this.symbolAccessoryStore.entities();
     
-    if (!term) {
-      return allSymbolsAccessory;
-    }
+    const filtered = !term
+      ? allSymbolsAccessory
+      : allSymbolsAccessory.filter(symbolAccessory => 
+          symbolAccessory.name?.toLowerCase().includes(term)
+        );
     
-    return allSymbolsAccessory.filter(symbolAccessory => 
-      symbolAccessory.name?.toLowerCase().includes(term)
+    return filtered.slice().sort((a, b) => 
+      (a.name || '').toLowerCase().localeCompare((b.name || '').toLowerCase())
     );
   });
   

@@ -28,12 +28,14 @@ export class SignificationsCollectionComponent {
     const term = this.searchTerm().toLowerCase().trim();
     const allSignifications = this.significationStore.entities();
     
-    if (!term) {
-      return allSignifications;
-    }
+    const filtered = !term
+      ? allSignifications
+      : allSignifications.filter(sig => 
+          sig.content?.toLowerCase().includes(term)
+        );
     
-    return allSignifications.filter(sig => 
-      sig.content?.toLowerCase().includes(term)
+    return filtered.slice().sort((a, b) => 
+      (a.content || '').toLowerCase().localeCompare((b.content || '').toLowerCase())
     );
   });
   

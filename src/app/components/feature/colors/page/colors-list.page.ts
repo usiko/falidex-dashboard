@@ -48,10 +48,13 @@ export class ColorsListPageComponent {
 
   protected readonly filteredColors = computed(() => {
     const search = normalizeString(this.searchTerm().trim());
+    const colors = this.colors().slice().sort((a, b) => 
+      normalizeString(a.name || '').localeCompare(normalizeString(b.name || ''))
+    );
     if (!search) {
-      return this.colors();
+      return colors;
     }
-    return this.colors().filter(c => 
+    return colors.filter(c => 
       normalizeString(c.name || '').includes(search) ||
       normalizeString(c.colorData || '').includes(search)
     );

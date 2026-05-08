@@ -101,7 +101,9 @@ export class FilieresListPageComponent {
     
     // Filtre de recherche
     if (!search) {
-      return filtered;
+      return filtered.slice().sort((a, b) => 
+        normalizeString(a.name || '').localeCompare(normalizeString(b.name || ''))
+      );
     }
     
     return filtered.filter(filiere => {
@@ -158,7 +160,9 @@ export class FilieresListPageComponent {
       });
       
       return hasMatchingCirculaire;
-    });
+    }).sort((a, b) => 
+      normalizeString(a.name || '').localeCompare(normalizeString(b.name || ''))
+    );
   });
 
   protected onAddFiliere(): void {

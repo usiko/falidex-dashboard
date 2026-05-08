@@ -28,12 +28,14 @@ export class PlacementsCollectionComponent {
     const term = this.searchTerm().toLowerCase().trim();
     const allPlacements = this.placementStore.entities();
     
-    if (!term) {
-      return allPlacements;
-    }
+    const filtered = !term
+      ? allPlacements
+      : allPlacements.filter(placement => 
+          placement.name?.toLowerCase().includes(term)
+        );
     
-    return allPlacements.filter(placement => 
-      placement.name?.toLowerCase().includes(term)
+    return filtered.slice().sort((a, b) => 
+      (a.name || '').toLowerCase().localeCompare((b.name || '').toLowerCase())
     );
   });
   

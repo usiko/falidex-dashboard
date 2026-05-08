@@ -47,7 +47,9 @@ export class SymbolsAccessoryListComponent {
 
   protected readonly filteredSymbolsAccessory = computed(() => {
     const term = this.normalizeString(this.searchTerm());
-    const allSymbolsAccessory = this.symbolsAccessory();
+    const allSymbolsAccessory = this.symbolsAccessory().slice().sort((a, b) => 
+      this.normalizeString(a.name || '').localeCompare(this.normalizeString(b.name || ''))
+    );
 
     if (!term) {
       return allSymbolsAccessory;

@@ -21,12 +21,14 @@ export class PositionsCollectionComponent {
     const term = this.searchTerm().toLowerCase().trim();
     const allPositions = this.positionStore.entities();
     
-    if (!term) {
-      return allPositions;
-    }
+    const filtered = !term
+      ? allPositions
+      : allPositions.filter(position => 
+          position.name?.toLowerCase().includes(term)
+        );
     
-    return allPositions.filter(position => 
-      position.name?.toLowerCase().includes(term)
+    return filtered.slice().sort((a, b) => 
+      (a.name || '').toLowerCase().localeCompare((b.name || '').toLowerCase())
     );
   });
   

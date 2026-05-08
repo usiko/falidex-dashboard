@@ -47,7 +47,9 @@ export class SignificationsListComponent {
 
   protected readonly filteredSignifications = computed(() => {
     const term = this.normalizeString(this.searchTerm());
-    const allSignifications = this.significations();
+    const allSignifications = this.significations().slice().sort((a, b) => 
+      this.normalizeString(a.content || '').localeCompare(this.normalizeString(b.content || ''))
+    );
 
     if (!term) {
       return allSignifications;

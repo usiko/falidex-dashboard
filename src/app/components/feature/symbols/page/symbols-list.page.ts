@@ -140,7 +140,9 @@ export class SymbolsListPageComponent {
     
     // Filtre de recherche
     if (!search) {
-      return filtered;
+      return filtered.slice().sort((a, b) => 
+        normalizeString(a.name || '').localeCompare(normalizeString(b.name || ''))
+      );
     }
     
     return filtered.filter(symbol => {
@@ -230,7 +232,9 @@ export class SymbolsListPageComponent {
       });
       
       return hasMatchingSymbolAccessory;
-    });
+    }).sort((a, b) => 
+      normalizeString(a.name || '').localeCompare(normalizeString(b.name || ''))
+    );
   });
 
   protected onAddSymbol(): void {

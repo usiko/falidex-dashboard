@@ -1,4 +1,4 @@
-import { Component, inject, input, output } from '@angular/core';
+import { Component, inject, input, output, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CodeSpeStore } from '../../../stores/codes-spe/codes-spe.store';
 import { IBaseCodeSpe } from '../../../models/data/base-data-models';
@@ -15,7 +15,11 @@ export class CodesSpeCollectionComponent {
   selection = output<IBaseCodeSpe>();
   
   private codeSpeStore = inject(CodeSpeStore);
-  protected codesSpe = this.codeSpeStore.entities;
+  protected codesSpe = computed(() => 
+    this.codeSpeStore.entities().slice().sort((a, b) => 
+      (a.name || '').toLowerCase().localeCompare((b.name || '').toLowerCase())
+    )
+  );
   
   protected onSelect(codeSpe: IBaseCodeSpe): void {
     if (this.selectable()) {

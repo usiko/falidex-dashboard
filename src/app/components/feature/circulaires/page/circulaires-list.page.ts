@@ -51,10 +51,13 @@ export class CirculairesListPageComponent {
 
   protected readonly filteredCirculaires = computed(() => {
     const search = normalizeString(this.searchTerm().trim());
+    const circulaires = this.circulaires().slice().sort((a, b) => 
+      normalizeString(a.name || '').localeCompare(normalizeString(b.name || ''))
+    );
     if (!search) {
-      return this.circulaires();
+      return circulaires;
     }
-    return this.circulaires().filter(c => 
+    return circulaires.filter(c => 
       normalizeString(c.name || '').includes(search) ||
       normalizeString(c.matiere || '').includes(search)
     );

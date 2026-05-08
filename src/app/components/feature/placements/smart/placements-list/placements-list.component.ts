@@ -47,7 +47,9 @@ export class PlacementsListComponent {
 
   protected readonly filteredPlacements = computed(() => {
     const term = this.normalizeString(this.searchTerm());
-    const allPlacements = this.placements();
+    const allPlacements = this.placements().slice().sort((a, b) => 
+      this.normalizeString(a.name || '').localeCompare(this.normalizeString(b.name || ''))
+    );
 
     if (!term) {
       return allPlacements;
