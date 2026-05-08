@@ -1,0 +1,30 @@
+<mat-card class="circulaire-card">
+  <mat-card-header>
+    <mat-icon mat-card-avatar>circle</mat-icon>
+    <mat-card-title>{{ circulaire.name }}</mat-card-title>
+    <mat-card-subtitle>
+      {{ circulaire.matiere }}
+      <span class="card-id">{{ circulaire.id }}</span>
+    </mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    @if (colors.length > 0) {
+      <div class="colors-container">
+        <span class="colors-label">Couleurs:</span>
+        <div class="colors-chips">
+          @for (color of colors; track $index) {
+            <div class="color-chip" [style.background-color]="color.colorData" [matTooltip]="color.name || 'Sans nom'"></div>
+          }
+        </div>
+      </div>
+    }
+  </mat-card-content>
+  <mat-card-actions align="end">
+    <button mat-icon-button (click)="edit.emit(circulaire); $event.stopPropagation()" matTooltip="Modifier">
+      <mat-icon>edit</mat-icon>
+    </button>
+    <button mat-icon-button color="warn" (click)="delete.emit(circulaire); $event.stopPropagation()" matTooltip="Supprimer">
+      <mat-icon>delete</mat-icon>
+    </button>
+  </mat-card-actions>
+</mat-card>

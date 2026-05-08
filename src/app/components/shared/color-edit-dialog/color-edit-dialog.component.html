@@ -1,0 +1,34 @@
+<div class="color-edit-dialog">
+  <h2 mat-dialog-title>{{ title }}</h2>
+  
+  <mat-dialog-content>
+    <div class="form-container">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Nom de la couleur</mat-label>
+        <input matInput [(ngModel)]="name" placeholder="Ex: Rouge vif" required>
+      </mat-form-field>
+
+      <div class="color-picker-container">
+        <label class="color-label">Couleur</label>
+        <div class="color-input-wrapper">
+          <input 
+            type="color" 
+            [(ngModel)]="colorData" 
+            class="color-picker"
+            required>
+          <mat-form-field appearance="outline" class="color-code-field">
+            <mat-label>Code couleur</mat-label>
+            <input matInput [(ngModel)]="colorData" placeholder="#000000" pattern="^#[0-9A-Fa-f]{6}$">
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="onCancel()">{{ cancelText }}</button>
+    <button mat-raised-button color="primary" (click)="onConfirm()" [disabled]="!name.trim() || !colorData">
+      {{ confirmText }}
+    </button>
+  </mat-dialog-actions>
+</div>

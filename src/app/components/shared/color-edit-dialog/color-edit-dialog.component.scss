@@ -1,0 +1,51 @@
+.color-edit-dialog {
+  min-width: 400px;
+
+  .form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 16px 0;
+  }
+
+  .full-width {
+    width: 100%;
+  }
+
+  .color-picker-container {
+    .color-label {
+      display: block;
+      font-size: 12px;
+      color: rgba(0, 0, 0, 0.6);
+      margin-bottom: 8px;
+    }
+
+    .color-input-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+
+      .color-picker {
+        width: 60px;
+        height: 60px;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        cursor: pointer;
+        padding: 0;
+        
+        &::-webkit-color-swatch-wrapper {
+          padding: 0;
+        }
+        
+        &::-webkit-color-swatch {
+          border: none;
+          border-radius: 6px;
+        }
+      }
+
+      .color-code-field {
+        flex: 1;
+      }
+    }
+  }
+}

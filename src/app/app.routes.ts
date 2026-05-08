@@ -63,6 +63,14 @@ export const routes: Routes = [
     loadComponent: () => import('./components/feature/positions/page/positions-list.page').then(m => m.PositionsListPageComponent)
   },
   {
+    path: 'circulaires',
+    loadComponent: () => import('./components/feature/circulaires/page/circulaires-list.page').then(m => m.CirculairesListPageComponent)
+  },
+  {
+    path: 'colors',
+    loadComponent: () => import('./components/feature/colors/page/colors-list.page').then(m => m.ColorsListPageComponent)
+  },
+  {
     path: '**',
     redirectTo: 'filieres'
   }
