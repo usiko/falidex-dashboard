@@ -1,8 +1,4 @@
 export interface IAppConfig {
-	urls: {
-		dataServer: string;
-		pictureServer: string;
-	};
     paths: {
 		circulaires: string;
 		circulaireColors: string;

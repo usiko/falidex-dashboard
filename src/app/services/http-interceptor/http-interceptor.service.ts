@@ -16,7 +16,7 @@ export const httpInterceptor: HttpInterceptorFn = (
     const configService = inject(AppConfigService);
     const snackbarService = inject(SnackbarService);
     const tokenHeader = environment.tokenHeader;
-    const dataBaseUrl = configService.getConfig()?.urls.dataServer;
+    const dataBaseUrl = environment.urls.dataServer;
     const tokenPath = configService.getConfig()?.paths.token;
     
     // Si la requête ne commence pas par dataBaseUrl, on laisse passer sans modification

@@ -20,7 +20,7 @@ export class AuthService {
     private currentUserStore = inject(CurrentUserStore);
 
     login(user_name:string,password:string) {
-        const url = this.configService.getConfig()?.urls?.dataServer;
+        const url = environment.urls?.dataServer;
         return this.http
             .post<{ token: string; user?: IUser }>(`${url}/${this.configService.getConfig()?.paths.login}`, {
                 user_name,
@@ -130,7 +130,7 @@ export class AuthService {
 
     authToken()
     {
-        const url = this.configService.getConfig()?.urls?.dataServer;
+        const url = environment.urls.dataServer;
         const tokenPath = this.configService.getConfig()?.paths.token;
         if(url && tokenPath)
         {
