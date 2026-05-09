@@ -61,3 +61,8 @@ export interface IBaseMetaData {
 	modificationDate: Date;
 	collection: IBaseCollectionData[];
 }
+
+export interface IOccurence{
+    relations:string,
+    items:number
+}

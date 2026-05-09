@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { v4 as uuidv4 } from 'uuid';
 import {
@@ -14,7 +14,8 @@ import {
   IBasePosition,
   IBaseSymbolSens,
   IBaseSymbolAcessory,
-  IBaseCodeSpe
+  IBaseCodeSpe,
+  IOccurence
 } from '../../models/data/base-data-models';
 import { IRelationData, IRelationItem } from '../../models/data/base-relations.models';
 import { PictureService } from '../picture/picture.service';
@@ -141,12 +142,10 @@ export class DataService {
   /**
    * creer une relation item
    */
-  createRelation(item:Omit<IRelationData,'id'>): Observable<void> {
+  createRelation(item:Omit<IRelationData,'id'>): Observable<IRelationData> {
     return this.http.post<IRelationData>(
         `${this.configService.getConfig()?.urls.dataServer}/${this.configService.getConfig()?.paths.dataLinkItem}`,
         item
-    ).pipe(
-      map(data =>void 0)
     );
   }
   /**
@@ -204,123 +203,363 @@ export class DataService {
     );
   }
 
-  deleteSymbole(id:string)
+  deleteSymbole(id:string): Observable<void>
   {
-    return of(void 0)
+    return this.http.delete(
+      `${this.configService.getConfig()?.urls.dataServer}/${this.configService.getConfig()?.paths.symbols}/${id}`
+    ).pipe(
+      map(data => void 0)
+    );
   }
 
-  editSymbol(symbol:Partial<ISymbol>)
+  editSymbol(symbol:Partial<ISymbol>): Observable<void>
   {
-    return of(void 0)
+    return this.http.put(
+      `${this.configService.getConfig()?.urls.dataServer}/${this.configService.getConfig()?.paths.symbols}/${symbol.id}`,
+      symbol
+    ).pipe(
+      map(data => void 0)
+    );
   }
 
-  createSymbole(symbol:Omit<IBaseSymbol,'id'>)
+  createSymbole(symbol:Omit<IBaseSymbol,'id'>): Observable<void>
   {
-    return of(void 0)
+    return this.http.post(
+      `${this.configService.getConfig()?.urls.dataServer}/${this.configService.getConfig()?.paths.symbols}`,
+      symbol
+    ).pipe(
+      map(data => void 0)
+    );
   }
 
-  deleteFiliere(id:string)
+  deleteFiliere(id:string): Observable<void>
   {
-    return of(void 0)
+    return this.http.delete(
+      `${this.configService.getConfig()?.urls.dataServer}/${this.configService.getConfig()?.paths.filieres}/${id}`
+    ).pipe(
+      map(data => void 0)
+    );
   }
 
-  editFiliere(filiere:Partial<IFiliere>)
+  editFiliere(filiere:Partial<IFiliere>): Observable<void>
   {
-    return of(void 0)
+    return this.http.put(
+      `${this.configService.getConfig()?.urls.dataServer}/${this.configService.getConfig()?.paths.filieres}/${filiere.id}`,
+      filiere
+    ).pipe(
+      map(data => void 0)
+    );
   }
 
-  createFiliere(filiere:Omit<IBaseFiliere,'id'>)
+  createFiliere(filiere:Omit<IBaseFiliere,'id'>): Observable<void>
   {
-    return of(void 0)
+    return this.http.post(
+      `${this.configService.getConfig()?.urls.dataServer}/${this.configService.getConfig()?.paths.filieres}`,
+      filiere
+    ).pipe(
+      map(data => void 0)
+    );
   }
 
   // Signification
-  createSignification(signification:Omit<IBaseSignification,'id'>)
+  createSignification(signification:Omit<IBaseSignification,'id'>): Observable<void>
   {
-    return of(void 0)
+    return this.http.post(
+      `${this.configService.getConfig()?.urls.dataServer}/${this.configService.getConfig()?.paths.significations}`,
+      signification
+    ).pipe(
+      map(data => void 0)
+    );
   }
 
-  editSignification(signification:Partial<IBaseSignification>)
+  editSignification(signification:Partial<IBaseSignification>): Observable<void>
   {
-    return of(void 0)
+    return this.http.put(
+      `${this.configService.getConfig()?.urls.dataServer}/${this.configService.getConfig()?.paths.significations}/${signification.id}`,
+      signification
+    ).pipe(
+      map(data => void 0)
+    );
   }
 
-  deleteSignification(id:string)
+  deleteSignification(id:string): Observable<void>
   {
-    return of(void 0)
+    return this.http.delete(
+      `${this.configService.getConfig()?.urls.dataServer}/${this.configService.getConfig()?.paths.significations}/${id}`
+    ).pipe(
+      map(data => void 0)
+    );
   }
 
   // Position
-  createPosition(position:Omit<IBasePosition,'id'>)
+  createPosition(position:Omit<IBasePosition,'id'>): Observable<void>
   {
-    return of(void 0)
+    return this.http.post(
+      `${this.configService.getConfig()?.urls.dataServer}/${this.configService.getConfig()?.paths.positions}`,
+      position
+    ).pipe(
+      map(data => void 0)
+    );
   }
 
-  editPosition(position:Partial<IBasePosition>)
+  editPosition(position:Partial<IBasePosition>): Observable<void>
   {
-    return of(void 0)
+    return this.http.put(
+      `${this.configService.getConfig()?.urls.dataServer}/${this.configService.getConfig()?.paths.positions}/${position.id}`,
+      position
+    ).pipe(
+      map(data => void 0)
+    );
   }
 
-  deletePosition(id:string)
+  deletePosition(id:string): Observable<void>
   {
-    return of(void 0)
+    return this.http.delete(
+      `${this.configService.getConfig()?.urls.dataServer}/${this.configService.getConfig()?.paths.positions}/${id}`
+    ).pipe(
+      map(data => void 0)
+    );
   }
 
   // Placement
-  createPlacement(placement:Omit<IBasePlacement,'id'>)
+  createPlacement(placement:Omit<IBasePlacement,'id'>): Observable<void>
   {
-    return of(void 0)
+    return this.http.post(
+      `${this.configService.getConfig()?.urls.dataServer}/${this.configService.getConfig()?.paths.placements}`,
+      placement
+    ).pipe(
+      map(data => void 0)
+    );
   }
 
-  editPlacement(placement:Partial<IBasePlacement>)
+  editPlacement(placement:Partial<IBasePlacement>): Observable<void>
   {
-    return of(void 0)
+    return this.http.put(
+      `${this.configService.getConfig()?.urls.dataServer}/${this.configService.getConfig()?.paths.placements}/${placement.id}`,
+      placement
+    ).pipe(
+      map(data => void 0)
+    );
   }
 
-  deletePlacement(id:string)
+  deletePlacement(id:string): Observable<void>
   {
-    return of(void 0)
+    return this.http.delete(
+      `${this.configService.getConfig()?.urls.dataServer}/${this.configService.getConfig()?.paths.placements}/${id}`
+    ).pipe(
+      map(data => void 0)
+    );
   }
 
   // Symbole Accessoire
-  createSymboleAccessoire(symboleAccessoire:Omit<IBaseSymbolAcessory,'id'>)
+  createSymboleAccessoire(symboleAccessoire:Omit<IBaseSymbolAcessory,'id'>): Observable<void>
   {
-    return of(void 0)
+    return this.http.post(
+      `${this.configService.getConfig()?.urls.dataServer}/${this.configService.getConfig()?.paths.symbolAccessories}`,
+      symboleAccessoire
+    ).pipe(
+      map(data => void 0)
+    );
   }
 
-  editSymboleAccessoire(symboleAccessoire:Partial<IBaseSymbolAcessory>)
+  editSymboleAccessoire(symboleAccessoire:Partial<IBaseSymbolAcessory>): Observable<void>
   {
-    return of(void 0)
+    return this.http.put(
+      `${this.configService.getConfig()?.urls.dataServer}/${this.configService.getConfig()?.paths.symbolAccessories}/${symboleAccessoire.id}`,
+      symboleAccessoire
+    ).pipe(
+      map(data => void 0)
+    );
   }
 
-  deleteSymboleAccessoire(id:string)
+  deleteSymboleAccessoire(id:string): Observable<void>
   {
-    return of(void 0)
+    return this.http.delete(
+      `${this.configService.getConfig()?.urls.dataServer}/${this.configService.getConfig()?.paths.symbolAccessories}/${id}`
+    ).pipe(
+      map(data => void 0)
+    );
   }
 
-  getCountRelationFiliere(id:string)
+  // Color
+  createColor(color:Omit<IBaseColor,'id'>): Observable<void>
   {
-    
+    return this.http.post(
+      `${this.configService.getConfig()?.urls.dataServer}/${this.configService.getConfig()?.paths.colors}`,
+      color
+    ).pipe(
+      map(data => void 0)
+    );
   }
-  getCountRelationSymbole(id:string)
-  {
 
+  editColor(color:Partial<IBaseColor>): Observable<void>
+  {
+    return this.http.put(
+      `${this.configService.getConfig()?.urls.dataServer}/${this.configService.getConfig()?.paths.colors}/${color.id}`,
+      color
+    ).pipe(
+      map(data => void 0)
+    );
   }
-  getCountRelationSignification(id:string)
-  {
 
+  deleteColor(id:string): Observable<void>
+  {
+    return this.http.delete(
+      `${this.configService.getConfig()?.urls.dataServer}/${this.configService.getConfig()?.paths.colors}/${id}`
+    ).pipe(
+      map(data => void 0)
+    );
   }
-  getCountRelationPosition(id:string)
-  {
 
+  // Circulaire
+  createCirculaire(circulaire:Omit<IBaseCirculaire,'id'>): Observable<void>
+  {
+    return this.http.post(
+      `${this.configService.getConfig()?.urls.dataServer}/${this.configService.getConfig()?.paths.circulaires}`,
+      circulaire
+    ).pipe(
+      map(data => void 0)
+    );
   }
-  getCountRelationPlacement(id:string)
-  {
 
+  editCirculaire(circulaire:Partial<IBaseCirculaire>): Observable<void>
+  {
+    return this.http.put(
+      `${this.configService.getConfig()?.urls.dataServer}/${this.configService.getConfig()?.paths.circulaires}/${circulaire.id}`,
+      circulaire
+    ).pipe(
+      map(data => void 0)
+    );
   }
-  getCountRelationSymbolaccessoir(id:string)
-  {
 
+  deleteCirculaire(id:string): Observable<void>
+  {
+    return this.http.delete(
+      `${this.configService.getConfig()?.urls.dataServer}/${this.configService.getConfig()?.paths.circulaires}/${id}`
+    ).pipe(
+      map(data => void 0)
+    );
+  }
+
+  // Circulaire Color
+  createCirculaireColor(circulaireColor:Omit<IBaseCirculaireColor,'id'>): Observable<void>
+  {
+    return this.http.post(
+      `${this.configService.getConfig()?.urls.dataServer}/${this.configService.getConfig()?.paths.circulaireColors}`,
+      circulaireColor
+    ).pipe(
+      map(data => void 0)
+    );
+  }
+
+  editCirculaireColor(circulaireColor:Partial<IBaseCirculaireColor>): Observable<void>
+  {
+    return this.http.put(
+      `${this.configService.getConfig()?.urls.dataServer}/${this.configService.getConfig()?.paths.circulaireColors}/${circulaireColor.id}`,
+      circulaireColor
+    ).pipe(
+      map(data => void 0)
+    );
+  }
+
+  deleteCirculaireColor(id:string): Observable<void>
+  {
+    return this.http.delete(
+      `${this.configService.getConfig()?.urls.dataServer}/${this.configService.getConfig()?.paths.circulaireColors}/${id}`
+    ).pipe(
+      map(data => void 0)
+    );
+  }
+
+  // Symbole Sens
+  createSymboleSens(symboleSens:Omit<IBaseSymbolSens,'id'>): Observable<void>
+  {
+    return this.http.post(
+      `${this.configService.getConfig()?.urls.dataServer}/${this.configService.getConfig()?.paths.symbolSens}`,
+      symboleSens
+    ).pipe(
+      map(data => void 0)
+    );
+  }
+
+  editSymboleSens(symboleSens:Partial<IBaseSymbolSens>): Observable<void>
+  {
+    return this.http.put(
+      `${this.configService.getConfig()?.urls.dataServer}/${this.configService.getConfig()?.paths.symbolSens}/${symboleSens.id}`,
+      symboleSens
+    ).pipe(
+      map(data => void 0)
+    );
+  }
+
+  deleteSymboleSens(id:string): Observable<void>
+  {
+    return this.http.delete(
+      `${this.configService.getConfig()?.urls.dataServer}/${this.configService.getConfig()?.paths.symbolSens}/${id}`
+    ).pipe(
+      map(data => void 0)
+    );
+  }
+
+  getOccurenceRelationFiliere(id:string):Observable<IOccurence[]>
+  {
+     return this.http.get<IOccurence[]>(
+      `${this.configService.getConfig()?.urls.dataServer}/${this.configService.getConfig()?.paths.filieres}/${this.configService.getConfig()?.paths.occurence}/${id}`
+    )
+  }
+  getOccurenceRelationSymbole(id:string):Observable<IOccurence[]>
+  {
+    return this.http.get<IOccurence[]>(
+      `${this.configService.getConfig()?.urls.dataServer}/${this.configService.getConfig()?.paths.symbols}/${this.configService.getConfig()?.paths.occurence}/${id}`
+    )
+  }
+  getOccurenceRelationSignification(id:string):Observable<IOccurence[]>
+  {
+    return this.http.get<IOccurence[]>(
+      `${this.configService.getConfig()?.urls.dataServer}/${this.configService.getConfig()?.paths.significations}/${this.configService.getConfig()?.paths.occurence}/${id}`
+    )
+  }
+  getOccurenceRelationPosition(id:string):Observable<IOccurence[]>
+  {
+    return this.http.get<IOccurence[]>(
+      `${this.configService.getConfig()?.urls.dataServer}/${this.configService.getConfig()?.paths.positions}/${this.configService.getConfig()?.paths.occurence}/${id}`
+    )
+  }
+  getOccurenceRelationPlacement(id:string):Observable<IOccurence[]>
+  {
+    return this.http.get<IOccurence[]>(
+      `${this.configService.getConfig()?.urls.dataServer}/${this.configService.getConfig()?.paths.placements}/${this.configService.getConfig()?.paths.occurence}/${id}`
+    )
+  }
+  getOccurenceRelationSymbolaccessoir(id:string):Observable<IOccurence[]>
+  {
+    return this.http.get<IOccurence[]>(
+      `${this.configService.getConfig()?.urls.dataServer}/${this.configService.getConfig()?.paths.symbolAccessories}/${this.configService.getConfig()?.paths.occurence}/${id}`
+    )
+  }
+  getOccurenceRelationColor(id:string):Observable<IOccurence[]>
+  {
+    return this.http.get<IOccurence[]>(
+      `${this.configService.getConfig()?.urls.dataServer}/${this.configService.getConfig()?.paths.colors}/${this.configService.getConfig()?.paths.occurence}/${id}`
+    )
+  }
+  getOccurenceRelationCirculaire(id:string):Observable<IOccurence[]>
+  {
+    return this.http.get<IOccurence[]>(
+      `${this.configService.getConfig()?.urls.dataServer}/${this.configService.getConfig()?.paths.circulaires}/${this.configService.getConfig()?.paths.occurence}/${id}`
+    )
+  }
+  getOccurenceRelationCirculaireColor(id:string):Observable<IOccurence[]>
+  {
+    return this.http.get<IOccurence[]>(
+      `${this.configService.getConfig()?.urls.dataServer}/${this.configService.getConfig()?.paths.circulaireColors}/${this.configService.getConfig()?.paths.occurence}/${id}`
+    )
+  }
+  getOccurenceRelationSymboleSens(id:string):Observable<IOccurence[]>
+  {
+    return this.http.get<IOccurence[]>(
+      `${this.configService.getConfig()?.urls.dataServer}/${this.configService.getConfig()?.paths.symbolSens}/${this.configService.getConfig()?.paths.occurence}/${id}`
+    )
   }
 
   /**
