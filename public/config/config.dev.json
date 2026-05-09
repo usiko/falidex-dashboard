@@ -16,6 +16,7 @@
         "positions": "items/positions.json",
         "dataLink": "relations/list-relations.json",
         "dataLinkItem": "relations/national.json",
+        "occurence": "occurence",
         "token": "token/token.json",
         "login":"login"
     }

@@ -16,6 +16,7 @@
         "positions": "collection/positions",
         "dataLink": "collection/links",
         "dataLinkItem": "collection/link",
+        "occurence": "occurence",
         "token": "token",
         "login":"auth"
     },

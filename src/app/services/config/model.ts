@@ -16,6 +16,7 @@ export interface IAppConfig {
 		colors: string;
 		dataLink: string;
 		dataLinkItem: string;
+        occurence:string
 		token: string;
         login:string;
 	};

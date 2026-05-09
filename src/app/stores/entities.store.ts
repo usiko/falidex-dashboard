@@ -153,6 +153,20 @@ export function createEntityMethods<T extends { id: string }, TAdditional = any>
       const old = this.getById(id)();
       if(old)
       {
+        // Calculer uniquement les propriétés qui ont réellement changé
+        const actualChanges: Partial<T> = {};
+        for (const key in item) {
+          if (item.hasOwnProperty(key)) {
+            const oldValue = (old as any)[key];
+            const newValue = (item as any)[key];
+            
+            // Comparer les valeurs (deep comparison pour les objets/arrays)
+            if (JSON.stringify(oldValue) !== JSON.stringify(newValue)) {
+              (actualChanges as any)[key] = newValue;
+            }
+          }
+        }
+        
         patchState(
             store,
             updateEntity({
@@ -160,7 +174,7 @@ export function createEntityMethods<T extends { id: string }, TAdditional = any>
             changes: item,
             }),
         );
-        subjects.onUpdate$?.next({ id, changes: item, old,send:!!send });
+        subjects.onUpdate$?.next({ id, changes: actualChanges, old,send:!!send });
       }
       
       
