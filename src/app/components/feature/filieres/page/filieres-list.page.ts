@@ -4,7 +4,9 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatDialog } from '@angular/material/dialog';
 import { FormsModule } from '@angular/forms';
 import { FiliereStore } from '../../../../stores/filieres/filieres.store';
 import { FiliereItemComponent } from '../smart/filiere-item/filiere-item.component';
@@ -13,8 +15,10 @@ import { SymbolStore } from '../../../../stores/symbols/symbols.store';
 import { CirculaireStore } from '../../../../stores/circulaires/circulaires.store';
 import { CirculaireColorStore } from '../../../../stores/circulaires-colors/circulaires-colors.store';
 import { ColorStore } from '../../../../stores/colors/colors.store';
+import { CurrentUserStore } from '../../../../stores/current-user/current-user.store';
 import { SelectedRelationStore } from '../../../../stores/selected-relation/selected-relation.store';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { InputDialogComponent, InputDialogData } from '../../../../components/shared/input-dialog/input-dialog.component';
 
 type SpeFilter = 'all' | 'with-spe' | 'without-spe';
 type AbsentFilter = 'all' | 'with-absent' | 'without-absent';
@@ -33,6 +37,7 @@ function normalizeString(str: string): string {
     MatFormFieldModule,
     MatInputModule,
     MatIconModule,
+    MatButtonModule,
     MatButtonToggleModule,
     MatSlideToggleModule,
     FormsModule,
@@ -48,7 +53,9 @@ export class FilieresListPageComponent {
   private readonly circulaireStore = inject(CirculaireStore);
   private readonly circulaireColorStore = inject(CirculaireColorStore);
   private readonly colorStore = inject(ColorStore);
+  private readonly currentUserStore = inject(CurrentUserStore);
   private readonly selectedRelationStore = inject(SelectedRelationStore);
+  private readonly dialog = inject(MatDialog);
 
   protected readonly filieres = this.filiereStore.entities;
   protected readonly searchTerm = signal('');
@@ -56,6 +63,7 @@ export class FilieresListPageComponent {
   protected readonly absentFilter = signal<AbsentFilter>('all');
   protected readonly hideWithoutRelation = signal(false);
   protected readonly isNational = this.selectedRelationStore.isNational;
+  protected readonly isLoggedIn = computed(() => this.currentUserStore.user() !== null);
 
   protected readonly filteredFilieres = computed(() => {
     const search = normalizeString(this.searchTerm().trim());
@@ -93,7 +101,9 @@ export class FilieresListPageComponent {
     
     // Filtre de recherche
     if (!search) {
-      return filtered;
+      return filtered.slice().sort((a, b) => 
+        normalizeString(a.name || '').localeCompare(normalizeString(b.name || ''))
+      );
     }
     
     return filtered.filter(filiere => {
@@ -150,8 +160,31 @@ export class FilieresListPageComponent {
       });
       
       return hasMatchingCirculaire;
-    });
+    }).sort((a, b) => 
+      normalizeString(a.name || '').localeCompare(normalizeString(b.name || ''))
+    );
   });
+
+  protected onAddFiliere(): void {
+    const dialogData: InputDialogData = {
+      title: 'Ajouter une filière',
+      message: 'Entrez le nom de la nouvelle filière',
+      placeholder: 'Nom de la filière',
+      confirmText: 'Ajouter',
+      cancelText: 'Annuler'
+    };
+
+    const dialogRef = this.dialog.open(InputDialogComponent, {
+      data: dialogData,
+      width: '400px'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.filiereStore.create({ name: result });
+      }
+    });
+  }
 
   protected clearSearch(): void {
     this.searchTerm.set('');

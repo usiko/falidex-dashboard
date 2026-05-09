@@ -5,8 +5,10 @@ import { SymbolStore } from '../../../../../stores/symbols/symbols.store';
 import { linkStore } from '../../../../../stores/links/links.store';
 import { SymbolDetailCardComponent } from '../../dumb/symbol-detail-card/symbol-detail-card.component';
 import { ConfirmDialogComponent, ConfirmDialogData } from '../../../../shared/confirm-dialog/confirm-dialog.component';
+import { InputDialogComponent, InputDialogData } from '../../../../shared/input-dialog/input-dialog.component';
 import { SelectedRelationStore } from '../../../../../stores/selected-relation/selected-relation.store';
 import { CurrentUserStore } from '../../../../../stores/current-user/current-user.store';
+import { DataService } from '../../../../../services/data/data.service';
 
 @Component({
   selector: 'app-symbol-detail',
@@ -26,6 +28,7 @@ export class SymbolDetailComponent {
   private readonly router = inject(Router);
   private readonly selectedRelationStore = inject(SelectedRelationStore);
   private readonly currentUserStore = inject(CurrentUserStore);
+  private readonly dataService = inject(DataService);
   
   protected readonly symbol = computed(() => {
     const id = this.id();
@@ -43,6 +46,10 @@ export class SymbolDetailComponent {
   
   protected readonly editable = computed(() => {
     return this.selectedRelationStore.isEditable() && !!this.currentUserStore.user();
+  });
+  
+  protected readonly canEditEntity = computed(() => {
+    return !!this.currentUserStore.user();
   });
   
   onEditLink(linkId: string) {
@@ -77,6 +84,75 @@ export class SymbolDetailComponent {
     // Naviguer vers le formulaire de création de la nouvelle relation
     this.router.navigate(['/relation', 'symbole', 'new'], {
       queryParams: { symboleId }
+    });
+  }
+  
+  onEditSymbol() {
+    const symbol = this.symbol();
+    if (!symbol || !symbol.id) return;
+    
+    this.dataService.getOccurenceRelationSymbole(symbol.id).subscribe(occurences => {
+      const totalOccurences = occurences.reduce((sum, occ) => sum + occ.items, 0);
+      const totalRelations = occurences.length;
+      const message = totalOccurences > 0 
+        ? `Cet élément est utilisé : ${totalOccurences} élément(s) parmi ${totalRelations} relation(s)` 
+        : undefined;
+
+      const dialogData: InputDialogData = {
+        title: 'Éditer le symbole',
+        message: message,
+        placeholder: 'Nom du symbole',
+        initialValue: symbol.name,
+        confirmText: 'Enregistrer',
+        cancelText: 'Annuler'
+      };
+      
+      const dialogRef = this.dialog.open(InputDialogComponent, {
+        data: dialogData,
+        width: '400px'
+      });
+      
+      dialogRef.afterClosed().subscribe(result => {
+        if (result && symbol.id) {
+          this.symbolStore.update(symbol.id, { name: result });
+        }
+      });
+    });
+  }
+  
+  onDeleteSymbol() {
+    const symbol = this.symbol();
+    if (!symbol || !symbol.id) return;
+    
+    this.dataService.getOccurenceRelationSymbole(symbol.id).subscribe(occurences => {
+      const totalOccurences = occurences.reduce((sum, occ) => sum + occ.items, 0);
+      const totalRelations = occurences.length;
+      const message = totalOccurences > 0
+        ? `Impossible de supprimer le symbole "${symbol.name}" tant qu'il est utilisé.\n\nCet élément est utilisé : ${totalOccurences} élément(s) parmi ${totalRelations} relation(s)`
+        : `Êtes-vous sûr de vouloir supprimer le symbole "${symbol.name}" ?`;
+
+      const dialogData: ConfirmDialogData = {
+        title: 'Confirmation de suppression',
+        message: message,
+        confirmText: 'Supprimer',
+        cancelText: 'Annuler',
+        disabled: totalOccurences > 0
+      };
+      
+      const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+        data: dialogData,
+        width: '400px'
+      });
+      
+      dialogRef.afterClosed().subscribe(confirmed => {
+        if (confirmed && symbol.id) {
+          // Supprimer le symbole
+          this.symbolStore.remove(symbol.id);
+          
+          // Rediriger vers la liste des symboles
+          this.router.navigate(['/symbols']);
+        }
+      });
     });
   }
 }

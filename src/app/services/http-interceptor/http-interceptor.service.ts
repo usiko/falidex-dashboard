@@ -16,7 +16,7 @@ export const httpInterceptor: HttpInterceptorFn = (
     const configService = inject(AppConfigService);
     const snackbarService = inject(SnackbarService);
     const tokenHeader = environment.tokenHeader;
-    const dataBaseUrl = configService.getConfig()?.urls.dataServer;
+    const dataBaseUrl = environment.urls.dataServer;
     const tokenPath = configService.getConfig()?.paths.token;
     
     // Si la requête ne commence pas par dataBaseUrl, on laisse passer sans modification
@@ -55,11 +55,12 @@ export const httpInterceptor: HttpInterceptorFn = (
                     return next(clonedRequest).pipe(
                         catchError((error: any) => {
                             if (error instanceof HttpErrorResponse) {
-                                // Vérifier si JWT invalide (401 + JWT_ERROR)
-                                if (error.status === 401 && error.error?.error === 'JWT_ERROR') {
-                                    console.error('🔒 JWT invalide détecté, déconnexion...', {
+                                // Vérifier si JWT invalide ou expiré (401 + JWT_ERROR ou JWT_EXPIRED)
+                                if (error.status === 401 && (error.error?.error === 'JWT_ERROR' || error.error?.error === 'JWT_EXPIRED')) {
+                                    console.error('🔒 JWT invalide ou expiré détecté, déconnexion...', {
                                         url: request.url,
-                                        status: error.status
+                                        status: error.status,
+                                        errorType: error.error?.error
                                     });
                                     
                                     snackbarService.error('Session expirée, veuillez vous reconnecter');

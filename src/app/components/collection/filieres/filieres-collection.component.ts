@@ -21,12 +21,14 @@ export class FilieresCollectionComponent {
     const term = this.searchTerm().toLowerCase().trim();
     const allFilieres = this.filiereStore.entities();
     
-    if (!term) {
-      return allFilieres;
-    }
+    const filtered = !term
+      ? allFilieres
+      : allFilieres.filter(fil => 
+          fil.name?.toLowerCase().includes(term)
+        );
     
-    return allFilieres.filter(fil => 
-      fil.name?.toLowerCase().includes(term)
+    return filtered.slice().sort((a, b) => 
+      (a.name || '').toLowerCase().localeCompare((b.name || '').toLowerCase())
     );
   });
   

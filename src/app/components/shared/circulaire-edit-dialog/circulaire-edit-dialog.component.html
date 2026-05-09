@@ -1,0 +1,97 @@
+<div class="circulaire-edit-dialog">
+  <h2 mat-dialog-title>{{ title }}</h2>
+  
+  <mat-dialog-content>
+    <p *ngIf="data.message" class="message">{{ data.message }}</p>
+    <div class="form-container">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Nom de la circulaire</mat-label>
+        <input matInput [(ngModel)]="name" placeholder="Ex: Circulaire rouge" required>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Matière</mat-label>
+        <mat-select [(ngModel)]="matiere" required>
+          @for (option of matiereOptions; track option.value) {
+            <mat-option [value]="option.value">
+              {{ option.label }}
+            </mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <div class="colors-section">
+        <div class="section-header">
+          <h3>Couleurs de la circulaire</h3>
+        </div>
+        
+        <div class="colors-list selected-colors">
+          @if (selectedColors().length === 0) {
+            <p class="empty-message">Aucune couleur ajoutée</p>
+          } @else {
+            <mat-list>
+              @for (color of selectedColors(); track $index) {
+                <mat-list-item>
+                  <div class="color-item">
+                    <div class="color-preview" [style.background-color]="color?.colorData"></div>
+                    <span class="color-name">{{ color?.name || 'Sans nom' }}</span>
+                    <button mat-icon-button color="warn" (click)="onRemoveColor($index)" type="button" matTooltip="Retirer" [disabled]="!isLoggedIn()">
+                      <mat-icon>remove_circle</mat-icon>
+                    </button>
+                  </div>
+                </mat-list-item>
+              }
+            </mat-list>
+          }
+        </div>
+      </div>
+
+      <div class="colors-section">
+        <div class="section-header">
+          <h3>Couleurs disponibles</h3>
+          <button mat-mini-fab color="primary" (click)="onAddColor()" type="button" matTooltip="Créer une nouvelle couleur" [disabled]="!isLoggedIn()">
+            <mat-icon>add</mat-icon>
+          </button>
+        </div>
+        
+        <mat-form-field appearance="outline" class="search-field">
+          <mat-label>Rechercher une couleur</mat-label>
+          <input matInput [(ngModel)]="colorSearchTerm" placeholder="Nom ou code couleur...">
+          <mat-icon matPrefix>search</mat-icon>
+          @if (colorSearchTerm()) {
+            <button matSuffix mat-icon-button (click)="colorSearchTerm.set('')" type="button">
+              <mat-icon>close</mat-icon>
+            </button>
+          }
+        </mat-form-field>
+        
+        <div class="colors-list available-colors">
+          @if (filteredColors().length === 0) {
+            <p class="empty-message">Aucune couleur disponible</p>
+          } @else {
+            <mat-list>
+              @for (color of filteredColors(); track color.id) {
+                <mat-list-item>
+                  <div class="color-item">
+                    <div class="color-preview" [style.background-color]="color.colorData"></div>
+                    <span class="color-name">{{ color.name || 'Sans nom' }}</span>
+                    <button mat-icon-button color="primary" (click)="onSelectExistingColor(color.id)" type="button" matTooltip="Ajouter à la circulaire" [disabled]="!isLoggedIn()">
+                      <mat-icon>add_circle</mat-icon>
+                    </button>
+                  </div>
+                </mat-list-item>
+              }
+            </mat-list>
+          }
+        </div>
+      </div>
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="onCancel()">{{ cancelText }}</button>
+    <button mat-raised-button color="primary" (click)="onConfirm()" [disabled]="!name.trim() || !matiere">
+      {{ confirmText }}
+    </button>
+  </mat-dialog-actions>
+</div>

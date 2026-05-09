@@ -2,8 +2,11 @@
   <app-symbol-detail-card 
     [symbol]="symbol()" 
     [links]="links()" 
-    [editable]="editable()" 
+    [editable]="editable()"
+    [canEditEntity]="canEditEntity()" 
     (addLink)="onAddLink()" 
     (editLink)="onEditLink($event)" 
-    (deleteLink)="onDeleteLink($event)" />
+    (deleteLink)="onDeleteLink($event)"
+    (editSymbol)="onEditSymbol()"
+    (deleteSymbol)="onDeleteSymbol()" />
 }

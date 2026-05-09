@@ -1,0 +1,39 @@
+<div class="significations-list">
+  <div class="header">
+    <div class="title-section">
+      <h1>Significations ({{ filteredSignifications().length }})</h1>
+    </div>
+    <button mat-raised-button color="primary" (click)="onAdd()" [disabled]="!isLoggedIn()">
+      <mat-icon>add</mat-icon>
+      Ajouter
+    </button>
+  </div>
+
+  <mat-form-field appearance="outline" class="search-field">
+    <mat-label>Rechercher</mat-label>
+    <input matInput [(ngModel)]="searchTerm" placeholder="Rechercher une signification...">
+    <mat-icon matPrefix>search</mat-icon>
+  </mat-form-field>
+
+  <div class="list-container">
+    @for (signification of filteredSignifications(); track signification.id) {
+      <mat-card class="item-card">
+        <mat-card-content>
+          <div class="item-content">
+            <span class="item-name">{{ signification.content }}</span>
+            <div class="item-actions">
+              <button mat-icon-button (click)="onEdit(signification.id, signification.content)" matTooltip="Modifier" [disabled]="!isLoggedIn()">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button color="warn" (click)="onDelete(signification.id, signification.content)" matTooltip="Supprimer" [disabled]="!isLoggedIn()">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    } @empty {
+      <p class="no-results">Aucune signification trouvée</p>
+    }
+  </div>
+</div>

@@ -24,10 +24,13 @@ export class SymbolDetailCardComponent {
   symbol = input<IBaseSymbol>();
   links = input<IRelationItem[]>([]);
   editable = input<boolean>(true);
+  canEditEntity = input<boolean>(true);
   
   addLink = output<void>();
   editLink = output<string>();
   deleteLink = output<string>();
+  editSymbol = output<void>();
+  deleteSymbol = output<void>();
   
   private readonly dialog = inject(MatDialog);
   

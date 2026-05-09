@@ -22,8 +22,11 @@ export class FiliereDetailCardComponent {
   filiere = input<IBaseFiliere>();
   links = input<IRelationItem[]>([]);
   editable = input<boolean>(true);
+  canEditEntity = input<boolean>(true);
   
   addLink = output<void>();
   editLink = output<string>();
   deleteLink = output<string>();
+  editFiliere = output<void>();
+  deleteFiliere = output<void>();
 }

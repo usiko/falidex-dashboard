@@ -1,0 +1,62 @@
+<div class="page-container">
+  <div class="page-header">
+    <div class="header-content">
+      <div class="title-section">
+        <h1>
+          <mat-icon>palette</mat-icon>
+          Couleurs
+        </h1>
+        <p class="subtitle">{{ filteredColors().length }} couleur(s) disponible(s)</p>
+      </div>
+      <button mat-raised-button color="primary" (click)="onAdd()" [disabled]="!isLoggedIn()">
+        <mat-icon>add</mat-icon>
+        Ajouter
+      </button>
+    </div>
+  </div>
+
+  <div class="filters">
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>Rechercher</mat-label>
+      <input matInput [(ngModel)]="searchTerm" placeholder="Nom de la couleur..." />
+      <mat-icon matPrefix>search</mat-icon>
+      @if (searchTerm()) {
+        <button matSuffix mat-icon-button (click)="clearSearch()">
+          <mat-icon>close</mat-icon>
+        </button>
+      }
+    </mat-form-field>
+  </div>
+
+  <div class="colors-grid">
+    @if (filteredColors().length === 0) {
+      <div class="empty-state">
+        <mat-icon>info</mat-icon>
+        <p>Aucune couleur trouvée</p>
+      </div>
+    } @else {
+      @for (color of filteredColors(); track color.id) {
+        <mat-card class="color-card">
+          <mat-card-header>
+            <div class="color-preview" [style.background-color]="color.colorData"></div>
+            <mat-card-title>{{ color.name || 'Sans nom' }}</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="color-info">
+              <span class="color-code">{{ color.colorData }}</span>
+              <span class="color-id">ID: {{ color.id }}</span>
+            </div>
+          </mat-card-content>
+          <mat-card-actions align="end">
+            <button mat-icon-button (click)="onEdit(color.id, color.name, color.colorData)" matTooltip="Modifier" [disabled]="!isLoggedIn()">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button color="warn" (click)="onDelete(color.id, color.name)" matTooltip="Supprimer" [disabled]="!isLoggedIn()">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      }
+    }
+  </div>
+</div>

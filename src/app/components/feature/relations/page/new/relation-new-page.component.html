@@ -46,6 +46,7 @@
 
   <app-relation-edit-form 
     [relation]="newRelation()" 
+    [editable]="editable()"
     (validated)="onValidated($event)" 
     (deleted)="onDeleted()" />
 </div>

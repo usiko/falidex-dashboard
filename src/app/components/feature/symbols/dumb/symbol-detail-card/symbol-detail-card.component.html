@@ -1,10 +1,20 @@
 <div class="symbol-detail">
   <div class="header">
     <h1 class="symbol-title">{{ symbol()?.name }}</h1>
-    <button mat-raised-button color="primary" [disabled]="!editable()" (click)="addLink.emit()">
-      <mat-icon>add</mat-icon>
-      Ajouter une relation
-    </button>
+    <div class="header-actions">
+      <button mat-raised-button color="primary" [disabled]="!editable()" (click)="addLink.emit()">
+        <mat-icon>add</mat-icon>
+        Ajouter une relation
+      </button>
+      <button mat-raised-button [disabled]="!canEditEntity()" (click)="editSymbol.emit()">
+        <mat-icon>edit</mat-icon>
+        Éditer le symbole
+      </button>
+      <button mat-raised-button color="warn" [disabled]="!canEditEntity()" (click)="deleteSymbol.emit()">
+        <mat-icon>delete</mat-icon>
+        Supprimer le symbole
+      </button>
+    </div>
   </div>
   
   @if (symbol()?.imgs && symbol()!.imgs!.length > 0) {

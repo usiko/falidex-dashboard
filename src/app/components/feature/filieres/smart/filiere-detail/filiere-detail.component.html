@@ -2,8 +2,11 @@
   <app-filiere-detail-card 
     [filiere]="filiere()" 
     [links]="links()" 
-    [editable]="editable()" 
+    [editable]="editable()"
+    [canEditEntity]="canEditEntity()" 
     (addLink)="onAddLink()" 
     (editLink)="onEditLink($event)" 
-    (deleteLink)="onDeleteLink($event)" />
+    (deleteLink)="onDeleteLink($event)"
+    (editFiliere)="onEditFiliere()"
+    (deleteFiliere)="onDeleteFiliere()" />
 }

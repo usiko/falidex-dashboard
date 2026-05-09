@@ -1,0 +1,129 @@
+.page-container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.page-header {
+  margin-bottom: 32px;
+  
+  .header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 24px;
+    
+    .title-section {
+      flex: 1;
+    }
+  }
+  
+  h1 {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 0 0 8px 0;
+    font-size: 32px;
+    font-weight: 500;
+    color: #333;
+    
+    mat-icon {
+      font-size: 36px;
+      width: 36px;
+      height: 36px;
+      color: #3f51b5;
+    }
+  }
+  
+  .subtitle {
+    margin: 0;
+    color: #666;
+    font-size: 16px;
+  }
+}
+
+.filters {
+  margin-bottom: 24px;
+  
+  .search-field {
+    width: 400px;
+    max-width: 100%;
+  }
+}
+
+.colors-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+}
+
+.color-card {
+  mat-card-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+
+  .color-preview {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 2px solid #ddd;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+
+  mat-card-title {
+    font-size: 18px;
+    font-weight: 500;
+    margin: 0;
+  }
+
+  .color-info {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    
+    .color-code {
+      font-family: monospace;
+      font-size: 14px;
+      color: #666;
+      background: #f5f5f5;
+      padding: 4px 8px;
+      border-radius: 4px;
+      display: inline-block;
+    }
+
+    .color-id {
+      font-size: 12px;
+      color: #999;
+    }
+  }
+
+  mat-card-actions {
+    padding: 8px;
+    margin: 0;
+    border-top: 1px solid #eee;
+  }
+}
+
+.empty-state {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 64px 24px;
+  color: #999;
+  
+  mat-icon {
+    font-size: 64px;
+    width: 64px;
+    height: 64px;
+    margin-bottom: 16px;
+  }
+  
+  p {
+    font-size: 18px;
+    margin: 0;
+  }
+}

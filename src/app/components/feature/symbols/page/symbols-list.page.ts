@@ -4,9 +4,11 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatDialog } from '@angular/material/dialog';
 import { FormsModule } from '@angular/forms';
 import { SymbolStore } from '../../../../stores/symbols/symbols.store';
 import { SymbolItemComponent } from '../smart/symbol-item/symbol-item.component';
@@ -16,9 +18,11 @@ import { SignificationStore } from '../../../../stores/significations/significat
 import { CirculaireStore } from '../../../../stores/circulaires/circulaires.store';
 import { CirculaireColorStore } from '../../../../stores/circulaires-colors/circulaires-colors.store';
 import { ColorStore } from '../../../../stores/colors/colors.store';
+import { CurrentUserStore } from '../../../../stores/current-user/current-user.store';
 import { SymbolSensStore } from '../../../../stores/symbols-sens/symbols-sens.store';
 import { SymbolAccessoryStore } from '../../../../stores/symbols-accessory/symbols-accessory.store';
 import { CiculaireMatiereEnum } from '../../../../models/data/circulaire-matiere.enum';
+import { InputDialogComponent, InputDialogData } from '../../../../components/shared/input-dialog/input-dialog.component';
 
 type BlameFilter = 'all' | 'with-blame' | 'without-blame';
 type RelationFilter = 'all' | 'only-filiere' | 'only-signification';
@@ -39,6 +43,7 @@ function normalizeString(str: string): string {
     MatFormFieldModule,
     MatInputModule,
     MatIconModule,
+    MatButtonModule,
     MatChipsModule,
     MatSlideToggleModule,
     MatButtonToggleModule,
@@ -56,8 +61,10 @@ export class SymbolsListPageComponent {
   private readonly circulaireStore = inject(CirculaireStore);
   private readonly circulaireColorStore = inject(CirculaireColorStore);
   private readonly colorStore = inject(ColorStore);
+  private readonly currentUserStore = inject(CurrentUserStore);
   private readonly symbolSensStore = inject(SymbolSensStore);
   private readonly symbolAccessoryStore = inject(SymbolAccessoryStore);
+  private readonly dialog = inject(MatDialog);
 
   protected readonly symbols = this.symbolStore.entities;
   protected readonly searchTerm = signal('');
@@ -66,6 +73,7 @@ export class SymbolsListPageComponent {
   protected readonly relationFilter = signal<RelationFilter>('all');
   protected readonly supportFilter = signal<SupportFilter>('all');
   protected readonly speFilter = signal<SpeFilter>('all');
+  protected readonly isLoggedIn = computed(() => this.currentUserStore.user() !== null);
 
   protected readonly filteredSymbols = computed(() => {
     const search = normalizeString(this.searchTerm().trim());
@@ -132,7 +140,9 @@ export class SymbolsListPageComponent {
     
     // Filtre de recherche
     if (!search) {
-      return filtered;
+      return filtered.slice().sort((a, b) => 
+        normalizeString(a.name || '').localeCompare(normalizeString(b.name || ''))
+      );
     }
     
     return filtered.filter(symbol => {
@@ -222,8 +232,31 @@ export class SymbolsListPageComponent {
       });
       
       return hasMatchingSymbolAccessory;
-    });
+    }).sort((a, b) => 
+      normalizeString(a.name || '').localeCompare(normalizeString(b.name || ''))
+    );
   });
+
+  protected onAddSymbol(): void {
+    const dialogData: InputDialogData = {
+      title: 'Ajouter un symbole',
+      message: 'Entrez le nom du nouveau symbole',
+      placeholder: 'Nom du symbole',
+      confirmText: 'Ajouter',
+      cancelText: 'Annuler'
+    };
+
+    const dialogRef = this.dialog.open(InputDialogComponent, {
+      data: dialogData,
+      width: '400px'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.symbolStore.create({ name: result });
+      }
+    });
+  }
 
   protected clearSearch(): void {
     this.searchTerm.set('');

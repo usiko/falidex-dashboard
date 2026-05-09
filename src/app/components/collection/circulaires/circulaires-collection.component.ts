@@ -30,7 +30,11 @@ export class CirculairesCollectionComponent {
       ? allCirculaires
       : allCirculaires.filter(circ => circ.name?.toLowerCase().includes(term));
     
-    return filteredCirculaires.map(circulaire => {
+    const sortedCirculaires = filteredCirculaires.slice().sort((a, b) => 
+      (a.name || '').toLowerCase().localeCompare((b.name || '').toLowerCase())
+    );
+    
+    return sortedCirculaires.map(circulaire => {
       const circulaireColors = this.circulaireColorStore.getByCirculaireId(circulaire.id)();
       const colors: ColorBadgeData[] = [];
       

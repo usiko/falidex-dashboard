@@ -1,4 +1,4 @@
-import { Component, inject, input, output } from '@angular/core';
+import { Component, inject, input, output, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CirculaireColorStore } from '../../../stores/circulaires-colors/circulaires-colors.store';
 import { IBaseCirculaireColor } from '../../../models/data/base-data-models';
@@ -15,7 +15,11 @@ export class CirculairesColorsCollectionComponent {
   selection = output<IBaseCirculaireColor>();
   
   private circulaireColorStore = inject(CirculaireColorStore);
-  protected circulairesColors = this.circulaireColorStore.entities;
+  protected circulairesColors = computed(() => 
+    this.circulaireColorStore.entities().slice().sort((a, b) => 
+      (a.circulaireId || '').toLowerCase().localeCompare((b.circulaireId || '').toLowerCase())
+    )
+  );
   
   protected onSelect(circulaireColor: IBaseCirculaireColor): void {
     if (this.selectable()) {
