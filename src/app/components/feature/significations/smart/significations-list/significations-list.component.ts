@@ -13,6 +13,7 @@ import { SignificationStore } from '../../../../../stores/significations/signifi
 import { CurrentUserStore } from '../../../../../stores/current-user/current-user.store';
 import { InputDialogComponent } from '../../../../shared/input-dialog/input-dialog.component';
 import { ConfirmDialogComponent } from '../../../../shared/confirm-dialog/confirm-dialog.component';
+import { DataService } from '../../../../../services/data/data.service';
 
 @Component({
   selector: 'app-significations-list',
@@ -35,6 +36,7 @@ export class SignificationsListComponent {
   private readonly currentUserStore = inject(CurrentUserStore);
   private readonly dialog = inject(MatDialog);
   private readonly router = inject(Router);
+  private readonly dataService = inject(DataService);
 
   protected readonly significations = this.significationStore.entities;
   protected readonly searchTerm = signal('');
@@ -78,39 +80,57 @@ export class SignificationsListComponent {
   }
 
   protected onEdit(id: string, currentContent: string): void {
-    const dialogRef = this.dialog.open(InputDialogComponent, {
-      width: '500px',
-      data: {
-        title: 'Modifier signification',
-        placeholder: 'Contenu',
-        initialValue: currentContent,
-        multiline: true,
-        confirmText: 'Modifier'
-      }
-    });
+    this.dataService.getOccurenceRelationSignification(id).subscribe(occurences => {
+      const totalOccurences = occurences.reduce((sum, occ) => sum + occ.items, 0);
+      const totalRelations = occurences.length;
+      const message = totalOccurences > 0 
+        ? `Cet élément est utilisé : ${totalOccurences} élément(s) parmi ${totalRelations} relation(s)` 
+        : undefined;
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.significationStore.update(id, { content: result });
-      }
+      const dialogRef = this.dialog.open(InputDialogComponent, {
+        width: '500px',
+        data: {
+          title: 'Modifier signification',
+          message: message,
+          placeholder: 'Contenu',
+          initialValue: currentContent,
+          multiline: true,
+          confirmText: 'Modifier'
+        }
+      });
+
+      dialogRef.afterClosed().subscribe(result => {
+        if (result) {
+          this.significationStore.update(id, { content: result });
+        }
+      });
     });
   }
 
   protected onDelete(id: string, content: string): void {
-    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      width: '400px',
-      data: {
-        title: 'Supprimer la signification',
-        message: `Êtes-vous sûr de vouloir supprimer "${content}" ?`,
-        confirmText: 'Supprimer',
-        cancelText: 'Annuler'
-      }
-    });
+    this.dataService.getOccurenceRelationSignification(id).subscribe(occurences => {
+      const totalOccurences = occurences.reduce((sum, occ) => sum + occ.items, 0);
+      const totalRelations = occurences.length;
+      const message = totalOccurences > 0
+        ? `Impossible de supprimer "${content}" tant qu'il est utilisé.\n\nCet élément est utilisé : ${totalOccurences} élément(s) parmi ${totalRelations} relation(s)`
+        : `Êtes-vous sûr de vouloir supprimer "${content}" ?`;
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.significationStore.remove(id);
-      }
+      const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+        width: '400px',
+        data: {
+          title: 'Supprimer la signification',
+          message: message,
+          confirmText: 'Supprimer',
+          cancelText: 'Annuler',
+          disabled: totalOccurences > 0
+        }
+      });
+
+      dialogRef.afterClosed().subscribe(result => {
+        if (result) {
+          this.significationStore.remove(id);
+        }
+      });
     });
   }
 }

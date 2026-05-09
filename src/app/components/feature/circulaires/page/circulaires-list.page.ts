@@ -16,6 +16,7 @@ import { signal } from '@angular/core';
 import { CirculaireEditDialogComponent } from '../../../shared/circulaire-edit-dialog/circulaire-edit-dialog.component';
 import { ConfirmDialogComponent } from '../../../shared/confirm-dialog/confirm-dialog.component';
 import { IBaseCirculaire, IBaseColor } from '../../../../models/data/base-data-models';
+import { DataService } from '../../../../services/data/data.service';
 
 // Fonction pour normaliser les chaînes en supprimant les accents
 function normalizeString(str: string): string {
@@ -44,6 +45,7 @@ export class CirculairesListPageComponent {
   private readonly colorStore = inject(ColorStore);
   private readonly currentUserStore = inject(CurrentUserStore);
   private readonly dialog = inject(MatDialog);
+  private readonly dataService = inject(DataService);
 
   protected readonly circulaires = this.circulaireStore.entities;
   protected readonly searchTerm = signal('');
@@ -116,62 +118,80 @@ export class CirculairesListPageComponent {
     const currentColorIds = circulaireColors.length > 0 ? circulaireColors[0].colorIds : [];
     const circulaireColorId = circulaireColors.length > 0 ? circulaireColors[0].id : undefined;
     
-    const dialogRef = this.dialog.open(CirculaireEditDialogComponent, {
-      width: '600px',
-      data: {
-        title: 'Modifier la circulaire',
-        name: circulaire.name,
-        matiere: circulaire.matiere,
-        colorIds: currentColorIds,
-        confirmText: 'Modifier'
-      }
-    });
+    this.dataService.getOccurenceRelationCirculaire(circulaire.id).subscribe(occurences => {
+      const totalOccurences = occurences.reduce((sum, occ) => sum + occ.items, 0);
+      const totalRelations = occurences.length;
+      const message = totalOccurences > 0 
+        ? `Cet élément est utilisé : ${totalOccurences} élément(s) parmi ${totalRelations} relation(s)` 
+        : undefined;
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.circulaireStore.update(circulaire.id, {
-          name: result.name,
-          matiere: result.matiere
-        });
-        
-        // Mettre à jour ou créer l'association circulaire-couleurs
-        if (circulaireColorId) {
-          // Mise à jour de l'association existante
-          this.circulaireColorStore.update(circulaireColorId, {
-            colorIds: result.colorIds
-          });
-        } else if (result.colorIds && result.colorIds.length > 0) {
-          // Création d'une nouvelle association
-          this.circulaireColorStore.create({
-            circulaireId: circulaire.id,
-            colorIds: result.colorIds,
-            name: result.name
-          });
+      const dialogRef = this.dialog.open(CirculaireEditDialogComponent, {
+        width: '600px',
+        data: {
+          title: 'Modifier la circulaire',
+          message: message,
+          name: circulaire.name,
+          matiere: circulaire.matiere,
+          colorIds: currentColorIds,
+          confirmText: 'Modifier'
         }
-      }
+      });
+
+      dialogRef.afterClosed().subscribe(result => {
+        if (result) {
+          this.circulaireStore.update(circulaire.id, {
+            name: result.name,
+            matiere: result.matiere
+          });
+          
+          // Mettre à jour ou créer l'association circulaire-couleurs
+          if (circulaireColorId) {
+            // Mise à jour de l'association existante
+            this.circulaireColorStore.update(circulaireColorId, {
+              colorIds: result.colorIds
+            });
+          } else if (result.colorIds && result.colorIds.length > 0) {
+            // Création d'une nouvelle association
+            this.circulaireColorStore.create({
+              circulaireId: circulaire.id,
+              colorIds: result.colorIds,
+              name: result.name
+            });
+          }
+        }
+      });
     });
   }
 
   protected onDelete(circulaire: IBaseCirculaire): void {
-    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      width: '400px',
-      data: {
-        title: 'Supprimer la circulaire',
-        message: `Êtes-vous sûr de vouloir supprimer "${circulaire.name || 'cette circulaire'}" ?`,
-        confirmText: 'Supprimer',
-        cancelText: 'Annuler'
-      }
-    });
+    this.dataService.getOccurenceRelationCirculaire(circulaire.id).subscribe(occurences => {
+      const totalOccurences = occurences.reduce((sum, occ) => sum + occ.items, 0);
+      const totalRelations = occurences.length;
+      const message = totalOccurences > 0
+        ? `Impossible de supprimer "${circulaire.name || 'cette circulaire'}" tant qu'elle est utilisée.\n\nCet élément est utilisé : ${totalOccurences} élément(s) parmi ${totalRelations} relation(s)`
+        : `Êtes-vous sûr de vouloir supprimer "${circulaire.name || 'cette circulaire'}" ?`;
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.circulaireStore.remove(circulaire.id);
-        
-        // Supprimer aussi l'association circulaire-couleurs
-        const circulaireColors = this.circulaireColorStore.entities()
-          .filter(cc => cc.circulaireId === circulaire.id);
-        circulaireColors.forEach(cc => this.circulaireColorStore.remove(cc.id));
-      }
+      const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+        width: '400px',
+        data: {
+          title: 'Supprimer la circulaire',
+          message: message,
+          confirmText: 'Supprimer',
+          cancelText: 'Annuler',
+          disabled: totalOccurences > 0
+        }
+      });
+
+      dialogRef.afterClosed().subscribe(result => {
+        if (result) {
+          this.circulaireStore.remove(circulaire.id);
+          
+          // Supprimer aussi l'association circulaire-couleurs
+          const circulaireColors = this.circulaireColorStore.entities()
+            .filter(cc => cc.circulaireId === circulaire.id);
+          circulaireColors.forEach(cc => this.circulaireColorStore.remove(cc.id));
+        }
+      });
     });
   }
 }

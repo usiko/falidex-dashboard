@@ -8,6 +8,7 @@ import { CommonModule } from '@angular/common';
 
 export interface ColorEditDialogData {
   title: string;
+  message?: string;
   name?: string;
   colorData?: string;
   confirmText?: string;

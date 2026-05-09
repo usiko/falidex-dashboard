@@ -2,6 +2,7 @@
   <h2 mat-dialog-title>{{ title }}</h2>
   
   <mat-dialog-content>
+    <p *ngIf="data.message" class="message">{{ data.message }}</p>
     <div class="form-container">
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Nom de la couleur</mat-label>

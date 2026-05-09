@@ -16,6 +16,7 @@ import { ColorEditDialogComponent } from '../color-edit-dialog/color-edit-dialog
 
 export interface CirculaireEditDialogData {
   title: string;
+  message?: string;
   name?: string;
   matiere?: string;
   colorIds?: string[];

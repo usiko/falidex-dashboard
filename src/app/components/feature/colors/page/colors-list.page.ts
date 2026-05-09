@@ -14,6 +14,7 @@ import { MatCardModule } from '@angular/material/card';
 import { ColorEditDialogComponent } from '../../../shared/color-edit-dialog/color-edit-dialog.component';
 import { ConfirmDialogComponent } from '../../../shared/confirm-dialog/confirm-dialog.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { DataService } from '../../../../services/data/data.service';
 
 // Fonction pour normaliser les chaînes en supprimant les accents
 function normalizeString(str: string): string {
@@ -41,6 +42,7 @@ export class ColorsListPageComponent {
   private readonly colorStore = inject(ColorStore);
   private readonly currentUserStore = inject(CurrentUserStore);
   private readonly dialog = inject(MatDialog);
+  private readonly dataService = inject(DataService);
 
   protected readonly colors = this.colorStore.entities;
   protected readonly searchTerm = signal('');
@@ -84,41 +86,59 @@ export class ColorsListPageComponent {
   }
 
   protected onEdit(id: string, currentName: string | undefined, currentColor: string | undefined): void {
-    const dialogRef = this.dialog.open(ColorEditDialogComponent, {
-      width: '500px',
-      data: {
-        title: 'Modifier la couleur',
-        name: currentName,
-        colorData: currentColor || '#000000',
-        confirmText: 'Modifier'
-      }
-    });
+    this.dataService.getOccurenceRelationColor(id).subscribe(occurences => {
+      const totalOccurences = occurences.reduce((sum, occ) => sum + occ.items, 0);
+      const totalRelations = occurences.length;
+      const message = totalOccurences > 0 
+        ? `Cet élément est utilisé : ${totalOccurences} élément(s) parmi ${totalRelations} relation(s)` 
+        : undefined;
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.colorStore.update(id, {
-          name: result.name,
-          colorData: result.colorData
-        });
-      }
+      const dialogRef = this.dialog.open(ColorEditDialogComponent, {
+        width: '500px',
+        data: {
+          title: 'Modifier la couleur',
+          message: message,
+          name: currentName,
+          colorData: currentColor || '#000000',
+          confirmText: 'Modifier'
+        }
+      });
+
+      dialogRef.afterClosed().subscribe(result => {
+        if (result) {
+          this.colorStore.update(id, {
+            name: result.name,
+            colorData: result.colorData
+          });
+        }
+      });
     });
   }
 
   protected onDelete(id: string, name: string | undefined): void {
-    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      width: '400px',
-      data: {
-        title: 'Supprimer la couleur',
-        message: `Êtes-vous sûr de vouloir supprimer "${name || 'cette couleur'}" ?`,
-        confirmText: 'Supprimer',
-        cancelText: 'Annuler'
-      }
-    });
+    this.dataService.getOccurenceRelationColor(id).subscribe(occurences => {
+      const totalOccurences = occurences.reduce((sum, occ) => sum + occ.items, 0);
+      const totalRelations = occurences.length;
+      const message = totalOccurences > 0
+        ? `Impossible de supprimer "${name || 'cette couleur'}" tant qu'elle est utilisée.\n\nCet élément est utilisé : ${totalOccurences} élément(s) parmi ${totalRelations} relation(s)`
+        : `Êtes-vous sûr de vouloir supprimer "${name || 'cette couleur'}" ?`;
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.colorStore.remove(id);
-      }
+      const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+        width: '400px',
+        data: {
+          title: 'Supprimer la couleur',
+          message: message,
+          confirmText: 'Supprimer',
+          cancelText: 'Annuler',
+          disabled: totalOccurences > 0
+        }
+      });
+
+      dialogRef.afterClosed().subscribe(result => {
+        if (result) {
+          this.colorStore.remove(id);
+        }
+      });
     });
   }
 }

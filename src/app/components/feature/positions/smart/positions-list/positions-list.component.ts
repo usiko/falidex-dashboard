@@ -13,6 +13,7 @@ import { PositionStore } from '../../../../../stores/positions/positions.store';
 import { CurrentUserStore } from '../../../../../stores/current-user/current-user.store';
 import { InputDialogComponent } from '../../../../shared/input-dialog/input-dialog.component';
 import { ConfirmDialogComponent } from '../../../../shared/confirm-dialog/confirm-dialog.component';
+import { DataService } from '../../../../../services/data/data.service';
 
 @Component({
   selector: 'app-positions-list',
@@ -35,6 +36,7 @@ export class PositionsListComponent {
   private readonly currentUserStore = inject(CurrentUserStore);
   private readonly dialog = inject(MatDialog);
   private readonly router = inject(Router);
+  private readonly dataService = inject(DataService);
 
   protected readonly positions = this.positionStore.entities;
   protected readonly searchTerm = signal('');
@@ -77,38 +79,56 @@ export class PositionsListComponent {
   }
 
   protected onEdit(id: string, currentName: string | undefined): void {
-    const dialogRef = this.dialog.open(InputDialogComponent, {
-      width: '400px',
-      data: {
-        title: 'Modifier position',
-        placeholder: 'Nom',
-        initialValue: currentName || '',
-        confirmText: 'Modifier'
-      }
-    });
+    this.dataService.getOccurenceRelationPosition(id).subscribe(occurences => {
+      const totalOccurences = occurences.reduce((sum, occ) => sum + occ.items, 0);
+      const totalRelations = occurences.length;
+      const message = totalOccurences > 0 
+        ? `Cet élément est utilisé : ${totalOccurences} élément(s) parmi ${totalRelations} relation(s)` 
+        : undefined;
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.positionStore.update(id, { name: result });
-      }
+      const dialogRef = this.dialog.open(InputDialogComponent, {
+        width: '400px',
+        data: {
+          title: 'Modifier position',
+          message: message,
+          placeholder: 'Nom',
+          initialValue: currentName || '',
+          confirmText: 'Modifier'
+        }
+      });
+
+      dialogRef.afterClosed().subscribe(result => {
+        if (result) {
+          this.positionStore.update(id, { name: result });
+        }
+      });
     });
   }
 
   protected onDelete(id: string, name: string | undefined): void {
-    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      width: '400px',
-      data: {
-        title: 'Supprimer la position',
-        message: `Êtes-vous sûr de vouloir supprimer "${name || ''}" ?`,
-        confirmText: 'Supprimer',
-        cancelText: 'Annuler'
-      }
-    });
+    this.dataService.getOccurenceRelationPosition(id).subscribe(occurences => {
+      const totalOccurences = occurences.reduce((sum, occ) => sum + occ.items, 0);
+      const totalRelations = occurences.length;
+      const message = totalOccurences > 0
+        ? `Impossible de supprimer "${name || ''}" tant qu'il est utilisé.\n\nCet élément est utilisé : ${totalOccurences} élément(s) parmi ${totalRelations} relation(s)`
+        : `Êtes-vous sûr de vouloir supprimer "${name || ''}" ?`;
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.positionStore.remove(id);
-      }
+      const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+        width: '400px',
+        data: {
+          title: 'Supprimer la position',
+          message: message,
+          confirmText: 'Supprimer',
+          cancelText: 'Annuler',
+          disabled: totalOccurences > 0
+        }
+      });
+
+      dialogRef.afterClosed().subscribe(result => {
+        if (result) {
+          this.positionStore.remove(id);
+        }
+      });
     });
   }
 }
