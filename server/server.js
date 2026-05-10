@@ -5,7 +5,7 @@ const path = require('path');
 const app = express();
 
 const port = process.env.PORT || 3001;
-const pathDist = 'www';
+const pathDist = 'dist/falidex-dashboard/browser';
 
 app.use(express.static(pathDist));
 
