@@ -15,6 +15,10 @@ export const routes: Routes = [
     loadComponent: () => import('./components/feature/filieres/page/detail/filiere-detail-page.component').then(m => m.FiliereDetailPageComponent)
   },
   {
+    path: 'table',
+    loadComponent: () => import('./components/feature/table/page/table-list.page').then(m => m.TableListPageComponent)
+  },
+  {
     path: 'symbols',
     loadComponent: () => import('./components/feature/symbols/page/symbols-list.page').then(m => m.SymbolsListPageComponent)
   },
