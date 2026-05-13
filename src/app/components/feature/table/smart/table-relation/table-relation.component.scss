@@ -1,0 +1,56 @@
+.table-wrapper {
+  overflow: auto;
+  border-radius: 4px;
+
+  table {
+    width: 100%;
+    min-width: 900px;
+  }
+
+  th.mat-header-cell {
+    font-weight: 600;
+    white-space: nowrap;
+    padding: 0 12px;
+  }
+
+  td.mat-cell {
+    padding: 0 12px;
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  tr.mat-row:hover {
+    background-color: rgba(0, 0, 0, 0.04);
+  }
+
+  .icon-yes {
+    color: #4caf50;
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+
+  .icon-absent {
+    color: #f44336;
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+
+  .icon-note {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    color: #ff9800;
+    cursor: pointer;
+  }
+}
+
+.no-data-cell {
+  text-align: center;
+  padding: 24px;
+  color: rgba(0, 0, 0, 0.54);
+  font-style: italic;
+}

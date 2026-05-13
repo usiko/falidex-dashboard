@@ -1,0 +1,93 @@
+<div class="table-wrapper mat-elevation-z2">
+  <table mat-table [dataSource]="tableRows()">
+
+    <!-- Filière -->
+    <ng-container matColumnDef="filiere">
+      <th mat-header-cell *matHeaderCellDef>Filière</th>
+      <td mat-cell *matCellDef="let row">{{ row.filiere }}</td>
+    </ng-container>
+
+    <!-- Symbole -->
+    <ng-container matColumnDef="symbole">
+      <th mat-header-cell *matHeaderCellDef>Symbole</th>
+      <td mat-cell *matCellDef="let row">{{ row.symbole }}</td>
+    </ng-container>
+
+    <!-- Signification -->
+    <ng-container matColumnDef="signification">
+      <th mat-header-cell *matHeaderCellDef>Signification</th>
+      <td mat-cell *matCellDef="let row">{{ row.signification }}</td>
+    </ng-container>
+
+    <!-- Placement -->
+    <ng-container matColumnDef="placement">
+      <th mat-header-cell *matHeaderCellDef>Décernement</th>
+      <td mat-cell *matCellDef="let row">{{ row.placement }}</td>
+    </ng-container>
+
+    <!-- Position -->
+    <ng-container matColumnDef="position">
+      <th mat-header-cell *matHeaderCellDef>Position</th>
+      <td mat-cell *matCellDef="let row">{{ row.position }}</td>
+    </ng-container>
+
+    <!-- Circulaire -->
+    <ng-container matColumnDef="circulaire">
+      <th mat-header-cell *matHeaderCellDef>Circulaire</th>
+      <td mat-cell *matCellDef="let row">{{ row.circulaire }}</td>
+    </ng-container>
+
+    <!-- Symbole Sens -->
+    <ng-container matColumnDef="symboleSens">
+      <th mat-header-cell *matHeaderCellDef>Sens symbole</th>
+      <td mat-cell *matCellDef="let row">{{ row.symboleSens }}</td>
+    </ng-container>
+
+    <!-- Symbole Accessoire -->
+    <ng-container matColumnDef="symboleAccessory">
+      <th mat-header-cell *matHeaderCellDef>Accessoire</th>
+      <td mat-cell *matCellDef="let row">{{ row.symboleAccessory }}</td>
+    </ng-container>
+
+    <!-- Spé -->
+    <ng-container matColumnDef="spe">
+      <th mat-header-cell *matHeaderCellDef>Spé</th>
+      <td mat-cell *matCellDef="let row">
+        @if (row.spe) {
+          <mat-icon class="icon-yes">check</mat-icon>
+        }
+      </td>
+    </ng-container>
+
+    <!-- Absent -->
+    <ng-container matColumnDef="absent">
+      <th mat-header-cell *matHeaderCellDef>Absent</th>
+      <td mat-cell *matCellDef="let row">
+        @if (row.absent) {
+          <mat-icon class="icon-absent">block</mat-icon>
+        }
+      </td>
+    </ng-container>
+
+    <!-- Note -->
+    <ng-container matColumnDef="note">
+      <th mat-header-cell *matHeaderCellDef>Note</th>
+      <td mat-cell *matCellDef="let row">
+        @if (row.note) {
+          <span [matTooltip]="row.note">
+            <mat-icon class="icon-note">sticky_note_2</mat-icon>
+          </span>
+        }
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+    <tr class="mat-row no-data-row" *matNoDataRow>
+      <td [attr.colspan]="displayedColumns.length" class="no-data-cell">
+        Aucune donnée pour la relation sélectionnée.
+      </td>
+    </tr>
+  </table>
+</div>
