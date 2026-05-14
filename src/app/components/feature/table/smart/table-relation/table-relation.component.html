@@ -1,5 +1,5 @@
 <div class="table-wrapper mat-elevation-z2">
-  <table mat-table [dataSource]="tableRows()">
+  <table mat-table [dataSource]="paginatedRows()">
 
     <!-- Filière -->
     <ng-container matColumnDef="filiere">
@@ -90,4 +90,12 @@
       </td>
     </tr>
   </table>
+  <mat-paginator
+    [length]="totalRows()"
+    [pageSize]="pageSize()"
+    [pageIndex]="pageIndex()"
+    [pageSizeOptions]="[10, 25, 50, 100]"
+    showFirstLastButtons
+    (page)="onPageChange($event)">
+  </mat-paginator>
 </div>

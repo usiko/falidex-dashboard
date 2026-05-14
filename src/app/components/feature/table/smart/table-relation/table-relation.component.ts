@@ -1,9 +1,10 @@
-import { Component, inject, computed } from '@angular/core';
+import { Component, inject, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 import { MatSortModule, Sort } from '@angular/material/sort';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatIconModule } from '@angular/material/icon';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { linkStore } from '../../../../../stores/links/links.store';
 import { FiliereStore } from '../../../../../stores/filieres/filieres.store';
 import { SymbolStore } from '../../../../../stores/symbols/symbols.store';
@@ -38,6 +39,7 @@ export interface TableRelationRow {
     MatSortModule,
     MatTooltipModule,
     MatIconModule,
+    MatPaginatorModule,
   ],
   templateUrl: './table-relation.component.html',
   styleUrl: './table-relation.component.scss'
@@ -52,6 +54,9 @@ export class TableRelationComponent {
   private readonly circulaireStore = inject(CirculaireStore);
   private readonly symbolSensStore = inject(SymbolSensStore);
   private readonly symbolAccessoryStore = inject(SymbolAccessoryStore);
+
+  readonly pageSize = signal(25);
+  readonly pageIndex = signal(0);
 
   readonly displayedColumns = [
     'filiere',
@@ -68,6 +73,7 @@ export class TableRelationComponent {
   ];
 
   protected readonly tableRows = computed<TableRelationRow[]>(() => {
+
     const filiereMap = this.filiereStore.entityMap();
     const symbolMap = this.symbolStore.entityMap();
     const significationMap = this.significationStore.entityMap();
@@ -92,4 +98,16 @@ export class TableRelationComponent {
       note: link.note ?? '',
     }));
   });
+
+  protected readonly totalRows = computed(() => this.tableRows().length);
+
+  protected readonly paginatedRows = computed(() => {
+    const start = this.pageIndex() * this.pageSize();
+    return this.tableRows().slice(start, start + this.pageSize());
+  });
+
+  onPageChange(event: PageEvent): void {
+    this.pageIndex.set(event.pageIndex);
+    this.pageSize.set(event.pageSize);
+  }
 }
