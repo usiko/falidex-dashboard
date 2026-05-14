@@ -21,4 +21,8 @@
 
 .page-content {
   margin-top: 16px;
+
+  .spinner-wrapper {
+    height: calc(100vh - 200px);
+  }
 }
