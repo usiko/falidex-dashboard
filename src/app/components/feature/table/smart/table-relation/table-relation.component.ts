@@ -5,6 +5,8 @@ import { MatSortModule, Sort, SortDirection } from '@angular/material/sort';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatIconModule } from '@angular/material/icon';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { TruncateTooltipDirective } from '../../../../shared/truncate-tooltip/truncate-tooltip.directive';
 import { linkStore } from '../../../../../stores/links/links.store';
 import { FiliereStore } from '../../../../../stores/filieres/filieres.store';
@@ -41,6 +43,8 @@ export interface TableRelationRow {
     MatTooltipModule,
     MatIconModule,
     MatPaginatorModule,
+    MatInputModule,
+    MatFormFieldModule,
     TruncateTooltipDirective,
   ],
   templateUrl: './table-relation.component.html',
@@ -60,8 +64,9 @@ export class TableRelationComponent {
   readonly pageSize = signal(25);
   readonly pageIndex = signal(0);
   readonly sort = signal<Sort>({ active: '', direction: '' });
+  readonly columnFilters = signal<Record<string, string>>({});
 
-  readonly displayedColumns = [
+  private readonly baseColumns = [
     'filiere',
     'symbole',
     'signification',
@@ -74,6 +79,8 @@ export class TableRelationComponent {
     'absent',
     'note',
   ];
+
+  readonly textColumns = new Set(['filiere', 'symbole', 'signification', 'placement', 'position', 'circulaire', 'symboleSens', 'symboleAccessory']);
 
   protected readonly tableRows = computed<TableRelationRow[]>(() => {
 
@@ -102,10 +109,36 @@ export class TableRelationComponent {
     }));
   });
 
+  protected readonly displayedColumns = computed(() => {
+    const rows = this.tableRows();
+    return this.baseColumns.filter(col => {
+      if (col === 'spe') return rows.some(r => r.spe);
+      if (col === 'absent') return rows.some(r => r.absent);
+      if (col === 'note') return rows.some(r => r.note);
+      return true;
+    });
+  });
+
+  protected readonly filterColumns = computed(() =>
+    this.displayedColumns().map(c => 'filter-' + c)
+  );
+
+  protected readonly filteredRows = computed(() => {
+    const filters = this.columnFilters();
+    const entries = Object.entries(filters).filter(([, v]) => v.trim());
+    if (!entries.length) return this.tableRows();
+    return this.tableRows().filter(row =>
+      entries.every(([col, val]) => {
+        const rowVal = (row as unknown as Record<string, unknown>)[col];
+        return String(rowVal ?? '').toLowerCase().includes(val.trim().toLowerCase());
+      })
+    );
+  });
+
   protected readonly sortedRows = computed(() => {
     const { active, direction } = this.sort();
-    if (!active || !direction) return this.tableRows();
-    const rows = [...this.tableRows()];
+    if (!active || !direction) return this.filteredRows();
+    const rows = [...this.filteredRows()];
     rows.sort((a, b) => {
       const valA = (a as unknown as Record<string, unknown>)[active];
       const valB = (b as unknown as Record<string, unknown>)[active];
@@ -125,7 +158,7 @@ export class TableRelationComponent {
     return rows;
   });
 
-  protected readonly totalRows = computed(() => this.tableRows().length);
+  protected readonly totalRows = computed(() => this.filteredRows().length);
 
   protected readonly paginatedRows = computed(() => {
     const start = this.pageIndex() * this.pageSize();
@@ -139,6 +172,11 @@ export class TableRelationComponent {
 
   onSortChange(sort: Sort): void {
     this.sort.set(sort);
+    this.pageIndex.set(0);
+  }
+
+  onFilterChange(col: string, value: string): void {
+    this.columnFilters.update(f => ({ ...f, [col]: value }));
     this.pageIndex.set(0);
   }
 }

@@ -1,21 +1,46 @@
 .table-wrapper {
-  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 250px);
   border-radius: 4px;
+  overflow: hidden;
+  --mat-form-field-container-height: 25px;
+  --mat-form-field-container-vertical-padding: 6px;
+
+  .table-scroll {
+    flex: 1;
+    overflow: auto;
+    min-height: 0;
+  }
 
   table {
     width: 100%;
-    min-width: 900px;
+    table-layout: fixed;
   }
+
+  // Column widths
+  .mat-column-filiere        { width: 120px; }
+  .mat-column-symbole        { width: 120px; }
+  .mat-column-signification  { width: 180px; }
+  .mat-column-placement      { width: 120px; }
+  .mat-column-position       { width: 100px; }
+  .mat-column-circulaire     { width: 110px; }
+  .mat-column-symboleSens    { width: 120px; }
+  .mat-column-symboleAccessory { width: 130px; }
+  .mat-column-spe            { width: 65px; }
+  .mat-column-absent         { width: 70px; }
+  .mat-column-note           { width: 65px; }
 
   th.mat-header-cell {
     font-weight: 600;
     white-space: nowrap;
-    padding: 0 12px;
+    padding: 0 8px;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   td.mat-cell {
-    padding: 0 12px;
-    max-width: 200px;
+    padding: 0 8px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -23,6 +48,20 @@
 
   tr.mat-row:hover {
     background-color: rgba(0, 0, 0, 0.04);
+  }
+
+  .filter-row th.mat-header-cell {
+    padding: 4px 12px;
+    background: inherit;
+  }
+
+  .filter-field {
+    width: 100%;
+    font-size: 12px;
+
+    input.mat-mdc-input-element {
+      font-size: 12px;
+    }
   }
 
   .icon-yes {

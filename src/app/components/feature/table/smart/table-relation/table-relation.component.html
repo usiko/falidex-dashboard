@@ -1,4 +1,5 @@
 <div class="table-wrapper mat-elevation-z2">
+  <div class="table-scroll">
   <table mat-table [dataSource]="paginatedRows()" matSort (matSortChange)="onSortChange($event)">
 
     <!-- Filière -->
@@ -81,15 +82,84 @@
       </td>
     </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns(); sticky: true"></tr>
+    <tr mat-header-row class="filter-row" *matHeaderRowDef="filterColumns(); sticky: true"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns();"></tr>
+
+    <!-- Filter columns -->
+    <ng-container matColumnDef="filter-filiere">
+      <th mat-header-cell *matHeaderCellDef>
+        <mat-form-field class="filter-field" subscriptSizing="dynamic">
+          <input matInput placeholder="Filtrer…" (input)="onFilterChange('filiere', $any($event.target).value)">
+        </mat-form-field>
+      </th>
+    </ng-container>
+    <ng-container matColumnDef="filter-symbole">
+      <th mat-header-cell *matHeaderCellDef>
+        <mat-form-field class="filter-field" subscriptSizing="dynamic">
+          <input matInput placeholder="Filtrer…" (input)="onFilterChange('symbole', $any($event.target).value)">
+        </mat-form-field>
+      </th>
+    </ng-container>
+    <ng-container matColumnDef="filter-signification">
+      <th mat-header-cell *matHeaderCellDef>
+        <mat-form-field class="filter-field" subscriptSizing="dynamic">
+          <input matInput placeholder="Filtrer…" (input)="onFilterChange('signification', $any($event.target).value)">
+        </mat-form-field>
+      </th>
+    </ng-container>
+    <ng-container matColumnDef="filter-placement">
+      <th mat-header-cell *matHeaderCellDef>
+        <mat-form-field class="filter-field" subscriptSizing="dynamic">
+          <input matInput placeholder="Filtrer…" (input)="onFilterChange('placement', $any($event.target).value)">
+        </mat-form-field>
+      </th>
+    </ng-container>
+    <ng-container matColumnDef="filter-position">
+      <th mat-header-cell *matHeaderCellDef>
+        <mat-form-field class="filter-field" subscriptSizing="dynamic">
+          <input matInput placeholder="Filtrer…" (input)="onFilterChange('position', $any($event.target).value)">
+        </mat-form-field>
+      </th>
+    </ng-container>
+    <ng-container matColumnDef="filter-circulaire">
+      <th mat-header-cell *matHeaderCellDef>
+        <mat-form-field class="filter-field" subscriptSizing="dynamic">
+          <input matInput placeholder="Filtrer…" (input)="onFilterChange('circulaire', $any($event.target).value)">
+        </mat-form-field>
+      </th>
+    </ng-container>
+    <ng-container matColumnDef="filter-symboleSens">
+      <th mat-header-cell *matHeaderCellDef>
+        <mat-form-field class="filter-field" subscriptSizing="dynamic">
+          <input matInput placeholder="Filtrer…" (input)="onFilterChange('symboleSens', $any($event.target).value)">
+        </mat-form-field>
+      </th>
+    </ng-container>
+    <ng-container matColumnDef="filter-symboleAccessory">
+      <th mat-header-cell *matHeaderCellDef>
+        <mat-form-field class="filter-field" subscriptSizing="dynamic">
+          <input matInput placeholder="Filtrer…" (input)="onFilterChange('symboleAccessory', $any($event.target).value)">
+        </mat-form-field>
+      </th>
+    </ng-container>
+    <ng-container matColumnDef="filter-spe">
+      <th mat-header-cell *matHeaderCellDef></th>
+    </ng-container>
+    <ng-container matColumnDef="filter-absent">
+      <th mat-header-cell *matHeaderCellDef></th>
+    </ng-container>
+    <ng-container matColumnDef="filter-note">
+      <th mat-header-cell *matHeaderCellDef></th>
+    </ng-container>
 
     <tr class="mat-row no-data-row" *matNoDataRow>
-      <td [attr.colspan]="displayedColumns.length" class="no-data-cell">
+      <td [attr.colspan]="displayedColumns().length" class="no-data-cell">
         Aucune donnée pour la relation sélectionnée.
       </td>
     </tr>
   </table>
+  </div>
   <mat-paginator
     [length]="totalRows()"
     [pageSize]="pageSize()"
