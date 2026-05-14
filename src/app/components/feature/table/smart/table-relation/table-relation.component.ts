@@ -1,10 +1,11 @@
 import { Component, inject, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
-import { MatSortModule, Sort } from '@angular/material/sort';
+import { MatSortModule, Sort, SortDirection } from '@angular/material/sort';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatIconModule } from '@angular/material/icon';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { TruncateTooltipDirective } from '../../../../shared/truncate-tooltip/truncate-tooltip.directive';
 import { linkStore } from '../../../../../stores/links/links.store';
 import { FiliereStore } from '../../../../../stores/filieres/filieres.store';
 import { SymbolStore } from '../../../../../stores/symbols/symbols.store';
@@ -40,6 +41,7 @@ export interface TableRelationRow {
     MatTooltipModule,
     MatIconModule,
     MatPaginatorModule,
+    TruncateTooltipDirective,
   ],
   templateUrl: './table-relation.component.html',
   styleUrl: './table-relation.component.scss'
@@ -57,6 +59,7 @@ export class TableRelationComponent {
 
   readonly pageSize = signal(25);
   readonly pageIndex = signal(0);
+  readonly sort = signal<Sort>({ active: '', direction: '' });
 
   readonly displayedColumns = [
     'filiere',
@@ -99,15 +102,38 @@ export class TableRelationComponent {
     }));
   });
 
+  protected readonly sortedRows = computed(() => {
+    const { active, direction } = this.sort();
+    if (!active || !direction) return this.tableRows();
+    const rows = [...this.tableRows()];
+    rows.sort((a, b) => {
+      const valA = (a as unknown as Record<string, unknown>)[active];
+      const valB = (b as unknown as Record<string, unknown>)[active];
+      let cmp = 0;
+      if (typeof valA === 'boolean' && typeof valB === 'boolean') {
+        cmp = (valA ? 1 : 0) - (valB ? 1 : 0);
+      } else {
+        cmp = String(valA ?? '').localeCompare(String(valB ?? ''), 'fr', { sensitivity: 'base' });
+      }
+      return direction === 'asc' ? cmp : -cmp;
+    });
+    return rows;
+  });
+
   protected readonly totalRows = computed(() => this.tableRows().length);
 
   protected readonly paginatedRows = computed(() => {
     const start = this.pageIndex() * this.pageSize();
-    return this.tableRows().slice(start, start + this.pageSize());
+    return this.sortedRows().slice(start, start + this.pageSize());
   });
 
   onPageChange(event: PageEvent): void {
     this.pageIndex.set(event.pageIndex);
     this.pageSize.set(event.pageSize);
+  }
+
+  onSortChange(sort: Sort): void {
+    this.sort.set(sort);
+    this.pageIndex.set(0);
   }
 }
