@@ -109,11 +109,16 @@ export class TableRelationComponent {
     rows.sort((a, b) => {
       const valA = (a as unknown as Record<string, unknown>)[active];
       const valB = (b as unknown as Record<string, unknown>)[active];
+      const emptyA = valA === '' || valA === null || valA === undefined;
+      const emptyB = valB === '' || valB === null || valB === undefined;
+      if (emptyA && emptyB) return 0;
+      if (emptyA) return 1;
+      if (emptyB) return -1;
       let cmp = 0;
       if (typeof valA === 'boolean' && typeof valB === 'boolean') {
         cmp = (valA ? 1 : 0) - (valB ? 1 : 0);
       } else {
-        cmp = String(valA ?? '').localeCompare(String(valB ?? ''), 'fr', { sensitivity: 'base' });
+        cmp = String(valA).localeCompare(String(valB), 'fr', { sensitivity: 'base' });
       }
       return direction === 'asc' ? cmp : -cmp;
     });
