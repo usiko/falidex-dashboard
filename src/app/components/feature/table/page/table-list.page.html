@@ -3,6 +3,10 @@
     <h1><mat-icon>table_chart</mat-icon> Table</h1>
   </div>
   <div class="page-content">
-    <app-table-relation />
+    @if (loading()) {
+      <div class="spinner-wrapper"><mat-spinner diameter="40" /></div>
+    } @else {
+      <app-table-relation />
+    }
   </div>
 </div>

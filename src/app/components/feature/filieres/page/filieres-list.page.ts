@@ -64,6 +64,14 @@ export class FilieresListPageComponent {
   protected readonly hideWithoutRelation = signal(false);
   protected readonly isNational = this.selectedRelationStore.isNational;
   protected readonly isLoggedIn = computed(() => this.currentUserStore.user() !== null);
+  protected readonly loading = computed(() =>
+    this.filiereStore.loading() ||
+    this.linkStoreInstance.loading() ||
+    this.symbolStore.loading() ||
+    this.circulaireStore.loading() ||
+    this.circulaireColorStore.loading() ||
+    this.colorStore.loading()
+  );
 
   protected readonly filteredFilieres = computed(() => {
     const search = normalizeString(this.searchTerm().trim());

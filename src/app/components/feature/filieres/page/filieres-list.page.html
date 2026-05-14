@@ -63,7 +63,9 @@
   </div>
 
   <div class="filieres-grid">
-    @if (filteredFilieres().length === 0) {
+    @if (loading()) {
+      <div class="spinner-wrapper"><mat-spinner diameter="40" /></div>
+    } @else if (filteredFilieres().length === 0) {
       <div class="empty-state">
         <mat-icon>info</mat-icon>
         <p>Aucune filière trouvée</p>
