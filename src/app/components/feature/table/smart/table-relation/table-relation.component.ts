@@ -7,7 +7,10 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatButtonModule } from '@angular/material/button';
+import { RouterModule } from '@angular/router';
 import { TruncateTooltipDirective } from '../../../../shared/truncate-tooltip/truncate-tooltip.directive';
+import { CurrentUserStore } from '../../../../../stores/current-user/current-user.store';
 import { linkStore } from '../../../../../stores/links/links.store';
 import { FiliereStore } from '../../../../../stores/filieres/filieres.store';
 import { SymbolStore } from '../../../../../stores/symbols/symbols.store';
@@ -45,6 +48,8 @@ export interface TableRelationRow {
     MatPaginatorModule,
     MatInputModule,
     MatFormFieldModule,
+    MatButtonModule,
+    RouterModule,
     TruncateTooltipDirective,
   ],
   templateUrl: './table-relation.component.html',
@@ -60,6 +65,9 @@ export class TableRelationComponent {
   private readonly circulaireStore = inject(CirculaireStore);
   private readonly symbolSensStore = inject(SymbolSensStore);
   private readonly symbolAccessoryStore = inject(SymbolAccessoryStore);
+  private readonly currentUserStore = inject(CurrentUserStore);
+
+  readonly isLoggedIn = computed(() => this.currentUserStore.user() !== null);
 
   readonly pageSize = signal(25);
   readonly pageIndex = signal(0);
@@ -78,6 +86,7 @@ export class TableRelationComponent {
     'spe',
     'absent',
     'note',
+    'actions',
   ];
 
   readonly textColumns = new Set(['filiere', 'symbole', 'signification', 'placement', 'position', 'circulaire', 'symboleSens', 'symboleAccessory']);
@@ -115,6 +124,7 @@ export class TableRelationComponent {
       if (col === 'spe') return rows.some(r => r.spe);
       if (col === 'absent') return rows.some(r => r.absent);
       if (col === 'note') return rows.some(r => r.note);
+      if (col === 'actions') return this.isLoggedIn();
       return true;
     });
   });

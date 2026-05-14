@@ -152,6 +152,21 @@
     <ng-container matColumnDef="filter-note">
       <th mat-header-cell *matHeaderCellDef></th>
     </ng-container>
+    <ng-container matColumnDef="filter-actions">
+      <th mat-header-cell *matHeaderCellDef></th>
+    </ng-container>
+
+    <!-- Actions -->
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let row">
+        @if (isLoggedIn()) {
+          <button mat-icon-button color="primary" [routerLink]="['/relation', row.id, 'symbole', 'edit']" matTooltip="Modifier">
+            <mat-icon>edit</mat-icon>
+          </button>
+        }
+      </td>
+    </ng-container>
 
     <tr class="mat-row no-data-row" *matNoDataRow>
       <td [attr.colspan]="displayedColumns().length" class="no-data-cell">
