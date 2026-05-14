@@ -1,0 +1,186 @@
+<div class="table-wrapper mat-elevation-z2">
+  <div class="table-scroll">
+  <table mat-table [dataSource]="paginatedRows()" matSort (matSortChange)="onSortChange($event)">
+
+    <!-- Filière -->
+    <ng-container matColumnDef="filiere">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Filière</th>
+      <td mat-cell *matCellDef="let row">{{ row.filiere || '--' }}</td>
+    </ng-container>
+
+    <!-- Symbole -->
+    <ng-container matColumnDef="symbole">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Symbole</th>
+      <td mat-cell *matCellDef="let row">{{ row.symbole || '--' }}</td>
+    </ng-container>
+
+    <!-- Signification -->
+    <ng-container matColumnDef="signification">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Signification</th>
+      <td mat-cell *matCellDef="let row" [truncateTooltip]="row.signification" matTooltipShowDelay="500">{{ row.signification || '--' }}</td>
+    </ng-container>
+
+    <!-- Placement -->
+    <ng-container matColumnDef="placement">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Décernement</th>
+      <td mat-cell *matCellDef="let row">{{ row.placement || '--' }}</td>
+    </ng-container>
+
+    <!-- Position -->
+    <ng-container matColumnDef="position">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Position</th>
+      <td mat-cell *matCellDef="let row">{{ row.position || '--' }}</td>
+    </ng-container>
+
+    <!-- Circulaire -->
+    <ng-container matColumnDef="circulaire">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Circulaire</th>
+      <td mat-cell *matCellDef="let row">{{ row.circulaire || '--' }}</td>
+    </ng-container>
+
+    <!-- Symbole Sens -->
+    <ng-container matColumnDef="symboleSens">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Sens symbole</th>
+      <td mat-cell *matCellDef="let row">{{ row.symboleSens || '--' }}</td>
+    </ng-container>
+
+    <!-- Symbole Accessoire -->
+    <ng-container matColumnDef="symboleAccessory">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Accessoire</th>
+      <td mat-cell *matCellDef="let row">{{ row.symboleAccessory || '--' }}</td>
+    </ng-container>
+
+    <!-- Spé -->
+    <ng-container matColumnDef="spe">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Spé</th>
+      <td mat-cell *matCellDef="let row">
+        @if (row.spe) {
+          <mat-icon class="icon-yes">check</mat-icon>
+        }
+      </td>
+    </ng-container>
+
+    <!-- Absent -->
+    <ng-container matColumnDef="absent">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Absent</th>
+      <td mat-cell *matCellDef="let row">
+        @if (row.absent) {
+          <mat-icon class="icon-absent">block</mat-icon>
+        }
+      </td>
+    </ng-container>
+
+    <!-- Note -->
+    <ng-container matColumnDef="note">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Note</th>
+      <td mat-cell *matCellDef="let row">
+        @if (row.note) {
+          <span [matTooltip]="row.note">
+            <mat-icon class="icon-note">sticky_note_2</mat-icon>
+          </span>
+        }
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns(); sticky: true"></tr>
+    <tr mat-header-row class="filter-row" *matHeaderRowDef="filterColumns(); sticky: true"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns();"></tr>
+
+    <!-- Filter columns -->
+    <ng-container matColumnDef="filter-filiere">
+      <th mat-header-cell *matHeaderCellDef>
+        <mat-form-field class="filter-field" subscriptSizing="dynamic">
+          <input matInput placeholder="Filtrer…" (input)="onFilterChange('filiere', $any($event.target).value)">
+        </mat-form-field>
+      </th>
+    </ng-container>
+    <ng-container matColumnDef="filter-symbole">
+      <th mat-header-cell *matHeaderCellDef>
+        <mat-form-field class="filter-field" subscriptSizing="dynamic">
+          <input matInput placeholder="Filtrer…" (input)="onFilterChange('symbole', $any($event.target).value)">
+        </mat-form-field>
+      </th>
+    </ng-container>
+    <ng-container matColumnDef="filter-signification">
+      <th mat-header-cell *matHeaderCellDef>
+        <mat-form-field class="filter-field" subscriptSizing="dynamic">
+          <input matInput placeholder="Filtrer…" (input)="onFilterChange('signification', $any($event.target).value)">
+        </mat-form-field>
+      </th>
+    </ng-container>
+    <ng-container matColumnDef="filter-placement">
+      <th mat-header-cell *matHeaderCellDef>
+        <mat-form-field class="filter-field" subscriptSizing="dynamic">
+          <input matInput placeholder="Filtrer…" (input)="onFilterChange('placement', $any($event.target).value)">
+        </mat-form-field>
+      </th>
+    </ng-container>
+    <ng-container matColumnDef="filter-position">
+      <th mat-header-cell *matHeaderCellDef>
+        <mat-form-field class="filter-field" subscriptSizing="dynamic">
+          <input matInput placeholder="Filtrer…" (input)="onFilterChange('position', $any($event.target).value)">
+        </mat-form-field>
+      </th>
+    </ng-container>
+    <ng-container matColumnDef="filter-circulaire">
+      <th mat-header-cell *matHeaderCellDef>
+        <mat-form-field class="filter-field" subscriptSizing="dynamic">
+          <input matInput placeholder="Filtrer…" (input)="onFilterChange('circulaire', $any($event.target).value)">
+        </mat-form-field>
+      </th>
+    </ng-container>
+    <ng-container matColumnDef="filter-symboleSens">
+      <th mat-header-cell *matHeaderCellDef>
+        <mat-form-field class="filter-field" subscriptSizing="dynamic">
+          <input matInput placeholder="Filtrer…" (input)="onFilterChange('symboleSens', $any($event.target).value)">
+        </mat-form-field>
+      </th>
+    </ng-container>
+    <ng-container matColumnDef="filter-symboleAccessory">
+      <th mat-header-cell *matHeaderCellDef>
+        <mat-form-field class="filter-field" subscriptSizing="dynamic">
+          <input matInput placeholder="Filtrer…" (input)="onFilterChange('symboleAccessory', $any($event.target).value)">
+        </mat-form-field>
+      </th>
+    </ng-container>
+    <ng-container matColumnDef="filter-spe">
+      <th mat-header-cell *matHeaderCellDef></th>
+    </ng-container>
+    <ng-container matColumnDef="filter-absent">
+      <th mat-header-cell *matHeaderCellDef></th>
+    </ng-container>
+    <ng-container matColumnDef="filter-note">
+      <th mat-header-cell *matHeaderCellDef></th>
+    </ng-container>
+    <ng-container matColumnDef="filter-actions">
+      <th mat-header-cell *matHeaderCellDef></th>
+    </ng-container>
+
+    <!-- Actions -->
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let row">
+        @if (isLoggedIn()) {
+          <button mat-icon-button color="primary" [routerLink]="['/relation', row.id, 'symbole', 'edit']" matTooltip="Modifier">
+            <mat-icon>edit</mat-icon>
+          </button>
+        }
+      </td>
+    </ng-container>
+
+    <tr class="mat-row no-data-row" *matNoDataRow>
+      <td [attr.colspan]="displayedColumns().length" class="no-data-cell">
+        Aucune donnée pour la relation sélectionnée.
+      </td>
+    </tr>
+  </table>
+  </div>
+  <mat-paginator
+    [length]="totalRows()"
+    [pageSize]="pageSize()"
+    [pageIndex]="pageIndex()"
+    [pageSizeOptions]="[10, 25, 50, 100]"
+    showFirstLastButtons
+    (page)="onPageChange($event)">
+  </mat-paginator>
+</div>
