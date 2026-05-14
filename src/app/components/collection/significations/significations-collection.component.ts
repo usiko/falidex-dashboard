@@ -2,6 +2,7 @@ import { Component, computed, inject, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { SignificationStore } from '../../../stores/significations/significations.store';
 import { CurrentUserStore } from '../../../stores/current-user/current-user.store';
 import { IBaseSignification } from '../../../models/data/base-data-models';
@@ -9,7 +10,7 @@ import { IBaseSignification } from '../../../models/data/base-data-models';
 @Component({
   selector: 'app-significations-collection',
   standalone: true,
-  imports: [CommonModule, MatButtonModule, MatIconModule],
+  imports: [CommonModule, MatButtonModule, MatIconModule, MatProgressSpinnerModule],
   templateUrl: './significations-collection.component.html',
   styleUrl: './significations-collection.component.scss'
 })
@@ -21,6 +22,7 @@ export class SignificationsCollectionComponent {
   
   private significationStore = inject(SignificationStore);
   private currentUserStore = inject(CurrentUserStore);
+  protected loading = this.significationStore.loading;
   
   protected isLoggedIn = computed(() => this.currentUserStore.user() !== null);
   

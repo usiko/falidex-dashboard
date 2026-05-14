@@ -1,5 +1,6 @@
 import { Component, computed, inject, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CirculaireStore } from '../../../stores/circulaires/circulaires.store';
 import { CirculaireColorStore } from '../../../stores/circulaires-colors/circulaires-colors.store';
 import { ColorStore } from '../../../stores/colors/colors.store';
@@ -9,7 +10,7 @@ import { ColorBadgeComponent, ColorBadgeData } from '../../shared/color-badge/co
 @Component({
   selector: 'app-circulaires-collection',
   standalone: true,
-  imports: [CommonModule, ColorBadgeComponent],
+  imports: [CommonModule, ColorBadgeComponent, MatProgressSpinnerModule],
   templateUrl: './circulaires-collection.component.html',
   styleUrl: './circulaires-collection.component.scss'
 })
@@ -21,6 +22,7 @@ export class CirculairesCollectionComponent {
   private circulaireStore = inject(CirculaireStore);
   private circulaireColorStore = inject(CirculaireColorStore);
   private colorStore = inject(ColorStore);
+  protected loading = this.circulaireStore.loading;
   
   protected circulaires = computed(() => {
     const term = this.searchTerm().toLowerCase().trim();

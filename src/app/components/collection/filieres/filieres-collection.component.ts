@@ -1,12 +1,13 @@
 import { Component, computed, inject, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { FiliereStore } from '../../../stores/filieres/filieres.store';
 import { IBaseFiliere } from '../../../models/data/base-data-models';
 
 @Component({
   selector: 'app-filieres-collection',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, MatProgressSpinnerModule],
   templateUrl: './filieres-collection.component.html',
   styleUrl: './filieres-collection.component.scss'
 })
@@ -16,6 +17,7 @@ export class FilieresCollectionComponent {
   selection = output<IBaseFiliere>();
   
   private filiereStore = inject(FiliereStore);
+  protected loading = this.filiereStore.loading;
   
   protected filieres = computed(() => {
     const term = this.searchTerm().toLowerCase().trim();
