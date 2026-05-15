@@ -7,10 +7,15 @@
   --mat-form-field-container-height: 25px;
   --mat-form-field-container-vertical-padding: 6px;
 
+  @media (max-width: 768px) {
+    height: calc(100vh - 200px);
+  }
+
   .table-scroll {
     flex: 1;
     overflow: auto;
     min-height: 0;
+    -webkit-overflow-scrolling: touch;
   }
 
   table {

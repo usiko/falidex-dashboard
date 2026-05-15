@@ -2,11 +2,31 @@
 .left-section {
   display: flex;
   align-items: center;
-  gap: 12px;
-  flex-wrap: wrap;
+  gap: 8px;
+  flex-wrap: nowrap;
+  overflow: hidden;
 }
-.relation-select{
-    width: 250px;
+
+.relation-select {
+  width: 250px;
+
+  @media (max-width: 599px) {
+    width: 150px;
+  }
+}
+
+.desktop-nav {
+  @media (max-width: 768px) {
+    display: none !important;
+  }
+}
+
+.mobile-menu-btn {
+  display: none;
+
+  @media (max-width: 768px) {
+    display: inline-flex;
+  }
 }
 .relation-option {
   display: flex;
