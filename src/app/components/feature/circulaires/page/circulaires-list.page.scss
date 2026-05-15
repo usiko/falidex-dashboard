@@ -10,7 +10,8 @@
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    gap: 24px;
+    gap: 16px;
+    flex-wrap: wrap;
     
     .title-section {
       flex: 1;
@@ -25,12 +26,22 @@
     font-size: 32px;
     font-weight: 500;
     color: #333;
+
+    @media (max-width: 599px) {
+      font-size: 22px;
+    }
     
     mat-icon {
       font-size: 36px;
       width: 36px;
       height: 36px;
       color: #3f51b5;
+
+      @media (max-width: 599px) {
+        font-size: 28px;
+        width: 28px;
+        height: 28px;
+      }
     }
   }
   
@@ -47,6 +58,10 @@
   .search-field {
     width: 400px;
     max-width: 100%;
+
+    @media (max-width: 599px) {
+      width: 100%;
+    }
   }
 }
 
@@ -54,6 +69,11 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 24px;
+
+  @media (max-width: 599px) {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
 }
 
 .empty-state {

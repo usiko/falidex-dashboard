@@ -1,5 +1,9 @@
 .page-container {
   padding: 24px;
+
+  @media (max-width: 599px) {
+    padding: 12px;
+  }
 }
 
 .page-header {
@@ -8,6 +12,10 @@
     align-items: center;
     gap: 8px;
     margin: 0 0 16px;
+
+    @media (max-width: 599px) {
+      font-size: 20px;
+    }
   }
 }
 

@@ -11,6 +11,8 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 8px;
+    gap: 12px;
+    flex-wrap: wrap;
     
     button {
       display: flex;
@@ -27,12 +29,22 @@
     font-size: 32px;
     font-weight: 500;
     color: #333;
+
+    @media (max-width: 599px) {
+      font-size: 22px;
+    }
     
     mat-icon {
       font-size: 36px;
       width: 36px;
       height: 36px;
       color: #4caf50;
+
+      @media (max-width: 599px) {
+        font-size: 28px;
+        width: 28px;
+        height: 28px;
+      }
     }
   }
   
@@ -46,13 +58,17 @@
 .filters {
   margin-bottom: 24px;
   display: flex;
-  gap: 16px;
+  gap: 12px;
   align-items: center;
   flex-wrap: wrap;
   
   .search-field {
     width: 400px;
     max-width: 100%;
+
+    @media (max-width: 599px) {
+      width: 100%;
+    }
   }
   
   .toggle-filters {
@@ -62,6 +78,15 @@
   
   .spe-filter,
   .absent-filter {
+    @media (max-width: 599px) {
+      width: 100%;
+
+      mat-button-toggle {
+        flex: 1;
+        text-align: center;
+      }
+    }
+
     mat-button-toggle {
       display: flex;
       align-items: center;
@@ -80,6 +105,11 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 24px;
+
+  @media (max-width: 599px) {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
 }
 
 .empty-state {

@@ -9,6 +9,11 @@
   border-left: 3px solid #333;
   max-width: 700px;
   position: relative;
+
+  @media (max-width: 599px) {
+    max-width: 100%;
+    flex-wrap: wrap;
+  }
   
   &.spe-item {
     border-left-color: #3f51b5; // Material primary color
@@ -22,9 +27,10 @@
     
     .detail-item {
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       gap: 8px;
       font-size: 13px;
+      flex-wrap: wrap;
       
       .label {
         font-weight: 600;

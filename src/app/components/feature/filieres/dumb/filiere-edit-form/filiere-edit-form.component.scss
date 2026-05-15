@@ -2,6 +2,10 @@
   padding: 24px;
   max-width: 1200px;
   margin: 0 auto;
+
+  @media (max-width: 599px) {
+    padding: 12px;
+  }
   
   .form-header {
     display: flex;
@@ -10,6 +14,8 @@
     margin-bottom: 24px;
     padding-bottom: 12px;
     border-bottom: 2px solid #333;
+    gap: 12px;
+    flex-wrap: wrap;
 
     .form-title {
       font-size: 24px;
@@ -18,13 +24,17 @@
       margin: 0;
       padding: 0;
       border: none;
+
+      @media (max-width: 599px) {
+        font-size: 18px;
+      }
     }
 
     .specificite-toggle,
     .absent-toggle {
       display: flex;
       align-items: center;
-      margin-left: 16px;
+      margin-left: 0;
     }
   }
   
@@ -53,6 +63,10 @@
     > * {
       flex: 1;
     }
+
+    @media (max-width: 599px) {
+      flex-direction: column;
+    }
   }
   
   .form-row-sections {
@@ -63,6 +77,10 @@
     > .form-section {
       flex: 1;
       margin-bottom: 0;
+    }
+
+    @media (max-width: 768px) {
+      flex-direction: column;
     }
   }
   

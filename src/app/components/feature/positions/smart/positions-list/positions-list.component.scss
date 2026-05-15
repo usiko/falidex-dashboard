@@ -3,17 +3,27 @@
   max-width: 1200px;
   margin: 0 auto;
 
+  @media (max-width: 599px) {
+    padding: 12px;
+  }
+
   .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 24px;
+    gap: 12px;
+    flex-wrap: wrap;
 
     .title-section {
       h1 {
         margin: 0;
         font-size: 28px;
         font-weight: 500;
+
+        @media (max-width: 599px) {
+          font-size: 20px;
+        }
       }
     }
 
