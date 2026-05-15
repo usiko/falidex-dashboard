@@ -85,6 +85,7 @@ export class SymbolsListPageComponent {
     this.symbolSensStore.loading() ||
     this.symbolAccessoryStore.loading()
   );
+  protected readonly showSpinner = computed(() => this.loading() && !this.symbolStore.entities().length);
 
   protected readonly filteredSymbols = computed(() => {
     const search = normalizeString(this.searchTerm().trim());

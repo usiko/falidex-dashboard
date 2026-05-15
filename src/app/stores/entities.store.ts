@@ -5,7 +5,7 @@ import { v6 } from 'uuid';
 import { BehaviorSubject, Subject } from 'rxjs';
 
 export function withLoadingState() {
-  return [withState({ loading: false }), withMethods((store: any) => ({
+  return [withState({ loading: true }), withMethods((store: any) => ({
     setLoading(loading: boolean): void {
       patchState(store, { loading });
     }

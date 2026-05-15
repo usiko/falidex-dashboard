@@ -13,6 +13,9 @@
     <p class="subtitle">{{ filteredSymbols().length }} symbole(s) disponible(s)</p>
   </div>
 
+  @if (showSpinner()) {
+    <div class="spinner-wrapper"><mat-spinner diameter="40" /></div>
+  } @else {
   <div class="filters">
     <mat-form-field appearance="outline" class="search-field">
       <mat-label>Rechercher</mat-label>
@@ -93,9 +96,7 @@
   </div>
 
   <div class="symbols-grid">
-    @if (loading()) {
-      <div class="spinner-wrapper"><mat-spinner diameter="40" /></div>
-    } @else if (filteredSymbols().length === 0) {
+    @if (filteredSymbols().length === 0) {
       <div class="empty-state">
         <mat-icon>info</mat-icon>
         <p>Aucun symbole trouvé</p>
@@ -106,4 +107,5 @@
       }
     }
   </div>
+  }
 </div>

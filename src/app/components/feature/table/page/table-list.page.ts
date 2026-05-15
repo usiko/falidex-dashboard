@@ -42,4 +42,5 @@ export class TableListPageComponent {
     this.symbolSensStore.loading() ||
     this.symbolAccessoryStore.loading()
   );
+  protected readonly showSpinner = computed(() => this.loading() && !this.filiereStore.entities().length);
 }

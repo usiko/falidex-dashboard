@@ -72,6 +72,7 @@ export class FilieresListPageComponent {
     this.circulaireColorStore.loading() ||
     this.colorStore.loading()
   );
+  protected readonly showSpinner = computed(() => this.loading() && !this.filiereStore.entities().length);
 
   protected readonly filteredFilieres = computed(() => {
     const search = normalizeString(this.searchTerm().trim());
