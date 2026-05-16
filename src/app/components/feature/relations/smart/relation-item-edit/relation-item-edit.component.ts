@@ -8,38 +8,27 @@ import { SelectedRelationStore } from '../../../../../stores/selected-relation/s
 import { CurrentUserStore } from '../../../../../stores/current-user/current-user.store';
 
 @Component({
-  selector: 'app-relation-filiere-edit',
+  selector: 'app-relation-item-edit',
   standalone: true,
   imports: [CommonModule, ItemRelationFormComponent],
-  templateUrl: './relation-filiere-edit.component.html',
-  styleUrl: './relation-filiere-edit.component.scss'
+  templateUrl: './relation-item-edit.component.html',
+  styleUrl: './relation-item-edit.component.scss'
 })
-export class RelationFiliereEditComponent {
-  id        = input<string | null>();
-  filiereId = input<string | null>();
+export class RelationItemEditComponent {
+  id = input<string | null>();
 
   private readonly linksStore = inject(linkStore);
-  private readonly router     = inject(Router);
+  private readonly router = inject(Router);
   private readonly selectedRelationStore = inject(SelectedRelationStore);
-  private readonly currentUserStore      = inject(CurrentUserStore);
+  private readonly currentUserStore = inject(CurrentUserStore);
 
   protected readonly editable = computed(() =>
     this.selectedRelationStore.isEditable() && !!this.currentUserStore.user()
   );
 
-  protected readonly contextIds = computed(() => {
-    const fid = this.filiereId();
-    return fid ? { filiere: fid } : {};
-  });
-
-  // filière, position et placement verrouillés dans le contexte filière
-  protected readonly lockedCollections = { filiere: true, position: true, placement: true } as const;
-
   protected onValidated(relationData: IRelationItem | null): void {
-    const filiereId = this.filiereId();
     if (!relationData) {
-      if (filiereId) this.router.navigate(['/filiere', filiereId]);
-      else           this.router.navigate(['/filieres']);
+      this.router.navigate(['/table']);
       return;
     }
     if (relationData.id) {
@@ -48,7 +37,6 @@ export class RelationFiliereEditComponent {
       const { id, ...dataWithoutId } = relationData;
       this.linksStore.create(dataWithoutId);
     }
-    if (filiereId) this.router.navigate(['/filiere', filiereId]);
-    else           this.router.navigate(['/filieres']);
+    this.router.navigate(['/table']);
   }
 }
