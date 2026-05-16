@@ -8,8 +8,10 @@ import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDialog } from '@angular/material/dialog';
 import { RouterModule } from '@angular/router';
 import { TruncateTooltipDirective } from '../../../../shared/truncate-tooltip/truncate-tooltip.directive';
+import { ConfirmDialogComponent } from '../../../../shared/confirm-dialog/confirm-dialog.component';
 import { CurrentUserStore } from '../../../../../stores/current-user/current-user.store';
 import { linkStore } from '../../../../../stores/links/links.store';
 import { FiliereStore } from '../../../../../stores/filieres/filieres.store';
@@ -66,6 +68,7 @@ export class TableRelationComponent {
   private readonly symbolSensStore = inject(SymbolSensStore);
   private readonly symbolAccessoryStore = inject(SymbolAccessoryStore);
   private readonly currentUserStore = inject(CurrentUserStore);
+  private readonly dialog = inject(MatDialog);
 
   readonly isLoggedIn = computed(() => this.currentUserStore.user() !== null);
 
@@ -188,5 +191,21 @@ export class TableRelationComponent {
   onFilterChange(col: string, value: string): void {
     this.columnFilters.update(f => ({ ...f, [col]: value }));
     this.pageIndex.set(0);
+  }
+
+  onDeleteRelation(relationId: string): void {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '400px',
+      data: {
+        title: 'Supprimer la relation',
+        message: 'Êtes-vous sûr de vouloir supprimer cette relation ? Cette action est irréversible.'
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.links.remove(relationId);
+      }
+    });
   }
 }
