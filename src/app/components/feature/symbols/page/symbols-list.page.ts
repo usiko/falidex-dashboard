@@ -74,6 +74,18 @@ export class SymbolsListPageComponent {
   protected readonly supportFilter = signal<SupportFilter>('all');
   protected readonly speFilter = signal<SpeFilter>('all');
   protected readonly isLoggedIn = computed(() => this.currentUserStore.user() !== null);
+  protected readonly loading = computed(() =>
+    this.symbolStore.loading() ||
+    this.linkStoreInstance.loading() ||
+    this.filiereStore.loading() ||
+    this.significationStore.loading() ||
+    this.circulaireStore.loading() ||
+    this.circulaireColorStore.loading() ||
+    this.colorStore.loading() ||
+    this.symbolSensStore.loading() ||
+    this.symbolAccessoryStore.loading()
+  );
+  protected readonly showSpinner = computed(() => this.loading() && !this.symbolStore.entities().length);
 
   protected readonly filteredSymbols = computed(() => {
     const search = normalizeString(this.searchTerm().trim());

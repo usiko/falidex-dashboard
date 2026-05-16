@@ -1,12 +1,13 @@
 import { Component, computed, inject, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { SymbolSensStore } from '../../../stores/symbols-sens/symbols-sens.store';
 import { IBaseSymbolSens } from '../../../models/data/base-data-models';
 
 @Component({
   selector: 'app-symbols-sens-collection',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, MatProgressSpinnerModule],
   templateUrl: './symbols-sens-collection.component.html',
   styleUrl: './symbols-sens-collection.component.scss'
 })
@@ -16,6 +17,7 @@ export class SymbolsSensCollectionComponent {
   selection = output<IBaseSymbolSens>();
   
   private symbolSensStore = inject(SymbolSensStore);
+  protected loading = this.symbolSensStore.loading;
   
   protected symbolsSens = computed(() => {
     const term = this.searchTerm().toLowerCase().trim();

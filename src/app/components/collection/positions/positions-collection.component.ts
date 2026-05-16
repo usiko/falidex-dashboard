@@ -1,12 +1,13 @@
 import { Component, computed, inject, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { PositionStore } from '../../../stores/positions/positions.store';
 import { IBasePosition } from '../../../models/data/base-data-models';
 
 @Component({
   selector: 'app-positions-collection',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, MatProgressSpinnerModule],
   templateUrl: './positions-collection.component.html',
   styleUrl: './positions-collection.component.scss'
 })
@@ -16,6 +17,7 @@ export class PositionsCollectionComponent {
   selection = output<IBasePosition>();
   
   private positionStore = inject(PositionStore);
+  protected loading = this.positionStore.loading;
   
   protected positions = computed(() => {
     const term = this.searchTerm().toLowerCase().trim();

@@ -1,3 +1,6 @@
+@if (loading()) {
+  <div class="spinner-wrapper"><mat-spinner diameter="32" /></div>
+} @else {
 <div class="collection">
   @for (position of positions(); track position.id) {
     <div class="collection-item" 
@@ -7,3 +10,4 @@
     </div>
   }
 </div>
+}

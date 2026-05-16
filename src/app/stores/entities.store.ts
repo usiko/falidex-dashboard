@@ -1,8 +1,16 @@
 import { computed, Signal } from '@angular/core';
-import { patchState, signalStore, withMethods } from '@ngrx/signals';
+import { patchState, signalStore, withMethods, withState } from '@ngrx/signals';
 import { addEntity, removeEntity, setAllEntities, updateEntity, withEntities } from '@ngrx/signals/entities';
 import { v6 } from 'uuid';
 import { BehaviorSubject, Subject } from 'rxjs';
+
+export function withLoadingState() {
+  return [withState({ loading: true }), withMethods((store: any) => ({
+    setLoading(loading: boolean): void {
+      patchState(store, { loading });
+    }
+  }))] as const;
+}
 
 /**
  * Interface pour les subjects d'événements CRUD

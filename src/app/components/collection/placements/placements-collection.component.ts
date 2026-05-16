@@ -2,6 +2,7 @@ import { Component, computed, inject, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { PlacementStore } from '../../../stores/placements/placements.store';
 import { CurrentUserStore } from '../../../stores/current-user/current-user.store';
 import { IBasePlacement } from '../../../models/data/base-data-models';
@@ -9,7 +10,7 @@ import { IBasePlacement } from '../../../models/data/base-data-models';
 @Component({
   selector: 'app-placements-collection',
   standalone: true,
-  imports: [CommonModule, MatButtonModule, MatIconModule],
+  imports: [CommonModule, MatButtonModule, MatIconModule, MatProgressSpinnerModule],
   templateUrl: './placements-collection.component.html',
   styleUrl: './placements-collection.component.scss'
 })
@@ -21,6 +22,7 @@ export class PlacementsCollectionComponent {
   
   private placementStore = inject(PlacementStore);
   private currentUserStore = inject(CurrentUserStore);
+  protected loading = this.placementStore.loading;
   
   protected isLoggedIn = computed(() => this.currentUserStore.user() !== null);
   

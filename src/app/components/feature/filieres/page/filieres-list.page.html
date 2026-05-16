@@ -13,6 +13,9 @@
     <p class="subtitle">{{ filteredFilieres().length }} filière(s) disponible(s)</p>
   </div>
 
+  @if (showSpinner()) {
+    <div class="spinner-wrapper"><mat-spinner diameter="40" /></div>
+  } @else {
   <div class="filters">
     <mat-form-field appearance="outline" class="search-field">
       <mat-label>Rechercher</mat-label>
@@ -74,4 +77,5 @@
       }
     }
   </div>
+  }
 </div>

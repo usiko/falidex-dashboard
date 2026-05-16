@@ -1,12 +1,13 @@
 import { Component, inject, input, output, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CodeSpeStore } from '../../../stores/codes-spe/codes-spe.store';
 import { IBaseCodeSpe } from '../../../models/data/base-data-models';
 
 @Component({
   selector: 'app-codes-spe-collection',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, MatProgressSpinnerModule],
   templateUrl: './codes-spe-collection.component.html',
   styleUrl: './codes-spe-collection.component.scss'
 })
@@ -15,6 +16,7 @@ export class CodesSpeCollectionComponent {
   selection = output<IBaseCodeSpe>();
   
   private codeSpeStore = inject(CodeSpeStore);
+  protected loading = this.codeSpeStore.loading;
   protected codesSpe = computed(() => 
     this.codeSpeStore.entities().slice().sort((a, b) => 
       (a.name || '').toLowerCase().localeCompare((b.name || '').toLowerCase())

@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { forkJoin, map, mergeMap } from 'rxjs';
+import { concatMap, forkJoin, from, map, mergeMap, toArray } from 'rxjs';
 import { TopBarComponent } from './components/feature/dashboard/smart/top-bar/top-bar.component';
 import { DataService } from './services/data/data.service';
 import { CirculaireColorStore } from './stores/circulaires-colors/circulaires-colors.store';
@@ -60,6 +60,21 @@ export class App implements OnInit {
   }
 
   private loadAllData(): void {
+    // Mettre tous les stores en loading
+    this.circulaireStore.setLoading(true);
+    this.filiereStore.setLoading(true);
+    this.symbolStore.setLoading(true);
+    this.significationStore.setLoading(true);
+    this.placementStore.setLoading(true);
+    this.positionStore.setLoading(true);
+    this.colorStore.setLoading(true);
+    this.circulaireColorStore.setLoading(true);
+    this.symbolSensStore.setLoading(true);
+    this.symbolAccessoryStore.setLoading(true);
+    this.codeSpeStore.setLoading(true);
+    this.relationDataStore.setLoading(true);
+    this.linkStore.setLoading(true);
+
     // Charger toutes les données en parallèle
     this.authService.authToken().pipe(mergeMap(()=>{
         return     forkJoin({
@@ -78,15 +93,11 @@ export class App implements OnInit {
     })
     }))
     .pipe(mergeMap((data)=>{
-        const obs = data.listRelations.map(item=>{
-            return this.dataService.getRelationById(item.id)
-        })
-        return forkJoin(obs).pipe(map((relations)=>{
-            return {
-                ...data,
-                relations
-            }
-        }))
+        return from(data.listRelations).pipe(
+            concatMap(item => this.dataService.getRelationById(item.id)),
+            toArray(),
+            map(relations => ({ ...data, relations }))
+        );
     }))
     .subscribe({
       next: (data) => {
@@ -103,6 +114,21 @@ export class App implements OnInit {
         this.symbolAccessoryStore.set(data.symbolsAccessory);
         this.relationDataStore.set(data.relations);
 
+        // Stopper le loading
+        this.circulaireStore.setLoading(false);
+        this.filiereStore.setLoading(false);
+        this.symbolStore.setLoading(false);
+        this.significationStore.setLoading(false);
+        this.placementStore.setLoading(false);
+        this.positionStore.setLoading(false);
+        this.colorStore.setLoading(false);
+        this.circulaireColorStore.setLoading(false);
+        this.symbolSensStore.setLoading(false);
+        this.symbolAccessoryStore.setLoading(false);
+        this.codeSpeStore.setLoading(false);
+        this.relationDataStore.setLoading(false);
+        this.linkStore.setLoading(false);
+
         // Initialiser la relation sélectionnée par défaut avec la première relation
         const relations = data.relations;
         if (relations.length > 0 && relations[0].id) {
@@ -114,6 +140,19 @@ export class App implements OnInit {
       },
       error: (error) => {
         console.error('❌ Erreur lors du chargement des données:', error);
+        this.circulaireStore.setLoading(false);
+        this.filiereStore.setLoading(false);
+        this.symbolStore.setLoading(false);
+        this.significationStore.setLoading(false);
+        this.placementStore.setLoading(false);
+        this.positionStore.setLoading(false);
+        this.colorStore.setLoading(false);
+        this.circulaireColorStore.setLoading(false);
+        this.symbolSensStore.setLoading(false);
+        this.symbolAccessoryStore.setLoading(false);
+        this.codeSpeStore.setLoading(false);
+        this.relationDataStore.setLoading(false);
+        this.linkStore.setLoading(false);
       }
     });
   }
