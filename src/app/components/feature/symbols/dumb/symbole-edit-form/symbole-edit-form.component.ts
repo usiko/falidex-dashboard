@@ -51,6 +51,9 @@ export class SymboleEditFormComponent {
   // Output pour la validation
   validated = output<IRelationItem | null>();
   
+  // Output pour demander la sélection d'un symbole
+  selectSymbole = output<void>();
+  
   // Spécificité
   protected isSpecificite = signal<boolean>(false);
   

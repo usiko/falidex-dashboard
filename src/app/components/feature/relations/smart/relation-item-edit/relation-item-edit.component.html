@@ -1,31 +1,4 @@
-@if (symbole()) {
-  <app-symbole-edit-form
-    [relation]="relation()"
-    [symbole]="symbole()!"
-    [editable]="editable()"
-    (validated)="onValidated($event)" />
-} @else {
-  <div class="picker-container">
-    <div class="picker-header">
-      <h2>
-        <mat-icon>star</mat-icon>
-        Choisir un symbole
-      </h2>
-      <button mat-stroked-button (click)="onValidated(null)">
-        <mat-icon>arrow_back</mat-icon>
-        Annuler
-      </button>
-    </div>
-
-    <mat-form-field appearance="outline" class="search-field">
-      <mat-label>Rechercher</mat-label>
-      <mat-icon matPrefix>search</mat-icon>
-      <input matInput [ngModel]="searchTerm()" (ngModelChange)="searchTerm.set($event)" placeholder="Nom du symbole..." />
-    </mat-form-field>
-
-    <app-symbols-collection
-      [selectable]="true"
-      [searchTerm]="searchTerm()"
-      (selection)="onSymboleSelected($event)" />
-  </div>
-}
+<app-item-relation-form
+  [id]="id()"
+  [editable]="editable()"
+  (validated)="onValidated($event)" />

@@ -41,8 +41,8 @@
     </div>
   </div>
   
-  @if (symbole()) {
-    <div class="symbole-info">
+  <div class="symbole-info">
+    @if (symbole()) {
       <div class="symbole-content">
         @if (symbole()!.imgs && symbole()!.imgs!.length > 0) {
           <img [src]="symbole()!.imgs![0].url" [alt]="symbole()!.name" class="symbole-image" />
@@ -50,9 +50,24 @@
         <div class="symbole-details">
           <p><strong>Symbole :</strong> {{ symbole()!.name }}</p>
         </div>
+        @if (!relation()) {
+          <button mat-stroked-button (click)="selectSymbole.emit()">
+            <mat-icon>edit</mat-icon>
+            Changer
+          </button>
+        }
       </div>
-    </div>
-  }
+    } @else {
+      <div class="no-symbol">
+        <mat-icon color="warn">warning</mat-icon>
+        <span>Aucun symbole sélectionné</span>
+        <button mat-raised-button color="primary" (click)="selectSymbole.emit()">
+          <mat-icon>star</mat-icon>
+          Choisir un symbole
+        </button>
+      </div>
+    }
+  </div>
   
   @if (relation()) {
     <div class="symbole-info">

@@ -92,6 +92,13 @@
         margin-right: 8px;
       }
     }
+
+    .no-symbol {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #666;
+    }
   }
 
   .form-section {

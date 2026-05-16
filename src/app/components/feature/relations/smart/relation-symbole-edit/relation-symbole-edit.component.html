@@ -1,9 +1,6 @@
-@if (symbole()) {
-  <app-symbole-edit-form 
-    [relation]="relation()" 
-    [symbole]="symbole()!" 
-    [editable]="editable()" 
-    (validated)="onValidated($event)" />
-} @else {
-  <div class="loading">Chargement...</div>
-}
+<app-item-relation-form
+  [id]="id()"
+  [contextIds]="contextIds()"
+  [lockedCollections]="lockedCollections"
+  [editable]="editable()"
+  (validated)="onValidated($event)" />
