@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { forkJoin, map, mergeMap } from 'rxjs';
+import { concatMap, forkJoin, from, map, mergeMap, toArray } from 'rxjs';
 import { TopBarComponent } from './components/feature/dashboard/smart/top-bar/top-bar.component';
 import { DataService } from './services/data/data.service';
 import { CirculaireColorStore } from './stores/circulaires-colors/circulaires-colors.store';
@@ -93,15 +93,11 @@ export class App implements OnInit {
     })
     }))
     .pipe(mergeMap((data)=>{
-        const obs = data.listRelations.map(item=>{
-            return this.dataService.getRelationById(item.id)
-        })
-        return forkJoin(obs).pipe(map((relations)=>{
-            return {
-                ...data,
-                relations
-            }
-        }))
+        return from(data.listRelations).pipe(
+            concatMap(item => this.dataService.getRelationById(item.id)),
+            toArray(),
+            map(relations => ({ ...data, relations }))
+        );
     }))
     .subscribe({
       next: (data) => {
