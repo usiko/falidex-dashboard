@@ -10,6 +10,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatDialog } from '@angular/material/dialog';
 import { FormsModule } from '@angular/forms';
+import { ScrollRestoreDirective } from '../../../../directives/scroll-restore.directive';
 import { SymbolStore } from '../../../../stores/symbols/symbols.store';
 import { SymbolItemComponent } from '../smart/symbol-item/symbol-item.component';
 import { linkStore } from '../../../../stores/links/links.store';
@@ -48,7 +49,8 @@ function normalizeString(str: string): string {
     MatSlideToggleModule,
     MatButtonToggleModule,
     FormsModule,
-    SymbolItemComponent
+    SymbolItemComponent,
+    ScrollRestoreDirective
   ],
   templateUrl: './symbols-list.page.html',
   styleUrl: './symbols-list.page.scss'

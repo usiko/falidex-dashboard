@@ -1,4 +1,4 @@
-import { Component, inject, computed, signal } from '@angular/core';
+import { Component, inject, computed, signal, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 import { MatSortModule, Sort, SortDirection } from '@angular/material/sort';
@@ -9,7 +9,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
-import { Router, RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';import { ScrollRestoreDirective } from '../../../../../directives/scroll-restore.directive';
 import { TruncateTooltipDirective } from '../../../../shared/truncate-tooltip/truncate-tooltip.directive';
 import { ConfirmDialogComponent } from '../../../../shared/confirm-dialog/confirm-dialog.component';
 import { CurrentUserStore } from '../../../../../stores/current-user/current-user.store';
@@ -53,6 +53,7 @@ export interface TableRelationRow {
     MatButtonModule,
     RouterModule,
     TruncateTooltipDirective,
+    ScrollRestoreDirective
   ],
   templateUrl: './table-relation.component.html',
   styleUrl: './table-relation.component.scss'
@@ -178,6 +179,18 @@ export class TableRelationComponent {
     const start = this.pageIndex() * this.pageSize();
     return this.sortedRows().slice(start, start + this.pageSize());
   });
+
+  constructor()
+  {
+    effect(()=>{
+        this.tableRows()
+        console.log('update table rows')
+    })
+    effect(()=>{
+       this.filiereStore.entityMap()
+        console.log('update filere data')
+    })
+  }
 
   onPageChange(event: PageEvent): void {
     this.pageIndex.set(event.pageIndex);
