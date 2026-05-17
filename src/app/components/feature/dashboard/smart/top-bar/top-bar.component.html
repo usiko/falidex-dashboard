@@ -42,19 +42,19 @@
     </button>
     
     <!-- Desktop nav buttons (hidden on mobile) -->
-    <button mat-button class="desktop-nav" [routerLink]="['/relation/current/edit']">
+    <button mat-button class="desktop-nav" (click)="onNavigate($event, ['/relation/current/edit'])">
       <mat-icon>info</mat-icon>
       Relation Info
     </button>
-    <button mat-button class="desktop-nav" [routerLink]="['/filieres']">
+    <button mat-button class="desktop-nav" (click)="onNavigate($event, ['/filieres'])">
       <mat-icon>school</mat-icon>
       Filières
     </button>
-    <button mat-button class="desktop-nav" [routerLink]="['/symbols']">
+    <button mat-button class="desktop-nav" (click)="onNavigate($event, ['/symbols'])">
       <mat-icon>star</mat-icon>
       Symboles
     </button>
-    <button mat-button class="desktop-nav" [routerLink]="['/table']">
+    <button mat-button class="desktop-nav" (click)="onNavigate($event, ['/table'])">
       <mat-icon>table_chart</mat-icon>
       Table
     </button>
@@ -70,27 +70,27 @@
       <mat-icon>arrow_drop_down</mat-icon>
     </button>
     <mat-menu #collectionsMenu="matMenu">
-      <button mat-menu-item [routerLink]="['/significations']">
+      <button mat-menu-item (click)="onNavigate($event, ['/significations'])">
         <mat-icon>label</mat-icon>
         <span>Significations</span>
       </button>
-      <button mat-menu-item [routerLink]="['/placements']">
+      <button mat-menu-item (click)="onNavigate($event, ['/placements'])">
         <mat-icon>military_tech</mat-icon>
         <span>Décernements</span>
       </button>
-      <button mat-menu-item [routerLink]="['/symbols-accessory']">
+      <button mat-menu-item (click)="onNavigate($event, ['/symbols-accessory'])">
         <mat-icon>auto_awesome</mat-icon>
         <span>Symboles accessoires</span>
       </button>
-      <button mat-menu-item [routerLink]="['/positions']">
+      <button mat-menu-item (click)="onNavigate($event, ['/positions'])">
         <mat-icon>location_on</mat-icon>
         <span>Positions</span>
       </button>
-      <button mat-menu-item [routerLink]="['/circulaires']">
+      <button mat-menu-item (click)="onNavigate($event, ['/circulaires'])">
         <mat-icon>circle</mat-icon>
         <span>Circulaires</span>
       </button>
-      <button mat-menu-item [routerLink]="['/colors']">
+      <button mat-menu-item (click)="onNavigate($event, ['/colors'])">
         <mat-icon>palette</mat-icon>
         <span>Couleurs</span>
       </button>
@@ -113,44 +113,44 @@
       <mat-icon>menu</mat-icon>
     </button>
     <mat-menu #mobileMenu="matMenu">
-      <button mat-menu-item [routerLink]="['/relation/current/edit']">
+      <button mat-menu-item (click)="onNavigate($event, ['/relation/current/edit'])">
         <mat-icon>info</mat-icon>
         <span>Relation Info</span>
       </button>
-      <button mat-menu-item [routerLink]="['/filieres']">
+      <button mat-menu-item (click)="onNavigate($event, ['/filieres'])">
         <mat-icon>school</mat-icon>
         <span>Filières</span>
       </button>
-      <button mat-menu-item [routerLink]="['/symbols']">
+      <button mat-menu-item (click)="onNavigate($event, ['/symbols'])">
         <mat-icon>star</mat-icon>
         <span>Symboles</span>
       </button>
-      <button mat-menu-item [routerLink]="['/table']">
+      <button mat-menu-item (click)="onNavigate($event, ['/table'])">
         <mat-icon>table_chart</mat-icon>
         <span>Table</span>
       </button>
       <mat-divider></mat-divider>
-      <button mat-menu-item [routerLink]="['/significations']">
+      <button mat-menu-item (click)="onNavigate($event, ['/significations'])">
         <mat-icon>label</mat-icon>
         <span>Significations</span>
       </button>
-      <button mat-menu-item [routerLink]="['/placements']">
+      <button mat-menu-item (click)="onNavigate($event, ['/placements'])">
         <mat-icon>military_tech</mat-icon>
         <span>Décernements</span>
       </button>
-      <button mat-menu-item [routerLink]="['/symbols-accessory']">
+      <button mat-menu-item (click)="onNavigate($event, ['/symbols-accessory'])">
         <mat-icon>auto_awesome</mat-icon>
         <span>Symboles accessoires</span>
       </button>
-      <button mat-menu-item [routerLink]="['/positions']">
+      <button mat-menu-item (click)="onNavigate($event, ['/positions'])">
         <mat-icon>location_on</mat-icon>
         <span>Positions</span>
       </button>
-      <button mat-menu-item [routerLink]="['/circulaires']">
+      <button mat-menu-item (click)="onNavigate($event, ['/circulaires'])">
         <mat-icon>circle</mat-icon>
         <span>Circulaires</span>
       </button>
-      <button mat-menu-item [routerLink]="['/colors']">
+      <button mat-menu-item (click)="onNavigate($event, ['/colors'])">
         <mat-icon>palette</mat-icon>
         <span>Couleurs</span>
       </button>

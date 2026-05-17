@@ -76,6 +76,23 @@ export class TopBarComponent implements OnInit {
     this.router.navigate(['/relation/new']);
   }
 
+  private navigateWithCtrlClick(event: MouseEvent, path: string[]): void {
+    event.preventDefault();
+    event.stopPropagation();
+    
+    if (event.ctrlKey || event.metaKey) {
+      const urlPath = this.router.createUrlTree(path).toString();
+      const url = `${window.location.origin}${window.location.pathname}#${urlPath}`;
+      window.open(url, '_blank');
+    } else {
+      this.router.navigate(path);
+    }
+  }
+
+  protected onNavigate(event: MouseEvent, path: string[]): void {
+    this.navigateWithCtrlClick(event, path);
+  }
+
   protected onLogin(): void {
     const dialogRef = this.dialog.open(LoginDialogComponent, {
       width: '400px',
