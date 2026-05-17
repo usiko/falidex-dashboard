@@ -1,4 +1,6 @@
 import { signalStore, withState, withMethods, patchState } from '@ngrx/signals';
+import { inject } from '@angular/core';
+import { SelectedRelationStorageService } from '../../services/storage/selected-relation-storage.service';
 
 interface SelectedRelationState {
   selectedRelationId: string | null;
@@ -13,13 +15,24 @@ export const SelectedRelationStore = signalStore(
     isEditable:false,
     isNational:false
   }),
-  withMethods((store) => ({
-    setSelectedRelationId(relationId: string,isEditable:boolean|undefined, isNational:boolean|undefined): void {
+  withMethods((store) => {
+    const storageService = inject(SelectedRelationStorageService);
+    
+    return {
+      setSelectedRelationId(relationId: string, isEditable: boolean | undefined, isNational: boolean | undefined): void {
+        patchState(store, { 
+          selectedRelationId: relationId,
+          isEditable: isEditable !== undefined ? isEditable : true,
+          isNational: isNational !== undefined ? isNational : false 
+        });
         
-      patchState(store, { selectedRelationId: relationId,isEditable:isEditable!==undefined?isEditable:true,isNational:isNational!==undefined?isNational:false });
-    },
-    clearSelection(): void {
-      patchState(store, { selectedRelationId: null });
-    }
-  }))
+        // Sauvegarder dans le localStorage
+        storageService.saveSelectedRelationId(relationId);
+      },
+      clearSelection(): void {
+        patchState(store, { selectedRelationId: null });
+        storageService.clearSelectedRelationId();
+      }
+    };
+  })
 );
