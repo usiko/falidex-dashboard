@@ -71,12 +71,17 @@ export class SymbolCardComponent {
   }
 
   onCardClick(event: MouseEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    
     // Gérer Ctrl+Click pour ouvrir dans un nouvel onglet
     if (event.ctrlKey || event.metaKey) {
-      event.preventDefault();
-      const url = this.router.createUrlTree(['/symbole', this.symbol().id]).toString();
+      const path = this.router.createUrlTree(['/symbole', this.symbol().id]).toString();
+      const url = `${window.location.origin}${window.location.pathname}#${path}`;
       window.open(url, '_blank');
+    } else {
+      // Click normal: naviguer
+      this.router.navigate(['/symbole', this.symbol().id]);
     }
-    // Sinon routerLink gère la navigation
   }
 }

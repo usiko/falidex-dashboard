@@ -1,4 +1,4 @@
-<mat-card class="symbol-card" [class.inactive]="inactive()" (click)="onCardClick($event)" [routerLink]="['/symbole', symbol().id]" style="cursor: pointer;">
+<mat-card class="symbol-card" [class.inactive]="inactive()" (click)="onCardClick($event)" style="cursor: pointer;">
     <mat-card-header>
       @let imgs = symbol().imgs;
       @if (imgs && imgs.length > 0) {

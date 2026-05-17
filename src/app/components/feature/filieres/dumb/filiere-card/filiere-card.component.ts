@@ -46,12 +46,17 @@ export class FiliereCardComponent {
   }
 
   onCardClick(event: MouseEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    
     // Gérer Ctrl+Click pour ouvrir dans un nouvel onglet
     if (event.ctrlKey || event.metaKey) {
-      event.preventDefault();
-      const url = this.router.createUrlTree(['/filiere', this.filiere().id]).toString();
+      const path = this.router.createUrlTree(['/filiere', this.filiere().id]).toString();
+      const url = `${window.location.origin}${window.location.pathname}#${path}`;
       window.open(url, '_blank');
+    } else {
+      // Click normal: naviguer
+      this.router.navigate(['/filiere', this.filiere().id]);
     }
-    // Sinon routerLink gère la navigation
   }
 }

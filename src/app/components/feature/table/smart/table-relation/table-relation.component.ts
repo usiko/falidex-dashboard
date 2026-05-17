@@ -224,12 +224,17 @@ export class TableRelationComponent {
   }
 
   onEditClick(event: MouseEvent, rowId: string) {
+    event.preventDefault();
+    event.stopPropagation();
+    
     // Gérer Ctrl+Click pour ouvrir dans un nouvel onglet
     if (event.ctrlKey || event.metaKey) {
-      event.preventDefault();
-      const url = this.router.createUrlTree(['/relation', rowId, 'item', 'edit']).toString();
+      const path = this.router.createUrlTree(['/relation', rowId, 'item', 'edit']).toString();
+      const url = `${window.location.origin}${window.location.pathname}#${path}`;
       window.open(url, '_blank');
+    } else {
+      // Click normal: naviguer
+      this.router.navigate(['/relation', rowId, 'item', 'edit']);
     }
-    // Sinon routerLink gère la navigation
   }
 }
