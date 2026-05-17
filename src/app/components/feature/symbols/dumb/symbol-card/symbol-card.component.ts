@@ -1,6 +1,5 @@
 import { Component, input, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
@@ -34,7 +33,6 @@ export class SymbolCardComponent {
   relationTypeStats = input<RelationTypeStats[]>([]);
   inactive = input<boolean>(false);
   
-  private readonly router = inject(Router);
   private readonly dialog = inject(MatDialog);
   protected openTooltipIndex = signal<number | null>(null);
   
@@ -50,9 +48,7 @@ export class SymbolCardComponent {
     return this.openTooltipIndex() === index;
   }
   
-  navigateToDetail() {
-    this.router.navigate(['/symbole', this.symbol().id]);
-  }
+
   
   openImageCarousel(event: Event, index: number) {
     event.stopPropagation();

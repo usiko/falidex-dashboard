@@ -1,6 +1,5 @@
 import { Component, input, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
@@ -32,7 +31,6 @@ export class FiliereCardComponent {
   symboleCombinations = input<FiliereCombination[]>([]);
   symbolImageUrl = input<string | undefined>();
   
-  private readonly router = inject(Router);
   protected isTooltipOpen = signal(false);
   
   showTooltip() {
@@ -43,7 +41,5 @@ export class FiliereCardComponent {
     this.isTooltipOpen.set(false);
   }
   
-  navigateToDetail() {
-    this.router.navigate(['/filiere', this.filiere().id]);
-  }
+
 }

@@ -1,8 +1,9 @@
-<mat-card class="symbol-card" [class.inactive]="inactive()" (click)="navigateToDetail()">
-  <mat-card-header>
-    @let imgs = symbol().imgs;
-    @if (imgs && imgs.length > 0) {
-      <div class="symbol-image-container" mat-card-avatar (click)="openImageCarousel($event, 0)">
+<a [href]="'/symbole/' + symbol().id" class="symbol-card-link">
+  <mat-card class="symbol-card" [class.inactive]="inactive()">
+    <mat-card-header>
+      @let imgs = symbol().imgs;
+      @if (imgs && imgs.length > 0) {
+        <div class="symbol-image-container" mat-card-avatar (click)="openImageCarousel($event, 0)">
         <img [src]="imgs[0].url" [alt]="symbol().name" class="symbol-image">
         @if (imgs.length > 1) {
           <div class="image-count-badge">{{ imgs.length }}</div>
@@ -23,7 +24,7 @@
               #trigger="cdkOverlayOrigin"
               (mouseenter)="showTooltip(idx)"
               (mouseleave)="hideTooltip()"
-              (click)="$event.stopPropagation()">
+              (click)="$event.preventDefault(); $event.stopPropagation()">
               {{ relStat.count }} {{ relStat.typeName }}@if (relStat.speCount > 0) {<span class="spe-count"> ({{ relStat.speCount }} spe)</span>}
             </mat-chip>
             
@@ -49,4 +50,5 @@
       </div>
     </mat-card-content>
   }
-</mat-card>
+  </mat-card>
+</a>

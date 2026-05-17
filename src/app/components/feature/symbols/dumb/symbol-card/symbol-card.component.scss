@@ -1,3 +1,13 @@
+.symbol-card-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  
+  &:visited {
+    color: inherit;
+  }
+}
+
 .symbol-card {
   cursor: pointer;
   transition: transform 0.2s, box-shadow 0.2s;
