@@ -9,7 +9,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { TruncateTooltipDirective } from '../../../../shared/truncate-tooltip/truncate-tooltip.directive';
 import { ConfirmDialogComponent } from '../../../../shared/confirm-dialog/confirm-dialog.component';
 import { CurrentUserStore } from '../../../../../stores/current-user/current-user.store';
@@ -69,6 +69,7 @@ export class TableRelationComponent {
   private readonly symbolAccessoryStore = inject(SymbolAccessoryStore);
   private readonly currentUserStore = inject(CurrentUserStore);
   private readonly dialog = inject(MatDialog);
+  private readonly router = inject(Router);
 
   readonly isLoggedIn = computed(() => this.currentUserStore.user() !== null);
 
@@ -207,5 +208,15 @@ export class TableRelationComponent {
         this.links.remove(relationId);
       }
     });
+  }
+
+  onEditClick(event: MouseEvent, rowId: string) {
+    // Gérer Ctrl+Click pour ouvrir dans un nouvel onglet
+    if (event.ctrlKey || event.metaKey) {
+      event.preventDefault();
+      const url = this.router.createUrlTree(['/relation', rowId, 'item', 'edit']).toString();
+      window.open(url, '_blank');
+    }
+    // Sinon routerLink gère la navigation
   }
 }

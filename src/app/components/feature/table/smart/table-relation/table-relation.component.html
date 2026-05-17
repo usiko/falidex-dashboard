@@ -161,9 +161,9 @@
       <th mat-header-cell *matHeaderCellDef></th>
       <td mat-cell *matCellDef="let row">
         @if (isLoggedIn()) {
-          <a mat-icon-button color="primary" [href]="'/relation/' + row.id + '/item/edit'" matTooltip="Modifier" class="edit-button">
+          <button mat-icon-button color="primary" [routerLink]="['/relation', row.id, 'item', 'edit']" (click)="onEditClick($event, row.id)" matTooltip="Modifier">
             <mat-icon>edit</mat-icon>
-          </a>
+          </button>
           <button mat-icon-button color="warn" (click)="onDeleteRelation(row.id)" matTooltip="Supprimer">
             <mat-icon>delete</mat-icon>
           </button>

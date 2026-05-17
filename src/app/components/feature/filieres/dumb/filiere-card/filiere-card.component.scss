@@ -1,13 +1,3 @@
-.filiere-card-link {
-  text-decoration: none;
-  color: inherit;
-  display: block;
-  
-  &:visited {
-    color: inherit;
-  }
-}
-
 .filiere-card {
   cursor: pointer;
   transition: transform 0.2s, box-shadow 0.2s;

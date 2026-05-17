@@ -1,5 +1,4 @@
-<a [href]="'/filiere/' + filiere().id" class="filiere-card-link">
-  <mat-card class="filiere-card" [class.inactive]="inactive()">
+<mat-card class="filiere-card" [class.inactive]="inactive()" (click)="onCardClick($event)" [routerLink]="['/filiere', filiere().id]" style="cursor: pointer;">
     <mat-card-header>
       @if (symbolImageUrl()) {
         <img [src]="symbolImageUrl()" alt="Symbol" class="symbol-avatar" mat-card-avatar />
@@ -39,4 +38,3 @@
     </ng-template>
   }
   </mat-card>
-</a>

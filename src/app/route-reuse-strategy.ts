@@ -4,9 +4,17 @@ export class CustomRouteReuseStrategy implements RouteReuseStrategy {
   private handlers: Map<string, DetachedRouteHandle> = new Map();
 
   // Liste des routes à réutiliser (pages de liste)
+  // La réutilisation de route préserve l'état des composants (signaux, filtres, scroll)
   private readonly routesToCache = [
     '/symbols',
-    '/filieres'
+    '/filieres',
+    '/table',
+    '/colors',
+    '/circulaires',
+    '/placements',
+    '/positions',
+    '/significations',
+    '/symbols-accessory'
   ];
 
   shouldDetach(route: ActivatedRouteSnapshot): boolean {
@@ -48,9 +56,11 @@ export class CustomRouteReuseStrategy implements RouteReuseStrategy {
     while (currentRoute) {
       if (currentRoute.routeConfig && currentRoute.routeConfig.path) {
         const segment = currentRoute.routeConfig.path;
-        // Ignorer les segments avec paramètres pour cette stratégie
-        if (!segment.includes(':')) {
-          path = '/' + segment + path;
+        // Extraire seulement la partie avant le paramètre (avant ':')
+        const basePath = segment.split(':')[0];
+        
+        if (basePath) {
+          path = '/' + basePath + path;
         }
       }
       currentRoute = currentRoute.parent;

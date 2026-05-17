@@ -1,5 +1,6 @@
 import { Component, input, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router, RouterModule } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
@@ -17,7 +18,8 @@ import { FiliereCombinationsTooltipComponent } from '../filiere-combinations-too
     MatChipsModule,
     MatIconModule,
     OverlayModule,
-    FiliereCombinationsTooltipComponent
+    FiliereCombinationsTooltipComponent,
+    RouterModule
   ],
   templateUrl: './filiere-card.component.html',
   styleUrl: './filiere-card.component.scss'
@@ -28,6 +30,8 @@ export class FiliereCardComponent {
   speCount = input<number>(0);
   inactive = input<boolean>(false);
   symboleNames = input<string[]>([]);
+  
+  private readonly router = inject(Router);
   symboleCombinations = input<FiliereCombination[]>([]);
   symbolImageUrl = input<string | undefined>();
   
@@ -40,6 +44,14 @@ export class FiliereCardComponent {
   hideTooltip() {
     this.isTooltipOpen.set(false);
   }
-  
 
+  onCardClick(event: MouseEvent) {
+    // Gérer Ctrl+Click pour ouvrir dans un nouvel onglet
+    if (event.ctrlKey || event.metaKey) {
+      event.preventDefault();
+      const url = this.router.createUrlTree(['/filiere', this.filiere().id]).toString();
+      window.open(url, '_blank');
+    }
+    // Sinon routerLink gère la navigation
+  }
 }
