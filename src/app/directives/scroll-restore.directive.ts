@@ -54,8 +54,8 @@ export class ScrollRestoreDirective implements OnInit, OnDestroy {
       .pipe(filter(event => event instanceof NavigationStart))
       .subscribe(() => {
         console.log(`[ScrollRestoreDirective] Sauvegarde avant navigation (${key})`);
-        this.ignoreScrollEvents = true; // Ignorer les scroll events pendant la navigation
         this.saveScrollPosition();
+        this.ignoreScrollEvents = true; // Ignorer les scroll events pendant la navigation
       });
     this.navigationSubscriptions.push(navStart);
 
