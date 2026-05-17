@@ -3,7 +3,9 @@
       @if (symbolImageUrl()) {
         <img [src]="symbolImageUrl()" alt="Symbol" class="symbol-avatar" mat-card-avatar />
       } @else {
-        <mat-icon mat-card-avatar>school</mat-icon>
+        <div class="symbol-avatar" mat-card-avatar>
+          <mat-icon>school</mat-icon>
+        </div>
       }
       <mat-card-title>{{ filiere().name }}</mat-card-title>
     </mat-card-header>
@@ -36,5 +38,16 @@
         <app-filiere-combinations-tooltip [combinations]="symboleCombinations()" />
       </div>
     </ng-template>
+  } @else {
+    <mat-card-content>
+      <div class="combinations-info">
+        <mat-chip-set>
+          <mat-chip disabled>
+            <mat-icon matChipAvatar>info</mat-icon>
+            Aucune donnée
+          </mat-chip>
+        </mat-chip-set>
+      </div>
+    </mat-card-content>
   }
   </mat-card>

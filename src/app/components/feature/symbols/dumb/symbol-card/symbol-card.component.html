@@ -9,7 +9,9 @@
         }
       </div>
     } @else {
-      <mat-icon mat-card-avatar>hide_image</mat-icon>
+      <div class="symbol-image-container" mat-card-avatar>
+        <mat-icon>hide_image</mat-icon>
+      </div>
     }
     <mat-card-title>{{ symbol().name }}</mat-card-title>
   </mat-card-header>
@@ -45,6 +47,17 @@
               </div>
             </ng-template>
           }
+        </mat-chip-set>
+      </div>
+    </mat-card-content>
+  } @else {
+    <mat-card-content>
+      <div class="combinations-info">
+        <mat-chip-set>
+          <mat-chip disabled>
+            <mat-icon matChipAvatar>info</mat-icon>
+            Aucune relation
+          </mat-chip>
         </mat-chip-set>
       </div>
     </mat-card-content>

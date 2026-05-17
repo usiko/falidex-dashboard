@@ -69,6 +69,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 24px;
+  align-items: stretch;
 
   @media (max-width: 599px) {
     grid-template-columns: 1fr;
@@ -77,6 +78,10 @@
 }
 
 .color-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
   mat-card-header {
     display: flex;
     align-items: center;
