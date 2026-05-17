@@ -1,6 +1,8 @@
 <mat-card class="circulaire-card">
   <mat-card-header>
-    <mat-icon mat-card-avatar>circle</mat-icon>
+    <div class="circulaire-image-container" mat-card-avatar>
+      <mat-icon>circle</mat-icon>
+    </div>
     <mat-card-title>{{ circulaire.name }}</mat-card-title>
     <mat-card-subtitle>
       {{ circulaire.matiere }}
@@ -16,6 +18,15 @@
             <div class="color-chip" [style.background-color]="color.colorData" [matTooltip]="color.name || 'Sans nom'"></div>
           }
         </div>
+      </div>
+    } @else {
+      <div class="colors-container">
+        <mat-chip-set>
+          <mat-chip disabled>
+            <mat-icon matChipAvatar>info</mat-icon>
+            Aucune couleur
+          </mat-chip>
+        </mat-chip-set>
       </div>
     }
   </mat-card-content>

@@ -1,6 +1,6 @@
 import { Component, input, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
@@ -24,7 +24,8 @@ import { ImageCarouselDialogComponent } from '../../dialogs/image-carousel-dialo
     MatBadgeModule,
     OverlayModule,
     SymbolPositionTooltipComponent,
-    FiliereCombinationsTooltipComponent
+    FiliereCombinationsTooltipComponent,
+    RouterModule
   ],
   templateUrl: './symbol-card.component.html',
   styleUrl: './symbol-card.component.scss'
@@ -34,8 +35,8 @@ export class SymbolCardComponent {
   relationTypeStats = input<RelationTypeStats[]>([]);
   inactive = input<boolean>(false);
   
-  private readonly router = inject(Router);
   private readonly dialog = inject(MatDialog);
+  private readonly router = inject(Router);
   protected openTooltipIndex = signal<number | null>(null);
   
   showTooltip(index: number) {
@@ -50,9 +51,7 @@ export class SymbolCardComponent {
     return this.openTooltipIndex() === index;
   }
   
-  navigateToDetail() {
-    this.router.navigate(['/symbole', this.symbol().id]);
-  }
+
   
   openImageCarousel(event: Event, index: number) {
     event.stopPropagation();
@@ -69,5 +68,20 @@ export class SymbolCardComponent {
       maxHeight: '90vh',
       panelClass: 'image-carousel-dialog'
     });
+  }
+
+  onCardClick(event: MouseEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    
+    // Gérer Ctrl+Click pour ouvrir dans un nouvel onglet
+    if (event.ctrlKey || event.metaKey) {
+      const path = this.router.createUrlTree(['/symbole', this.symbol().id]).toString();
+      const url = `${window.location.origin}${window.location.pathname}#${path}`;
+      window.open(url, '_blank');
+    } else {
+      // Click normal: naviguer
+      this.router.navigate(['/symbole', this.symbol().id]);
+    }
   }
 }

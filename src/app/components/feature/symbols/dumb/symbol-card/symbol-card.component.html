@@ -1,15 +1,17 @@
-<mat-card class="symbol-card" [class.inactive]="inactive()" (click)="navigateToDetail()">
-  <mat-card-header>
-    @let imgs = symbol().imgs;
-    @if (imgs && imgs.length > 0) {
-      <div class="symbol-image-container" mat-card-avatar (click)="openImageCarousel($event, 0)">
+<mat-card class="symbol-card" [class.inactive]="inactive()" (click)="onCardClick($event)" style="cursor: pointer;">
+    <mat-card-header>
+      @let imgs = symbol().imgs;
+      @if (imgs && imgs.length > 0) {
+        <div class="symbol-image-container" mat-card-avatar (click)="openImageCarousel($event, 0)">
         <img [src]="imgs[0].url" [alt]="symbol().name" class="symbol-image">
         @if (imgs.length > 1) {
           <div class="image-count-badge">{{ imgs.length }}</div>
         }
       </div>
     } @else {
-      <mat-icon mat-card-avatar>hide_image</mat-icon>
+      <div class="symbol-image-container" mat-card-avatar>
+        <mat-icon>hide_image</mat-icon>
+      </div>
     }
     <mat-card-title>{{ symbol().name }}</mat-card-title>
   </mat-card-header>
@@ -23,7 +25,7 @@
               #trigger="cdkOverlayOrigin"
               (mouseenter)="showTooltip(idx)"
               (mouseleave)="hideTooltip()"
-              (click)="$event.stopPropagation()">
+              (click)="$event.preventDefault(); $event.stopPropagation()">
               {{ relStat.count }} {{ relStat.typeName }}@if (relStat.speCount > 0) {<span class="spe-count"> ({{ relStat.speCount }} spe)</span>}
             </mat-chip>
             
@@ -48,5 +50,16 @@
         </mat-chip-set>
       </div>
     </mat-card-content>
+  } @else {
+    <mat-card-content>
+      <div class="combinations-info">
+        <mat-chip-set>
+          <mat-chip disabled>
+            <mat-icon matChipAvatar>info</mat-icon>
+            Aucune relation
+          </mat-chip>
+        </mat-chip-set>
+      </div>
+    </mat-card-content>
   }
-</mat-card>
+  </mat-card>

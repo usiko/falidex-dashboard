@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { ScrollRestoreDirective } from '../../../../directives/scroll-restore.directive';
 import { TableRelationComponent } from '../smart/table-relation/table-relation.component';
 import { CurrentUserStore } from '../../../../stores/current-user/current-user.store';
 import { linkStore } from '../../../../stores/links/links.store';
@@ -19,7 +20,7 @@ import { SymbolAccessoryStore } from '../../../../stores/symbols-accessory/symbo
 @Component({
   selector: 'app-table-list-page',
   standalone: true,
-  imports: [CommonModule, MatIconModule, MatButtonModule, MatProgressSpinnerModule, TableRelationComponent],
+  imports: [CommonModule, MatIconModule, MatButtonModule, MatProgressSpinnerModule, TableRelationComponent, ScrollRestoreDirective],
   templateUrl: './table-list.page.html',
   styleUrl: './table-list.page.scss'
 })

@@ -1,6 +1,6 @@
 import { Component, input, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
@@ -18,7 +18,8 @@ import { FiliereCombinationsTooltipComponent } from '../filiere-combinations-too
     MatChipsModule,
     MatIconModule,
     OverlayModule,
-    FiliereCombinationsTooltipComponent
+    FiliereCombinationsTooltipComponent,
+    RouterModule
   ],
   templateUrl: './filiere-card.component.html',
   styleUrl: './filiere-card.component.scss'
@@ -29,10 +30,11 @@ export class FiliereCardComponent {
   speCount = input<number>(0);
   inactive = input<boolean>(false);
   symboleNames = input<string[]>([]);
+  
+  private readonly router = inject(Router);
   symboleCombinations = input<FiliereCombination[]>([]);
   symbolImageUrl = input<string | undefined>();
   
-  private readonly router = inject(Router);
   protected isTooltipOpen = signal(false);
   
   showTooltip() {
@@ -42,8 +44,19 @@ export class FiliereCardComponent {
   hideTooltip() {
     this.isTooltipOpen.set(false);
   }
-  
-  navigateToDetail() {
-    this.router.navigate(['/filiere', this.filiere().id]);
+
+  onCardClick(event: MouseEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    
+    // Gérer Ctrl+Click pour ouvrir dans un nouvel onglet
+    if (event.ctrlKey || event.metaKey) {
+      const path = this.router.createUrlTree(['/filiere', this.filiere().id]).toString();
+      const url = `${window.location.origin}${window.location.pathname}#${path}`;
+      window.open(url, '_blank');
+    } else {
+      // Click normal: naviguer
+      this.router.navigate(['/filiere', this.filiere().id]);
+    }
   }
 }

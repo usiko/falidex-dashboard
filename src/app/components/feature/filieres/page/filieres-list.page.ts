@@ -8,6 +8,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatDialog } from '@angular/material/dialog';
 import { FormsModule } from '@angular/forms';
+import { ScrollRestoreDirective } from '../../../../directives/scroll-restore.directive';
 import { FiliereStore } from '../../../../stores/filieres/filieres.store';
 import { FiliereItemComponent } from '../smart/filiere-item/filiere-item.component';
 import { linkStore } from '../../../../stores/links/links.store';
@@ -41,7 +42,8 @@ function normalizeString(str: string): string {
     MatButtonToggleModule,
     MatSlideToggleModule,
     FormsModule,
-    FiliereItemComponent
+    FiliereItemComponent,
+    ScrollRestoreDirective
   ],
   templateUrl: './filieres-list.page.html',
   styleUrl: './filieres-list.page.scss'

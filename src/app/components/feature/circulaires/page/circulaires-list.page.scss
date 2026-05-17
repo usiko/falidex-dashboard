@@ -69,6 +69,12 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 24px;
+  align-items: stretch;
+
+  app-circulaire-card {
+    display: flex;
+    flex-direction: column;
+  }
 
   @media (max-width: 599px) {
     grid-template-columns: 1fr;

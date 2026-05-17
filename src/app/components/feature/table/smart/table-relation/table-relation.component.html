@@ -1,5 +1,5 @@
 <div class="table-wrapper mat-elevation-z2">
-  <div class="table-scroll">
+  <div class="table-scroll" [appScrollRestore]="'/table/scroll'">
   <table mat-table [dataSource]="paginatedRows()" matSort (matSortChange)="onSortChange($event)">
 
     <!-- Filière -->
@@ -161,7 +161,7 @@
       <th mat-header-cell *matHeaderCellDef></th>
       <td mat-cell *matCellDef="let row">
         @if (isLoggedIn()) {
-          <button mat-icon-button color="primary" [routerLink]="['/relation', row.id, 'item', 'edit']" matTooltip="Modifier">
+          <button mat-icon-button color="primary" (click)="onEditClick($event, row.id)" matTooltip="Modifier">
             <mat-icon>edit</mat-icon>
           </button>
           <button mat-icon-button color="warn" (click)="onDeleteRelation(row.id)" matTooltip="Supprimer">

@@ -3,6 +3,7 @@ import { RouterOutlet } from '@angular/router';
 import { concatMap, forkJoin, from, map, mergeMap, toArray } from 'rxjs';
 import { TopBarComponent } from './components/feature/dashboard/smart/top-bar/top-bar.component';
 import { DataService } from './services/data/data.service';
+import { SelectedRelationStorageService } from './services/storage/selected-relation-storage.service';
 import { CirculaireColorStore } from './stores/circulaires-colors/circulaires-colors.store';
 import { CirculaireStore } from './stores/circulaires/circulaires.store';
 import { CodeSpeStore } from './stores/codes-spe/codes-spe.store';
@@ -30,6 +31,7 @@ export class App implements OnInit {
   protected readonly title = signal('falidex-dashboard');
 
   private readonly dataService = inject(DataService);
+  private readonly selectedRelationStorageService = inject(SelectedRelationStorageService);
   private readonly circulaireStore = inject(CirculaireStore);
   private readonly filiereStore = inject(FiliereStore);
   private readonly symbolStore = inject(SymbolStore);
@@ -129,11 +131,31 @@ export class App implements OnInit {
         this.relationDataStore.setLoading(false);
         this.linkStore.setLoading(false);
 
-        // Initialiser la relation sélectionnée par défaut avec la première relation
+        // Initialiser la relation sélectionnée
         const relations = data.relations;
-        if (relations.length > 0 && relations[0].id) {
-          this.selectedRelationStore.setSelectedRelationId(relations[0].id,relations[0].editable,relations[0].national);
-          this.linkStore.set(relations[0].relations);
+        if (relations.length > 0) {
+          // Essayer de charger la relation précédemment sélectionnée depuis le localStorage
+          const savedRelationId = this.selectedRelationStorageService.getSelectedRelationId();
+          const savedRelation = savedRelationId 
+            ? relations.find(r => r.id === savedRelationId)
+            : null;
+
+          // Utiliser la relation sauvegardée ou la première relation
+          const selectedRelation = savedRelation || relations[0];
+          
+          if (selectedRelation && selectedRelation.id) {
+            this.selectedRelationStore.setSelectedRelationId(
+              selectedRelation.id,
+              selectedRelation.editable,
+              selectedRelation.national
+            );
+            this.linkStore.set(selectedRelation.relations);
+            
+            // Sauvegarder cette sélection
+            this.selectedRelationStorageService.saveSelectedRelationId(selectedRelation.id);
+            
+            console.log(`✅ Relation sélectionnée: ${selectedRelation.id} (${savedRelation ? 'sauvegardée' : 'première'})`);
+          }
         }
 
         console.log('✅ Toutes les données ont été chargées dans les stores');

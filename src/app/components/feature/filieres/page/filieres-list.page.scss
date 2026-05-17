@@ -105,9 +105,17 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 24px;
+  align-items: stretch;
+
+  app-filiere-item {
+    display: flex;
+    flex-direction: column;
+  }
+
   .spinner-wrapper {
     grid-column: 1 / -1;
   }
+
   @media (max-width: 599px) {
     grid-template-columns: 1fr;
     gap: 16px;
