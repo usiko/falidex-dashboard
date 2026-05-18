@@ -1,4 +1,4 @@
-import { Component, inject, computed, OnInit } from '@angular/core';
+import { Component, inject, computed, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSelectModule } from '@angular/material/select';
@@ -44,6 +44,9 @@ export class TopBarComponent implements OnInit {
   private readonly authService = inject(AuthService);
   private readonly currentUserStore = inject(CurrentUserStore);
 
+  // Theme management
+  protected readonly isDarkMode = signal<boolean>(false);
+
   // Utiliser le store pour l'utilisateur courant
   protected readonly currentUser = this.currentUserStore.user;
   protected readonly isLoggedIn = computed(() => !!this.currentUser());
@@ -57,12 +60,33 @@ export class TopBarComponent implements OnInit {
   });
 
   ngOnInit(): void {
+    // Load theme preference from localStorage
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+      this.isDarkMode.set(true);
+      document.documentElement.setAttribute('data-theme', 'dark');
+    }
+
     // Sélectionner la première relation par défaut
     const entities = this.relations();
     if (entities.length && !this.selectedRelationId()) {
       this.onRelationChange(entities[0].id);
     }
   }
+
+  protected toggleTheme(): void {
+    const isDark = !this.isDarkMode();
+    this.isDarkMode.set(isDark);
+    
+    if (isDark) {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      localStorage.setItem('theme', 'dark');
+    } else {
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('theme', 'light');
+    }
+  }
+
   protected onRelationChange(relationId: string): void {
     const relation = this.relationStore.entityMap()[relationId];
     if (relation) {

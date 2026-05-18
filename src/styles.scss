@@ -4,19 +4,111 @@
 // Learn more about theming and how to use it for your application's
 // custom components at https://material.angular.dev/guide/theming
 @use '@angular/material' as mat;
+@use 'sass:map';
+
+// Custom color palettes
+$primary-palette: (
+  0: #000000,
+  10: #33050f,
+  20: #5c0a1f,
+  25: #74121c,
+  30: #8d1b28,
+  35: #a72534,
+  40: #c12d3e,
+  50: #dc092c,
+  60: #f2384a,
+  70: #ff8a9b,
+  80: #ffb3c1,
+  90: #ffdce2,
+  95: #fff0f1,
+  99: #fffbfa,
+  100: #ffffff,
+);
+
+$secondary-palette: (
+  0: #000000,
+  10: #1a2532,
+  20: #2d3a4a,
+  25: #354256,
+  30: #3d4a63,
+  35: #465370,
+  40: #50617d,
+  50: #5f768e,
+  60: #7a8fa3,
+  70: #96a8b8,
+  80: #b3c1cd,
+  90: #cfdae3,
+  95: #dde9f0,
+  99: #faf8f8,
+  100: #ffffff,
+);
+
+$tertiary-palette: (
+  0: #000000,
+  10: #3d1f20,
+  20: #5c3233,
+  25: #704145,
+  30: #854e57,
+  35: #9b5b66,
+  40: #b26975,
+  50: #b46a6a,
+  60: #c88589,
+  70: #dda3a3,
+  80: #f3bfbf,
+  90: #ffdad8,
+  95: #ffe9e8,
+  99: #fffbfa,
+  100: #ffffff,
+);
 
 html {
   height: 100%;
+  
+  // Light theme (default)
   @include mat.theme(
     (
       color: (
-        primary: mat.$azure-palette,
-        tertiary: mat.$blue-palette,
+        primary: $primary-palette,
+        tertiary: $tertiary-palette,
       ),
       typography: Roboto,
       density: 0,
     )
   );
+}
+
+// Dark theme
+html[data-theme="dark"] {
+  color-scheme: dark;
+  
+  // Override with dark theme colors
+  --mat-sys-primary: #f2384a;
+  --mat-sys-on-primary: #fff;
+  --mat-sys-primary-container: #8d1b28;
+  --mat-sys-on-primary-container: #ffdce2;
+  
+  --mat-sys-secondary: #7a8fa3;
+  --mat-sys-on-secondary: #fff;
+  --mat-sys-secondary-container: #465370;
+  --mat-sys-on-secondary-container: #cfdae3;
+  
+  --mat-sys-tertiary: #f3bfbf;
+  --mat-sys-on-tertiary: #522a2b;
+  --mat-sys-tertiary-container: #704145;
+  --mat-sys-on-tertiary-container: #ffdad8;
+  
+  --mat-sys-surface: #1c1f24;
+  --mat-sys-on-surface: #e5e1e6;
+  --mat-sys-surface-dim: #131417;
+  --mat-sys-surface-bright: #373d46;
+  --mat-sys-surface-container-lowest: #0d0f13;
+  --mat-sys-surface-container-low: #25282e;
+  --mat-sys-surface-container: #2a2e35;
+  --mat-sys-surface-container-high: #353a42;
+  --mat-sys-surface-container-highest: #40454d;
+  
+  --mat-sys-background: #1c1f24;
+  --mat-sys-on-background: #e5e1e6;
 }
 
 .spinner-wrapper {
@@ -27,9 +119,7 @@ html {
 }
 
 body {
-  // Default the application to a light color theme. This can be changed to
-  // `dark` to enable the dark color theme, or to `light dark` to defer to the
-  // user's system settings.
+  // Default the application to a light color theme
   color-scheme: light;
 
   // Set a default background, font and text colors for the application using
@@ -42,13 +132,22 @@ body {
   // Reset the user agent margin.
   margin: 0;
   height: 100%;
+  
+  // Support system dark mode preference
+  @media (prefers-color-scheme: dark) {
+    &:not([data-theme="light"]) {
+      color-scheme: dark;
+    }
+  }
 }
+
 /* You can add global styles to this file, and also import other style files */
 
 /* Snackbar styles */
 .snackbar-success {
   --mat-snack-bar-container-color: #4caf50 !important;
   --mat-snack-bar-button-color: #fff !important;
+  --mat-snackbar-supporting-text-color: #fff !important;
   --mdc-snackbar-supporting-text-color: #fff !important;
 }
 
@@ -56,10 +155,12 @@ body {
   --mat-snack-bar-container-color: #f44336 !important;
   --mat-snack-bar-button-color: #fff !important;
   --mat-snackbar-supporting-text-color: #fff !important;
+  --mdc-snackbar-supporting-text-color: #fff !important;
 }
 
 .snackbar-info {
   --mat-snack-bar-container-color: #2196f3 !important;
   --mat-snack-bar-button-color: #fff !important;
   --mat-snackbar-supporting-text-color: #fff !important;
+  --mdc-snackbar-supporting-text-color: #fff !important;
 }

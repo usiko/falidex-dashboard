@@ -96,6 +96,11 @@
       </button>
     </mat-menu>
     
+    <!-- Theme toggle button -->
+    <button mat-icon-button (click)="toggleTheme()" [matTooltip]="isDarkMode() ? 'Mode clair' : 'Mode sombre'">
+      <mat-icon>{{ isDarkMode() ? 'light_mode' : 'dark_mode' }}</mat-icon>
+    </button>
+    
     @if (!isLoggedIn()) {
       <button mat-button (click)="onLogin()">
         <mat-icon>login</mat-icon>
