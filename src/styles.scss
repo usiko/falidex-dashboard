@@ -9,19 +9,19 @@
 // Custom color palettes
 $primary-palette: (
   0: #000000,
-  10: #33050f,
-  20: #5c0a1f,
-  25: #74121c,
-  30: #8d1b28,
-  35: #a72534,
-  40: #c12d3e,
-  50: #dc092c,
-  60: #f2384a,
-  70: #ff8a9b,
-  80: #ffb3c1,
-  90: #ffdce2,
-  95: #fff0f1,
-  99: #fffbfa,
+  10: #001d4d,
+  20: #003d7a,
+  25: #004b8f,
+  30: #0059a5,
+  35: #0068bb,
+  40: #0077d2,
+  50: #0086ff,
+  60: #4ca3ff,
+  70: #80b8ff,
+  80: #b3cdff,
+  90: #dae4ff,
+  95: #eef1ff,
+  99: #faf8f8,
   100: #ffffff,
 );
 
@@ -75,6 +75,20 @@ html {
       density: 0,
     )
   );
+  
+  // Explicit light theme variables
+  --mat-sys-surface: #fffbfe;
+  --mat-sys-on-surface: #1c1b1f;
+  --mat-sys-surface-dim: #ded8e1;
+  --mat-sys-surface-bright: #fffbfe;
+  --mat-sys-surface-container-lowest: #ffffff;
+  --mat-sys-surface-container-low: #f7f2fa;
+  --mat-sys-surface-container: #f3eef7;
+  --mat-sys-surface-container-high: #ede7f0;
+  --mat-sys-surface-container-highest: #e8e1eb;
+  --mat-sys-background: #fffbfe;
+  --mat-sys-on-background: #1c1b1f;
+  --mat-sys-error: light-dark(#b3261e, #f2b8b5);
 }
 
 // Dark theme
@@ -82,10 +96,10 @@ html[data-theme="dark"] {
   color-scheme: dark;
   
   // Override with dark theme colors
-  --mat-sys-primary: #f2384a;
+  --mat-sys-primary: #4ca3ff;
   --mat-sys-on-primary: #fff;
-  --mat-sys-primary-container: #8d1b28;
-  --mat-sys-on-primary-container: #ffdce2;
+  --mat-sys-primary-container: #003d7a;
+  --mat-sys-on-primary-container: #eef1ff;
   
   --mat-sys-secondary: #7a8fa3;
   --mat-sys-on-secondary: #fff;
@@ -163,4 +177,133 @@ body {
   --mat-snack-bar-button-color: #fff !important;
   --mat-snackbar-supporting-text-color: #fff !important;
   --mdc-snackbar-supporting-text-color: #fff !important;
+}
+
+/* Scrollbar styles */
+* {
+  scrollbar-color: var(--mat-sys-primary) var(--mat-sys-surface-container);
+  scrollbar-width: thin;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--mat-sys-surface-container);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--mat-sys-primary);
+  border-radius: 5px;
+  
+  &:hover {
+    background: var(--mat-sys-primary-container);
+  }
+}
+
+/* Menu Panel Styling */
+.mat-mdc-menu-panel {
+  background-color: var(--mat-sys-surface-container-high) !important;
+  
+  .mat-mdc-menu-content {
+    background-color: var(--mat-sys-surface-container-high) !important;
+  }
+}
+
+.mat-mdc-menu-item {
+  color: var(--mat-sys-on-surface) !important;
+  
+  &:hover {
+    background-color: var(--mat-sys-surface-container-high) !important;
+  }
+}
+
+/* Dialog Panel Styling */
+.mat-mdc-dialog-container {
+  background-color: var(--mat-sys-surface-container) !important;
+  color: var(--mat-sys-on-surface) !important;
+  border-radius: 28px !important;
+}
+
+mat-dialog-content {
+  background-color: var(--mat-sys-surface-container) !important;
+  color: var(--mat-sys-on-surface) !important;
+}
+
+mat-dialog-actions {
+  background-color: var(--mat-sys-surface-container) !important;
+}
+
+/* Dialog title styling */
+h2[mat-dialog-title] {
+  background-color: var(--mat-sys-surface-container) !important;
+  color: var(--mat-sys-on-surface) !important;
+  margin: 0 !important;
+  padding: 24px 24px 16px !important;
+}
+
+/* Dialog backdrop blur */
+.cdk-overlay-backdrop {
+  backdrop-filter: blur(4px) !important;
+  background-color: rgba(0, 0, 0, 0.32) !important;
+}
+
+/* Form field styling */
+mat-form-field {
+  .mat-mdc-text-field-wrapper {
+    background-color: var(--mat-sys-surface-container) !important;
+    border-radius: 4px;
+  }
+}
+
+mat-form-field .mdc-text-field {
+  background-color: var(--mat-sys-surface-container) !important;
+}
+
+.mat-mdc-input-element {
+  background-color: var(--mat-sys-surface-container) !important;
+  color: var(--mat-sys-on-surface) !important;
+}
+
+/* Button styling - remove box shadows */
+button[mat-button],
+button[mat-raised-button],
+button[mat-icon-button],
+button[mat-fab],
+button[mat-mini-fab] {
+  box-shadow: none !important;
+  
+  &:hover {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08) !important;
+  }
+}
+
+/* Delete buttons - ensure red danger color */
+button[color="warn"] {
+  color: var(--mat-sys-error) !important;
+  
+  mat-icon {
+    color: var(--mat-sys-error) !important;
+  }
+  
+  &:hover:not(:disabled) {
+    background-color: rgba(var(--rgb-error), 0.08) !important;
+  }
+}
+
+/* Primary buttons - ensure primary color for icons */
+button[color="primary"] {
+  color: var(--mat-sys-primary) !important;
+  
+  mat-icon {
+    color: var(--mat-sys-primary) !important;
+  }
+}
+
+/* Tooltips - theme support */
+.mat-mdc-tooltip-panel {
+  background-color: var(--mat-sys-inverse-surface) !important;
+  color: var(--mat-sys-inverse-on-surface) !important;
 }

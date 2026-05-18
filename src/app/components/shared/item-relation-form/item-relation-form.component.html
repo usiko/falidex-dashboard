@@ -40,7 +40,7 @@
           <p><strong>Symbole :</strong> {{ selectedSymbole()!.name }}</p>
         </div>
         @if (!locked().symbole && editable()) {
-          <button mat-stroked-button (click)="openSymboleDialog()">
+          <button mat-stroked-button color="primary" (click)="openSymboleDialog()">
             <mat-icon>edit</mat-icon>
             Changer
           </button>

@@ -93,6 +93,25 @@
   }
 }
 
+/* Action buttons styling */
+.mat-column-actions {
+  button[mat-icon-button] {
+    color: var(--mat-sys-primary) !important;
+    
+    mat-icon {
+      color: var(--mat-sys-primary) !important;
+    }
+    
+    &[color="warn"] {
+      color: var(--mat-sys-error) !important;
+      
+      mat-icon {
+        color: var(--mat-sys-error) !important;
+      }
+    }
+  }
+}
+
 .no-data-cell {
   text-align: center;
   padding: 24px;

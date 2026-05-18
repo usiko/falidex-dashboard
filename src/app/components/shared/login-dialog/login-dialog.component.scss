@@ -4,6 +4,12 @@
   gap: 16px;
   padding: 20px 0;
   min-width: 300px;
+  color: var(--mat-sys-on-surface);
+}
+
+:host {
+  background-color: light-dark(#ede7f0, #353a42);
+  display: block;
 }
 
 .error-message {
@@ -12,9 +18,9 @@
   gap: 8px;
   padding: 12px;
   margin-top: 8px;
-  background-color: #ffebee;
+  background-color: var(--mat-sys-error-container);
   border-radius: 4px;
-  color: #c62828;
+  color: var(--mat-sys-on-error-container);
   font-size: 14px;
 
   mat-icon {
@@ -30,11 +36,15 @@
 
 mat-dialog-content {
   min-height: 200px;
+  background-color: var(--mat-sys-surface-container) !important;
+  color: var(--mat-sys-on-surface) !important;
 }
 
 mat-dialog-actions {
   padding: 16px 24px;
   gap: 8px;
+  background-color: var(--mat-sys-surface-container) !important;
+  color: var(--mat-sys-on-surface) !important;
 
   button {
     display: flex;

@@ -3,10 +3,10 @@
   align-items: center;
   gap: 4px;
   padding: 2px 8px;
-  background: white;
+  background: var(--mat-sys-surface-container);
   border-radius: 12px;
   font-size: 12px;
-  border: 1px solid #e0e0e0;
+  border: 1px solid var(--mat-sys-outline-variant);
   position: relative;
   overflow: hidden;
   
@@ -33,7 +33,7 @@
     width: 10px;
     height: 10px;
     border-radius: 50%;
-    border: 1px solid #ccc;
+    border: 1px solid var(--mat-sys-outline-variant);
     position: relative;
     z-index: 1;
   }

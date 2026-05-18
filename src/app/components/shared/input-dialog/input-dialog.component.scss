@@ -8,6 +8,6 @@ mat-dialog-content {
   
   p {
     margin: 0 0 16px 0;
-    color: #666;
+    color: var(--mat-sys-on-surface-variant);
   }
 }

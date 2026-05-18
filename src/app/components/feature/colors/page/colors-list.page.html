@@ -48,7 +48,7 @@
             </div>
           </mat-card-content>
           <mat-card-actions align="end">
-            <button mat-icon-button (click)="onEdit(color.id, color.name, color.colorData)" matTooltip="Modifier" [disabled]="!isLoggedIn()">
+            <button mat-icon-button color="primary" (click)="onEdit(color.id, color.name, color.colorData)" matTooltip="Modifier" [disabled]="!isLoggedIn()">
               <mat-icon>edit</mat-icon>
             </button>
             <button mat-icon-button color="warn" (click)="onDelete(color.id, color.name)" matTooltip="Supprimer" [disabled]="!isLoggedIn()">
