@@ -10,7 +10,7 @@
   overflow: auto;
   padding: 24px;
   background-color: var(--mat-sys-surface);
-  background-image: url('/textures/noise.png');
+  background-image: url('/textures/noise2.png');
   background-attachment: fixed;
   background-blend-mode: overlay;
   color: var(--mat-sys-on-surface);
@@ -18,4 +18,8 @@
   @media (max-width: 599px) {
     padding: 12px;
   }
+}
+
+html[data-theme="dark"] .app-content {
+  background-image: url('/textures/noise.png');
 }

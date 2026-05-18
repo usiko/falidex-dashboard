@@ -71,14 +71,14 @@
   }
 
   .icon-yes {
-    color: #4caf50;
+    color: var(--mat-sys-primary);
     font-size: 18px;
     width: 18px;
     height: 18px;
   }
 
   .icon-absent {
-    color: #f44336;
+    color: var(--mat-sys-error);
     font-size: 18px;
     width: 18px;
     height: 18px;
@@ -88,7 +88,7 @@
     font-size: 18px;
     width: 18px;
     height: 18px;
-    color: #ff9800;
+    color: var(--mat-sys-primary);
     cursor: pointer;
   }
 }
@@ -96,6 +96,6 @@
 .no-data-cell {
   text-align: center;
   padding: 24px;
-  color: rgba(0, 0, 0, 0.54);
+  color: var(--mat-sys-on-surface-variant);
   font-style: italic;
 }

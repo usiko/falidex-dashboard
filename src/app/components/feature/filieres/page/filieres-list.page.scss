@@ -28,7 +28,7 @@
     margin: 0;
     font-size: 32px;
     font-weight: 500;
-    color: #333;
+    color: var(--mat-sys-on-surface);
 
     @media (max-width: 599px) {
       font-size: 22px;
@@ -38,7 +38,7 @@
       font-size: 36px;
       width: 36px;
       height: 36px;
-      color: #4caf50;
+      color: var(--mat-sys-primary);
 
       @media (max-width: 599px) {
         font-size: 28px;
@@ -78,6 +78,11 @@
   
   .spe-filter,
   .absent-filter {
+    padding: 8px 12px;
+    background-color: var(--mat-sys-surface-container);
+    border-radius: 6px;
+    border: 1px solid var(--mat-sys-outline-variant);
+    
     @media (max-width: 599px) {
       width: 100%;
 
