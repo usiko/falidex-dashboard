@@ -13,7 +13,7 @@
     align-items: center;
     margin-bottom: 24px;
     padding-bottom: 12px;
-    border-bottom: 2px solid #333;
+    border-bottom: 2px solid var(--mat-sys-outline-variant);
     gap: 12px;
     flex-wrap: wrap;
     
@@ -38,7 +38,7 @@
   .filiere-title {
     font-size: 28px;
     font-weight: 600;
-    color: #333;
+    color: var(--mat-sys-on-surface);
     margin: 0;
 
     @media (max-width: 599px) {
@@ -54,7 +54,7 @@
   
   .no-links {
     text-align: center;
-    color: #999;
+    color: var(--mat-sys-on-surface-variant);
     font-style: italic;
     padding: 24px;
   }

@@ -13,7 +13,7 @@
     align-items: center;
     margin-bottom: 24px;
     padding-bottom: 12px;
-    border-bottom: 2px solid #333;
+    border-bottom: 2px solid var(--mat-sys-outline-variant);
     gap: 12px;
     flex-wrap: wrap;
     
@@ -38,7 +38,7 @@
   .symbol-title {
     font-size: 28px;
     font-weight: 600;
-    color: #333;
+    color: var(--mat-sys-on-surface);
     margin: 0;
 
     @media (max-width: 599px) {
@@ -75,7 +75,7 @@
     .section-title {
       font-size: 20px;
       font-weight: 600;
-      color: #333;
+      color: var(--mat-sys-on-surface);
       margin: 0 0 16px 0;
     }
     
@@ -93,10 +93,10 @@
       .group-title {
         font-size: 16px;
         font-weight: 500;
-        color: #555;
+        color: var(--mat-sys-on-surface-variant);
         margin: 0 0 12px 0;
         padding-bottom: 8px;
-        border-bottom: 1px solid #ddd;
+        border-bottom: 1px solid var(--mat-sys-outline-variant);
       }
       
       .relations-container {
@@ -107,7 +107,7 @@
       
       .empty-group {
         text-align: center;
-        color: #999;
+        color: var(--mat-sys-on-surface-variant);
         font-style: italic;
         padding: 16px;
         font-size: 14px;
@@ -117,7 +117,7 @@
   
   .no-relations {
     text-align: center;
-    color: #999;
+    color: var(--mat-sys-on-surface-variant);
     font-style: italic;
     padding: 24px;
   }

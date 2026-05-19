@@ -50,7 +50,7 @@
   
   .subtitle {
     margin: 0;
-    color: #666;
+    color: var(--mat-sys-on-surface-variant);
     font-size: 16px;
   }
 }
@@ -74,6 +74,10 @@
   .toggle-filters {
     display: flex;
     align-items: center;
+    background-color: var(--mat-sys-surface-container-high);
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px solid var(--mat-sys-outline-variant);
   }
   
   .blame-filter,
@@ -130,7 +134,7 @@
   align-items: center;
   justify-content: center;
   padding: 64px 24px;
-  color: #999;
+  color: var(--mat-sys-on-surface-variant);
   
   mat-icon {
     font-size: 64px;

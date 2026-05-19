@@ -302,6 +302,11 @@ button[color="primary"] {
   }
 }
 
+/* Stroked primary buttons - add visible border */
+button[mat-stroked-button][color="primary"] {
+  border: 2px solid var(--mat-sys-primary) !important;
+}
+
 /* Tooltips - theme support */
 .mat-mdc-tooltip-panel {
   background-color: var(--mat-sys-inverse-surface) !important;
