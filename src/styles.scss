@@ -82,10 +82,10 @@ html {
   --mat-sys-surface-dim: #ded8e1;
   --mat-sys-surface-bright: #fffbfe;
   --mat-sys-surface-container-lowest: #ffffff;
-  --mat-sys-surface-container-low: #f7f2fa;
-  --mat-sys-surface-container: #f3eef7;
-  --mat-sys-surface-container-high: #ede7f0;
-  --mat-sys-surface-container-highest: #e8e1eb;
+  --mat-sys-surface-container-low: #f0eaf4;
+  --mat-sys-surface-container: #e8e1ec;
+  --mat-sys-surface-container-high: #dfd9e3;
+  --mat-sys-surface-container-highest: #d9d3dd;
   --mat-sys-background: #fffbfe;
   --mat-sys-on-background: #1c1b1f;
   --mat-sys-error: light-dark(#b3261e, #f2b8b5);
@@ -222,23 +222,24 @@ body {
 
 /* Dialog Panel Styling */
 .mat-mdc-dialog-container {
-  background-color: var(--mat-sys-surface-container) !important;
+  background-color: var(--mat-sys-surface-container-low) !important;
   color: var(--mat-sys-on-surface) !important;
   border-radius: 28px !important;
 }
 
 mat-dialog-content {
-  background-color: var(--mat-sys-surface-container) !important;
+  background-color: var(--mat-sys-surface-container-low) !important;
   color: var(--mat-sys-on-surface) !important;
 }
 
 mat-dialog-actions {
-  background-color: var(--mat-sys-surface-container) !important;
+  background-color: var(--mat-sys-surface-container-low) !important;
 }
 
 /* Dialog title styling */
-h2[mat-dialog-title] {
-  background-color: var(--mat-sys-surface-container) !important;
+h2[mat-dialog-title],
+.mat-mdc-dialog-title {
+  background-color: var(--mat-sys-surface-container-low) !important;
   color: var(--mat-sys-on-surface) !important;
   margin: 0 !important;
   padding: 24px 24px 16px !important;

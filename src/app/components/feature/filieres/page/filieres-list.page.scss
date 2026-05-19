@@ -74,6 +74,10 @@
   .toggle-filters {
     display: flex;
     align-items: center;
+    padding: 8px 12px;
+    background-color: var(--mat-sys-surface-container-high);
+    border-radius: 6px;
+    border: 1px solid var(--mat-sys-outline-variant);
   }
   
   .spe-filter,

@@ -31,6 +31,10 @@
       gap: 16px;
       align-items: center;
       flex-wrap: wrap;
+      padding: 8px 12px;
+      background-color: var(--mat-sys-surface-container-high);
+      border-radius: 6px;
+      border: 1px solid var(--mat-sys-outline-variant);
     }
   }
 

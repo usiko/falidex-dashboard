@@ -152,7 +152,7 @@
 
     .empty-message {
       text-align: center;
-      color: #999;
+      color: var(--mat-sys-on-surface-variant);
       font-style: italic;
       margin: 20px 0;
     }
@@ -167,9 +167,9 @@
       position: relative;
       padding: 16px;
       padding-top: 48px;
-      background: var(--mat-sys-surface-container);
+      background: var(--mat-sys-surface-container-high);
       border-radius: 6px;
-      border: 1px solid #ddd;
+      border: 1px solid var(--mat-sys-outline-variant);
 
       .card-actions {
         position: absolute;
@@ -180,27 +180,27 @@
       }
 
       .edit-button {
-        color: #1976d2;
+        color: var(--mat-sys-primary);
 
         &:hover:not(:disabled) {
-          background-color: #e3f2fd;
+          background-color: var(--mat-sys-primary-container);
         }
 
         &:disabled {
-          color: #bdbdbd;
+          color: var(--mat-sys-on-surface-variant);
           cursor: not-allowed;
         }
       }
 
       .delete-button {
-        color: #d32f2f;
+        color: var(--mat-sys-error);
 
         &:hover:not(:disabled) {
-          background-color: #ffebee;
+          background-color: var(--mat-sys-error-container);
         }
 
         &:disabled {
-          color: #bdbdbd;
+          color: var(--mat-sys-on-surface-variant);
           cursor: not-allowed;
         }
       }
@@ -208,19 +208,19 @@
       .spe-header {
         margin-bottom: 12px;
         padding-bottom: 8px;
-        border-bottom: 1px solid #e0e0e0;
+        border-bottom: 1px solid var(--mat-sys-outline-variant);
         font-size: 16px;
-        color: #1976d2;
+        color: var(--mat-sys-primary);
       }
 
       .spe-content {
         p {
           margin: 8px 0;
           font-size: 14px;
-          color: #555;
+          color: var(--mat-sys-on-surface-variant);
 
           strong {
-            color: #333;
+            color: var(--mat-sys-on-surface);
             margin-right: 8px;
           }
         }
