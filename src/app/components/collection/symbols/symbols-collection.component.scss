@@ -45,7 +45,7 @@
       
       &:hover {
         border-color: var(--mat-sys-primary);
-        box-shadow: 0 1px 2px rgba(220, 9, 44, 0.1);
+        box-shadow: var(--mat-sys-level1);
         transform: translateY(-2px);
       }
     }
