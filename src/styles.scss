@@ -300,10 +300,10 @@ button[color="warn"] {
 
 /* Primary buttons - ensure primary color for icons */
 button[color="primary"] {
-  color: var(--mat-sys-primary) !important;
+  color: var(--mat-sys-primary);
   
   mat-icon {
-    color: var(--mat-sys-primary) !important;
+    color: var(--mat-sys-primary);
   }
 }
 

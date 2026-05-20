@@ -73,6 +73,10 @@
                         justify-content: center;
                     }
                 }
+                mat-icon{
+                    
+                    color:var(--input-file-btn-color);
+                }
             }
         }
     }

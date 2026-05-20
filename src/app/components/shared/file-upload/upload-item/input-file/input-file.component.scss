@@ -13,7 +13,8 @@
         }
         button{
             background-color: var(--input-file-btn-bg-color);
-            color:var(--input-file-btn-color)
+            color: var(--input-file-btn-color);
+            --mdc-text-button-label-text-color: var(--input-file-btn-color);
         }
     }
 }

@@ -2,7 +2,7 @@
 
 <mat-dialog-content>
   <app-file-upload
-    allowedFileType="image/*"
+    allowedFileType="image/png,image/jpg,image/jpeg,image/tiff"
     [uploadState]="uploadState()"
     (fileUpload)="onFileUpload($event)"
     (onCancel)="onCancel()"
