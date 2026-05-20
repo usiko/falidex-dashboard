@@ -84,6 +84,14 @@ export class SymbolEditComponent {
     });
   }
 
+  onDeleteImg(imgId: string) {
+    const id = this.id();
+    const symbol = this.symbol();
+    if (!id || !symbol) return;
+    const updatedImgs = (symbol.imgs ?? []).filter(img => img.id !== imgId);
+    this.symbolStore.update(id, { imgs: updatedImgs });
+  }
+
   onSave() {
     const id = this.id();
     const name = this.nameValue().trim();

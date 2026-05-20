@@ -22,11 +22,20 @@
           <h2 class="section-title">Images</h2>
           <div class="images-grid">
             @for (img of symbol()!.imgs!; track img.id; let idx = $index) {
-              <img
-                [src]="img.url"
-                [alt]="symbol()?.name"
-                class="symbol-image"
-                (click)="openImageCarousel(idx)" />
+              <div class="image-wrapper">
+                <img
+                  [src]="img.url"
+                  [alt]="symbol()?.name"
+                  class="symbol-image"
+                  (click)="openImageCarousel(idx)" />
+                <button
+                  mat-icon-button
+                  class="delete-img-btn"
+                  (click)="onDeleteImg(img.id)"
+                  aria-label="Supprimer l'image">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </div>
             }
           </div>
         </div>
