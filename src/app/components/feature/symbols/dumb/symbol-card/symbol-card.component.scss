@@ -17,8 +17,8 @@
 
   mat-card-header {
     mat-icon[mat-card-avatar] {
-      background: #ff9800;
-      color: white;
+      background: var(--mat-sys-tertiary-container);
+      color: var(--mat-sys-on-tertiary-container);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -53,8 +53,8 @@
         position: absolute;
         bottom: -3px;
         right: -3px;
-        background: #ff9800;
-        color: white;
+        background: var(--mat-sys-tertiary);
+        color: var(--mat-sys-on-tertiary);
         font-size: 10px;
         font-weight: 600;
         padding: 2px 4px;
@@ -79,7 +79,7 @@
           font-weight: 500;
           
           .spe-count {
-            color: #3f51b5;
+            color: var(--mat-sys-primary);
             font-size: 0.9em;
             font-weight: 600;
           }

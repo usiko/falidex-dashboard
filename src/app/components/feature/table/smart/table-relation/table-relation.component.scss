@@ -53,7 +53,7 @@
   }
 
   tr.mat-row:hover {
-    background-color: rgba(0, 0, 0, 0.04);
+    background-color: var(--mat-sys-surface-container-high);
   }
 
   .filter-row th.mat-header-cell {

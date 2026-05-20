@@ -84,16 +84,17 @@
 
       .delete-action {
         margin-right: auto;
-        background-color: #d32f2f;
-        color: white;
+        color: var(--mat-sys-error);
+        border: 1px solid var(--mat-sys-error);
 
         &:hover:not(:disabled) {
-          background-color: #c62828;
+          background-color: var(--mat-sys-error-container);
+          color: var(--mat-sys-on-error-container);
         }
 
         &:disabled {
-          background-color: #ffcdd2;
-          color: rgba(0, 0, 0, 0.38);
+          color: var(--mat-sys-on-surface-variant);
+          border-color: var(--mat-sys-outline-variant);
         }
       }
 

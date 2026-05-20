@@ -35,7 +35,7 @@
 ::ng-deep {
   .swiper-button-next,
   .swiper-button-prev {
-    color: #333;
+    color: var(--mat-sys-on-surface);
     
     &:after {
       font-size: 24px;
@@ -43,7 +43,7 @@
   }
 
   .swiper-pagination-bullet {
-    background: #333;
+    background: var(--mat-sys-on-surface-variant);
     opacity: 0.5;
     
     &-active {

@@ -17,8 +17,8 @@
   
   mat-card-header {
     mat-icon[mat-card-avatar] {
-      background: #4caf50;
-      color: white;
+      background: var(--mat-sys-secondary-container);
+      color: var(--mat-sys-on-secondary-container);
       display: flex;
       align-items: center;
       justify-content: center;

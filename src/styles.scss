@@ -303,6 +303,28 @@ button[color="primary"] {
   }
 }
 
+/* Raised buttons - add outline */
+button[mat-raised-button],
+.mat-mdc-raised-button {
+  border: 1px solid var(--mat-sys-outline-variant) !important;
+}
+
+.mat-mdc-raised-button.mat-unthemed {
+  border: 1px solid var(--mat-sys-outline) !important;
+  outline: 1px solid var(--mat-sys-outline) !important;
+  outline-offset: -1px;
+}
+
+button[mat-raised-button][color="primary"],
+.mat-mdc-raised-button.mat-primary {
+  border: 1px solid var(--mat-sys-primary) !important;
+}
+
+button[mat-raised-button][color="warn"],
+.mat-mdc-raised-button.mat-warn {
+  border: 1px solid var(--mat-sys-error) !important;
+}
+
 /* Stroked primary buttons - add visible border */
 button[mat-stroked-button][color="primary"] {
   border: 2px solid var(--mat-sys-primary) !important;
