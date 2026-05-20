@@ -1,0 +1,31 @@
+<app-upload-item 
+[file]="file" 
+[allowedFileType]="allowedFileType()"
+[uploadState]="uploadState()"
+(fileChanged)="onFileSelected($event)"
+(fileError)="onFileError($event)"
+
+></app-upload-item>
+@if(fileError)
+{
+    <div class="error message">
+        <span>{{fileError}}</span>
+    </div>
+}
+@else {
+    <div class="confirm message">
+        @if(uploadState())
+        {
+            @if(uploadState()?.state==='running')
+            {
+                <button mat-button (click)="cancel()">cancel</button>
+            }
+            @else{
+               <button mat-button (click)="back()">back</button>
+            }
+        }
+        @else {
+            <button mat-button [disabled]="!file" (click)="upload()">send</button>
+        }
+    </div>
+}

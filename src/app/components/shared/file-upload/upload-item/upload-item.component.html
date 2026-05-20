@@ -1,0 +1,88 @@
+<div class="container">
+    @if(uploadState())
+    {
+        <div class="progress">
+            @if(uploadState()?.state==='running')
+            {
+            <div>
+                <mat-progress-spinner
+                *ngIf="uploadState()?.progressValue!==undefined"
+                mode="determinate"
+                [value]="uploadState()?.progressValue"
+                ></mat-progress-spinner>
+                <mat-progress-spinner
+                *ngIf="uploadState()?.progressValue===undefined"
+                mode="indeterminate"
+                ></mat-progress-spinner>
+            </div>
+            }
+            @if(uploadState()?.state==='success')
+            {
+                <div class="result success">
+                    <div>
+                        <div class="icon">
+                            <mat-icon>check</mat-icon>
+                        </div>
+                        <div class="message">
+                            success
+                        </div>
+                    </div>
+                </div>
+            }
+            @if(uploadState()?.state==='error')
+            {
+                <div class="result error">
+                    <div>
+                        <div class="icon">
+                            <mat-icon>error</mat-icon>
+                        </div>
+                        <div class="message">
+                            error
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    @else if (file()) {
+    <div class="file">
+        <mat-icon class="main-icon">attach_file</mat-icon>
+        <div class="filename">
+            {{file()?.name}}
+        </div>
+        <button mat-button (click)="clear()">
+            delete
+        </button>
+    </div>
+    }
+    @else {
+        <div class="form">
+            <app-dragndrop 
+            [allowedFileType]="allowedFileType()" 
+            (fileDropped)="onFilesSelected($event)" 
+            (fileError)="onFileError($event)" 
+            (fileOver)="onFileOver($event)" 
+            (fileOverError)="onFileOverError($event)">
+                <div class="dnd" [class.fileover]="fileOver" [class.fileovererror]="fileOverError">
+                   <div class="dnd-container">
+                        <mat-icon class="main-icon">upload</mat-icon>
+                        <div>dnd</div>
+                        <div>or</div>
+                        <div>
+                            <app-input-file [allowedFileType]="allowedFileType()" (fileChanged)="onFilesSelected($event)">
+                            <div>
+                                <div>
+                                chose a file
+                                </div>
+                                <mat-icon>attach_file</mat-icon>
+                            </div>
+                            </app-input-file>
+                        </div>
+                   </div>
+                </div>
+            </app-dragndrop>
+           
+        </div>
+    }
+
+</div>

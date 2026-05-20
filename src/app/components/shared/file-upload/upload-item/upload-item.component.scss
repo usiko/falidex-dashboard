@@ -1,0 +1,132 @@
+:host{
+    --upload-item-height: 200px;
+   --upload-item-color-bg :#ffffff;
+   --upload-item-color:blue;
+   --upload-item-border: solid 1px red;
+   --upload-item-border-radius: 10px;
+   --upload-item-main-icon-color:var(-upload-item-color);
+   --upload-item-fileover-border:solid 1px blue;
+   --upload-item-fileover-color:orange;
+   --upload-item-fileover-error-border:solid 1px red;
+   --upload-item-fileover-error-color:var(--upload-item-fileover-color);
+   --upload-item-fileover-main-icon-color:var(--upload-item-fileover-color);
+
+   --upload-item-delete-btn-bg:red;
+   --upload-item-delete-btn-color:orange;
+
+   --upload-item-success-color:green;
+   --upload-item-error-color:pink;
+
+
+   --upload-item-spinner-color:green;
+   .container{
+    height:var(--upload-item-height);
+    .main-icon{
+        font-size: 45px;
+        height: 45px;
+        width: 45px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color:var(--upload-item-main-icon-color);
+    }
+    .form{
+        height: 100%;
+        app-dragndrop{
+            height: 100%;
+            .dnd{
+                box-sizing: border-box;
+                border-radius: var(--upload-item-border-radius);
+                background-color: var(--upload-item-color-bg);
+               
+                height: 100%;
+                border:var(--upload-item-border);
+                border-radius: var(--upload-item-border-radius);
+                color:var(--upload-item-color);
+                transition: color 350ms, border 350ms;
+                padding: 5px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                .dnd-container{
+                     
+                    text-align: center;
+                }
+                .mat-icon{
+                    margin: auto;
+                }
+                &.fileover{
+                    border: var(--upload-item-fileover-border);
+                    color: var(--upload-item-fileover-color);
+                }
+
+                &.fileovererror{
+                    border: var(--upload-item-fileover-error-border);
+                    color: var(--upload-item-fileover-error-color);
+                }
+                app-input-file{
+                    --input-file-btn-bg-color:var(--upload-item-color);
+                    --input-file-btn-color:var(--upload-item-color-bg);
+                    div{
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                    }
+                }
+            }
+        }
+    }
+
+
+    .file
+    {
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        background-color: var(--upload-item-color-bg);
+        height: 100%;
+        border:var(--upload-item-border);
+        color:var(--upload-item-color);
+        border-radius: var(--upload-item-border-radius);
+        button{
+            margin-top: 16px;
+            background-color: var(--upload-item-delete-btn-bg);
+            color:var(--upload-item-delete-btn-color);
+            border:solid 1px var(--upload-item-delete-btn-bg)
+        }
+    }
+
+    .progress{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        mat-progress-spinner{
+            --mdc-circular-progress-active-indicator-color:var(--upload-item-spinner-color)
+        }
+        .result{
+             display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            >div{
+                text-align: center;
+            }
+            mat-icon{
+                height: 45px;
+                width: 45px;
+                font-size: 45px;
+                
+            }
+            &.success{
+                color:var(--upload-item-success-color)
+            }
+            &.error{
+                color:var(--upload-item-error-color)
+            }
+    }
+    }
+   }
+}

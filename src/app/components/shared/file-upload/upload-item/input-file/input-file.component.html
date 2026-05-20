@@ -1,0 +1,7 @@
+<input #fileupload type="file" class="file-input" [accept]="allowedFileType()" (change)="onFileSelected($event)" >
+
+<div class="fileupload">
+    <button mat-button color="primary" class="upload-btn" (click)="fileupload.click()">
+        <ng-content></ng-content>
+    </button>
+</div>
