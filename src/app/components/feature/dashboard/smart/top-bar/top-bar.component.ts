@@ -52,6 +52,11 @@ export class TopBarComponent implements OnInit {
   protected readonly isLoggedIn = computed(() => !!this.currentUser());
 
   protected readonly relations = this.relationStore.entities;
+  protected readonly visibleRelations = computed(() =>
+    this.isLoggedIn()
+      ? this.relations()
+      : this.relations().filter(r => r.visible !== false)
+  );
   protected readonly selectedRelationId = this.selectedRelationStore.selectedRelationId;
   protected readonly selectedRelation = computed(() => {
     const id = this.selectedRelationId();
@@ -70,8 +75,8 @@ export class TopBarComponent implements OnInit {
       document.documentElement.setAttribute('data-theme', 'light');
     }
 
-    // Sélectionner la première relation par défaut
-    const entities = this.relations();
+    // Sélectionner la première relation visible par défaut
+    const entities = this.visibleRelations();
     if (entities.length && !this.selectedRelationId()) {
       this.onRelationChange(entities[0].id);
     }

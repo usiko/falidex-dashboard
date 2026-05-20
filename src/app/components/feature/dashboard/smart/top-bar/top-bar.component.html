@@ -1,7 +1,7 @@
 <mat-toolbar color="primary" class="top-bar">
   <div class="left-section">
     <mat-form-field appearance="outline" class="relation-select">
-      <mat-label>Relation</mat-label>
+      <mat-label>Code</mat-label>
       <mat-select 
         [value]="selectedRelationId()" 
         (selectionChange)="onRelationChange($event.value)">
@@ -20,7 +20,7 @@
             </span>
           }
         </mat-select-trigger>
-        @for (relation of relations(); track relation.id) {
+        @for (relation of visibleRelations(); track relation.id) {
           <mat-option [value]="relation.id">
             <span class="relation-option" [class.default-relation]="relation.default">
               <span>{{ relation.name}} - {{relation.annee}}</span>
