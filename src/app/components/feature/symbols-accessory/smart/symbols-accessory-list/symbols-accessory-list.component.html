@@ -22,7 +22,7 @@
           <div class="item-content">
             <span class="item-name">{{ symbolAccessory.name }}</span>
             <div class="item-actions">
-              <button mat-icon-button (click)="onEdit(symbolAccessory.id, symbolAccessory.name)" matTooltip="Modifier" [disabled]="!isLoggedIn()">
+              <button mat-icon-button color="primary" (click)="onEdit(symbolAccessory.id, symbolAccessory.name)" matTooltip="Modifier" [disabled]="!isLoggedIn()">
                 <mat-icon>edit</mat-icon>
               </button>
               <button mat-icon-button color="warn" (click)="onDelete(symbolAccessory.id, symbolAccessory.name)" matTooltip="Supprimer" [disabled]="!isLoggedIn()">

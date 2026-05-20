@@ -25,7 +25,7 @@
     margin: 0 0 8px 0;
     font-size: 32px;
     font-weight: 500;
-    color: #333;
+    color: var(--mat-sys-on-surface);
 
     @media (max-width: 599px) {
       font-size: 22px;
@@ -35,7 +35,7 @@
       font-size: 36px;
       width: 36px;
       height: 36px;
-      color: #3f51b5;
+      color: var(--mat-sys-primary);
 
       @media (max-width: 599px) {
         font-size: 28px;
@@ -47,7 +47,7 @@
   
   .subtitle {
     margin: 0;
-    color: #666;
+    color: var(--mat-sys-on-surface-variant);
     font-size: 16px;
   }
 }
@@ -89,7 +89,7 @@
   align-items: center;
   justify-content: center;
   padding: 64px 24px;
-  color: #999;
+  color: var(--mat-sys-on-surface-variant);
   
   mat-icon {
     font-size: 64px;

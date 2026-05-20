@@ -1,4 +1,4 @@
-import { Component, inject, computed, OnInit } from '@angular/core';
+import { Component, inject, computed, OnInit, signal, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSelectModule } from '@angular/material/select';
@@ -44,11 +44,19 @@ export class TopBarComponent implements OnInit {
   private readonly authService = inject(AuthService);
   private readonly currentUserStore = inject(CurrentUserStore);
 
+  // Theme management
+  protected readonly isDarkMode = signal<boolean>(false);
+
   // Utiliser le store pour l'utilisateur courant
   protected readonly currentUser = this.currentUserStore.user;
   protected readonly isLoggedIn = computed(() => !!this.currentUser());
 
   protected readonly relations = this.relationStore.entities;
+  protected readonly visibleRelations = computed(() =>
+    this.isLoggedIn()
+      ? this.relations()
+      : this.relations().filter(r => r.visible !== false)
+  );
   protected readonly selectedRelationId = this.selectedRelationStore.selectedRelationId;
   protected readonly selectedRelation = computed(() => {
     const id = this.selectedRelationId();
@@ -56,13 +64,48 @@ export class TopBarComponent implements OnInit {
     return this.relationStore.entityMap()[id];
   });
 
+  constructor() {
+    // Quand la liste des codes visibles change, effacer la sélection si elle n'est plus disponible
+    effect(() => {
+      const visible = this.visibleRelations();
+      const currentId = this.selectedRelationId();
+      if (currentId && !visible.some(r => r.id === currentId)) {
+        this.selectedRelationStore.clearSelection();
+      }
+    });
+  }
+
   ngOnInit(): void {
-    // Sélectionner la première relation par défaut
-    const entities = this.relations();
+    // Load theme preference from localStorage
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+      this.isDarkMode.set(true);
+      document.documentElement.setAttribute('data-theme', 'dark');
+    } else if (savedTheme === 'light') {
+      this.isDarkMode.set(false);
+      document.documentElement.setAttribute('data-theme', 'light');
+    }
+
+    // Sélectionner la première relation visible par défaut
+    const entities = this.visibleRelations();
     if (entities.length && !this.selectedRelationId()) {
       this.onRelationChange(entities[0].id);
     }
   }
+
+  protected toggleTheme(): void {
+    const isDark = !this.isDarkMode();
+    this.isDarkMode.set(isDark);
+    
+    if (isDark) {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      localStorage.setItem('theme', 'dark');
+    } else {
+      document.documentElement.setAttribute('data-theme', 'light');
+      localStorage.setItem('theme', 'light');
+    }
+  }
+
   protected onRelationChange(relationId: string): void {
     const relation = this.relationStore.entityMap()[relationId];
     if (relation) {

@@ -5,17 +5,18 @@
   
   .collection-item {
     padding: 12px 16px;
-    border: 1px solid #e0e0e0;
+    border: 1px solid var(--mat-sys-outline-variant);
     border-radius: 4px;
-    background-color: #fff;
+    background-color: var(--mat-sys-surface-container-high);
+    color: var(--mat-sys-on-surface);
     transition: all 0.2s;
     
     &.selectable {
       cursor: pointer;
       
       &:hover {
-        background-color: #f5f5f5;
-        border-color: #1976d2;
+        background-color: var(--mat-sys-surface-container-high);
+        border-color: var(--mat-sys-primary);
       }
     }
   }

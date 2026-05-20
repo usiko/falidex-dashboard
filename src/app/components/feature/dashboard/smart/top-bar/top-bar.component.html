@@ -1,7 +1,7 @@
 <mat-toolbar color="primary" class="top-bar">
   <div class="left-section">
     <mat-form-field appearance="outline" class="relation-select">
-      <mat-label>Relation</mat-label>
+      <mat-label>Code</mat-label>
       <mat-select 
         [value]="selectedRelationId()" 
         (selectionChange)="onRelationChange($event.value)">
@@ -10,26 +10,30 @@
             <span class="relation-option" [class.default-relation]="selectedRelation()!.default">
               <span>{{ selectedRelation()!.name}} - {{selectedRelation()!.annee}}</span>
               <span class="icons">
-                @if (selectedRelation()!.visible!== undefined && !selectedRelation()!.visible) {
-                  <mat-icon class="visibility-icon">visibility_off</mat-icon>
-                }
-                @if (!selectedRelation()!.editable) {
-                  <mat-icon class="lock-icon">lock</mat-icon>
+                @if (isLoggedIn()) {
+                  @if (selectedRelation()!.visible!== undefined && !selectedRelation()!.visible) {
+                    <mat-icon class="visibility-icon">visibility_off</mat-icon>
+                  }
+                  @if (!selectedRelation()!.editable) {
+                    <mat-icon class="lock-icon">lock</mat-icon>
+                  }
                 }
               </span>
             </span>
           }
         </mat-select-trigger>
-        @for (relation of relations(); track relation.id) {
+        @for (relation of visibleRelations(); track relation.id) {
           <mat-option [value]="relation.id">
             <span class="relation-option" [class.default-relation]="relation.default">
               <span>{{ relation.name}} - {{relation.annee}}</span>
               <span class="icons">
-                @if (relation.visible !== undefined && !relation.visible) {
-                  <mat-icon class="visibility-icon">visibility_off</mat-icon>
-                }
-                @if (!relation.editable) {
-                  <mat-icon class="lock-icon">lock</mat-icon>
+                @if (isLoggedIn()) {
+                  @if (relation.visible !== undefined && !relation.visible) {
+                    <mat-icon class="visibility-icon">visibility_off</mat-icon>
+                  }
+                  @if (!relation.editable) {
+                    <mat-icon class="lock-icon">lock</mat-icon>
+                  }
                 }
               </span>
             </span>
@@ -42,7 +46,7 @@
     </button>
     
     <!-- Desktop nav buttons (hidden on mobile) -->
-    <button mat-button class="desktop-nav" (click)="onNavigate($event, ['/relation/current/edit'])">
+    <button mat-button class="desktop-nav" (click)="onNavigate($event, ['/relation/current/edit'])" [disabled]="!selectedRelationId()">
       <mat-icon>info</mat-icon>
       Relation Info
     </button>
@@ -96,6 +100,14 @@
       </button>
     </mat-menu>
     
+    <!-- Theme toggle button -->
+    <button mat-icon-button (click)="toggleTheme()"
+            [matTooltip]="isDarkMode() ? 'Mode clair' : 'Mode sombre'"
+            [attr.aria-label]="isDarkMode() ? 'Activer le mode clair' : 'Activer le mode sombre'"
+            [attr.aria-pressed]="isDarkMode()">
+      <mat-icon aria-hidden="true">{{ isDarkMode() ? 'light_mode' : 'dark_mode' }}</mat-icon>
+    </button>
+    
     @if (!isLoggedIn()) {
       <button mat-button (click)="onLogin()">
         <mat-icon>login</mat-icon>
@@ -113,7 +125,7 @@
       <mat-icon>menu</mat-icon>
     </button>
     <mat-menu #mobileMenu="matMenu">
-      <button mat-menu-item (click)="onNavigate($event, ['/relation/current/edit'])">
+      <button mat-menu-item (click)="onNavigate($event, ['/relation/current/edit'])" [disabled]="!selectedRelationId()">
         <mat-icon>info</mat-icon>
         <span>Relation Info</span>
       </button>

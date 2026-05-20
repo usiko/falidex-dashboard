@@ -4,14 +4,14 @@
   align-items: flex-start;
   padding: 12px;
   margin-bottom: 12px;
-  background: #f9f9f9;
+  background: var(--mat-sys-surface-container);
   border-radius: 6px;
-  border-left: 3px solid #333;
+  border-left: 3px solid var(--mat-sys-on-surface-variant);
   max-width: 700px;
   position: relative;
   
   &.spe-item {
-    border-left-color: #3f51b5; // Material primary color
+    border-left-color: var(--mat-sys-primary);
   }
   
   .symbol-image-container {
@@ -27,7 +27,7 @@
       
       &:hover {
         transform: scale(1.05);
-        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        box-shadow: 0 1px 2px rgba(0,0,0,0.04);
       }
     }
   }
@@ -46,12 +46,12 @@
       
       .label {
         font-weight: 600;
-        color: #555;
+        color: var(--mat-sys-on-surface);
         min-width: 110px;
       }
       
       .value {
-        color: #333;
+        color: var(--mat-sys-on-surface-variant);
       }
       
       .circulaire-content {
@@ -71,14 +71,14 @@
     
     .spe-badge {
       .spe-true {
-        color: #3f51b5; // Material primary color
+        color: var(--mat-sys-primary);
         font-weight: 600;
       }
     }
     
     .absent-badge {
       .absent-true {
-        color: #f44336; // Material warn color
+        color: var(--mat-sys-error);
         font-weight: 600;
       }
     }
