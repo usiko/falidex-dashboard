@@ -97,8 +97,11 @@
     </mat-menu>
     
     <!-- Theme toggle button -->
-    <button mat-icon-button (click)="toggleTheme()" [matTooltip]="isDarkMode() ? 'Mode clair' : 'Mode sombre'">
-      <mat-icon>{{ isDarkMode() ? 'light_mode' : 'dark_mode' }}</mat-icon>
+    <button mat-icon-button (click)="toggleTheme()"
+            [matTooltip]="isDarkMode() ? 'Mode clair' : 'Mode sombre'"
+            [attr.aria-label]="isDarkMode() ? 'Activer le mode clair' : 'Activer le mode sombre'"
+            [attr.aria-pressed]="isDarkMode()">
+      <mat-icon aria-hidden="true">{{ isDarkMode() ? 'light_mode' : 'dark_mode' }}</mat-icon>
     </button>
     
     @if (!isLoggedIn()) {

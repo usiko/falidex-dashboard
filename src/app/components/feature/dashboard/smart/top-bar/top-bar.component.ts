@@ -65,6 +65,9 @@ export class TopBarComponent implements OnInit {
     if (savedTheme === 'dark') {
       this.isDarkMode.set(true);
       document.documentElement.setAttribute('data-theme', 'dark');
+    } else if (savedTheme === 'light') {
+      this.isDarkMode.set(false);
+      document.documentElement.setAttribute('data-theme', 'light');
     }
 
     // Sélectionner la première relation par défaut
@@ -82,7 +85,7 @@ export class TopBarComponent implements OnInit {
       document.documentElement.setAttribute('data-theme', 'dark');
       localStorage.setItem('theme', 'dark');
     } else {
-      document.documentElement.removeAttribute('data-theme');
+      document.documentElement.setAttribute('data-theme', 'light');
       localStorage.setItem('theme', 'light');
     }
   }
