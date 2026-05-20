@@ -329,6 +329,14 @@ button[mat-raised-button][color="warn"],
   border: 1px solid var(--mat-sys-error) !important;
 }
 
+/* Disabled raised buttons - no border, muted appearance */
+.mat-mdc-raised-button:disabled,
+.mat-mdc-raised-button[disabled] {
+  border: none !important;
+  outline: none !important;
+  opacity: 0.38 !important;
+}
+
 /* Stroked primary buttons - add visible border */
 button[mat-stroked-button][color="primary"] {
   border: 2px solid var(--mat-sys-primary) !important;
