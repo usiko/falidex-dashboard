@@ -12,7 +12,19 @@
   width: 250px;
   display: flex;
   align-items: center;
-
+  height: 40px;
+  --mat-form-field-container-vertical-padding:8px;
+  ::ng-deep{
+    .mdc-text-field--outlined{
+        height: 40px;
+    }
+  }
+  .mat-mdc-text-field-wrapper{
+    height: 35px
+  }
+  mat-select{
+    height: 25px;
+  }
   @media (max-width: 599px) {
     width: 150px;
   }
