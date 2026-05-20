@@ -217,8 +217,10 @@ export class DataService {
   {
     const formData = new FormData();
     formData.append('file', file);
+    const symbolPath = this.configService.getConfig()?.paths.symbols;
+    const imgPath = this.configService.getConfig()?.paths.imgUpload
     return this.http.post<{ id: string; url: string; modificationDate: Date }>(
-      `${environment.urls.dataServer}/${this.configService.getConfig()?.paths.symbols}/${id}/imgs`,
+      `${environment.urls.dataServer}/${this.configService.getConfig()?.paths.symbols}/${id}/${imgPath}`,
       formData
     );
   }

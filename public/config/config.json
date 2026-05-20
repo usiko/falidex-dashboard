@@ -18,7 +18,8 @@
         "dataLinkItem": "collection/link",
         "occurence": "occurence",
         "token": "token",
-        "login":"auth"
+        "login":"auth",
+        "imgUpload":"img/upload"
     },
     "pictureServerSalt": "iBhodGT6GTqS6Bb"
 }
