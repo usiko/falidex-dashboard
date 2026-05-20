@@ -124,7 +124,7 @@
 }
 
 html[data-theme="dark"] .color-card .color-code {
-  color: white !important;
+  color: var(--mat-sys-on-surface) !important;
 }
 
 .empty-state {
