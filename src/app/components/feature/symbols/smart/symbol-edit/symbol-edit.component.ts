@@ -10,6 +10,7 @@ import { SymbolStore } from '../../../../../stores/symbols/symbols.store';
 import { DataService } from '../../../../../services/data/data.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ImageCarouselDialogComponent } from '../../dialogs/image-carousel-dialog/image-carousel-dialog.component';
+import { SymbolAddImgDialogComponent, SymbolAddImgDialogData } from '../../dialogs/symbol-add-img-dialog/symbol-add-img-dialog.component';
 
 @Component({
   selector: 'app-symbol-edit',
@@ -42,6 +43,7 @@ export class SymbolEditComponent {
   protected readonly nameValue = signal<string>('');
   protected readonly occurenceMessage = signal<string | undefined>(undefined);
   protected readonly loading = signal(false);
+
 
   constructor() {
     effect(() => {
@@ -81,6 +83,22 @@ export class SymbolEditComponent {
       maxWidth: '90vw',
       maxHeight: '90vh',
       panelClass: 'image-carousel-dialog'
+    });
+  }
+
+  openAddImageDialog() {
+    const id = this.id();
+    if (!id) return;
+    const dialogData: SymbolAddImgDialogData = { symbolId: id };
+    this.dialog.open(SymbolAddImgDialogComponent, {
+      data: dialogData,
+      width: '420px'
+    }).afterClosed().subscribe(newImg => {
+      if (newImg) {
+        const symbol = this.symbol();
+        const currentImgs = symbol?.imgs ?? [];
+        this.symbolStore.update(id, { imgs: [...currentImgs, newImg] });
+      }
     });
   }
 

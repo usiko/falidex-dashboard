@@ -213,6 +213,16 @@ export class DataService {
     );
   }
 
+  addSymboleImg(id: string, file: File): Observable<{ id: string; url: string; modificationDate: Date }>
+  {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.post<{ id: string; url: string; modificationDate: Date }>(
+      `${environment.urls.dataServer}/${this.configService.getConfig()?.paths.symbols}/${id}/imgs`,
+      formData
+    );
+  }
+
   editSymbol(symbol:Partial<ISymbol>): Observable<void>
   {
     return this.http.put(

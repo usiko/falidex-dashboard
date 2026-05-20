@@ -1,0 +1,10 @@
+<h2 mat-dialog-title>Ajouter une image</h2>
+
+<mat-dialog-content>
+  <app-file-upload
+    allowedFileType="image/*"
+    [uploadState]="uploadState()"
+    (fileUpload)="onFileUpload($event)"
+    (onCancel)="onCancel()"
+    (onBack)="onCancel()" />
+</mat-dialog-content>

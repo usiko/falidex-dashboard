@@ -41,6 +41,11 @@
         </div>
       }
 
+      <button mat-stroked-button (click)="openAddImageDialog()">
+          <mat-icon>add_photo_alternate</mat-icon>
+          Ajouter une image
+        </button>
+
       <div class="actions">
         <button mat-button (click)="onCancel()">Annuler</button>
         <button mat-raised-button color="primary" [disabled]="!nameValue().trim()" (click)="onSave()">
