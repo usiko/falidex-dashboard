@@ -14,10 +14,12 @@
   align-items: center;
   height: 40px;
   --mat-form-field-container-vertical-padding:8px;
+  --mat-form-field-container-height:40px;
   ::ng-deep{
     .mdc-text-field--outlined{
         height: 40px;
     }
+    
   }
   .mat-mdc-text-field-wrapper{
     height: 35px

@@ -1,10 +1,12 @@
 import { Component, computed, effect, inject, input, output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Location } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import {
   IBaseFiliere, IBaseSymbol, IBaseSymbolSens, IBaseSymbolAcessory,
   IBaseCirculaire, IBaseSignification, IBasePosition, IBasePlacement
@@ -49,6 +51,7 @@ type RelationMode = 'filiere' | 'signification';
     MatButtonModule,
     MatIconModule,
     MatSlideToggleModule,
+    MatProgressSpinnerModule,
     ColorBadgeComponent
   ],
   templateUrl: './item-relation-form.component.html',
@@ -96,7 +99,14 @@ export class ItemRelationFormComponent {
   private readonly symbolSensStore     = inject(SymbolSensStore);
   private readonly symbolAccessoryStore= inject(SymbolAccessoryStore);
   private readonly dialog              = inject(MatDialog);
+  private readonly location            = inject(Location);
   protected readonly selectedRelationStore = inject(SelectedRelationStore);
+
+  protected readonly hasRelationSelected = computed(
+    () => !!this.selectedRelationStore.selectedRelationId()
+  );
+
+  protected goBack(): void { this.location.back(); }
 
   // ── Computed ─────────────────────────────────────────────────────────────
   protected readonly relation = computed(() => {
@@ -132,6 +142,19 @@ export class ItemRelationFormComponent {
       }));
     return colors;
   });
+
+  protected readonly isLoading = computed(() =>
+   {
+    return  this.symboleStore.loading() ||
+            this.filiereStore.loading() ||
+            this.circulaireStore.loading() ||
+            this.significationStore.loading() ||
+            this.positionStore.loading() ||
+            this.placementStore.loading() ||
+            this.symbolSensStore.loading() ||
+            this.symbolAccessoryStore.loading();
+   }
+  );
 
   protected readonly isFormValid = computed(() => {
     if (!this.selectedSymbole()) return false;

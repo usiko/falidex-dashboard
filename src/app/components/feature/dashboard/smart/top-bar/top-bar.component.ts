@@ -1,4 +1,4 @@
-import { Component, inject, computed, OnInit, signal } from '@angular/core';
+import { Component, inject, computed, OnInit, signal, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSelectModule } from '@angular/material/select';
@@ -63,6 +63,17 @@ export class TopBarComponent implements OnInit {
     if (!id) return null;
     return this.relationStore.entityMap()[id];
   });
+
+  constructor() {
+    // Quand la liste des codes visibles change, effacer la sélection si elle n'est plus disponible
+    effect(() => {
+      const visible = this.visibleRelations();
+      const currentId = this.selectedRelationId();
+      if (currentId && !visible.some(r => r.id === currentId)) {
+        this.selectedRelationStore.clearSelection();
+      }
+    });
+  }
 
   ngOnInit(): void {
     // Load theme preference from localStorage

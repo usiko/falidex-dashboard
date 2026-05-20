@@ -1,4 +1,18 @@
 <div class="item-relation-form">
+  @if (!hasRelationSelected()) {
+    <div class="no-relation-state">
+      <mat-icon>link_off</mat-icon>
+      <p>Aucun code sélectionné.<br>Veuillez sélectionner un code pour continuer.</p>
+      <button mat-raised-button (click)="goBack()">
+        <mat-icon aria-hidden="true">arrow_back</mat-icon>
+        Retour
+      </button>
+    </div>
+  } @else if (isLoading()) {
+    <div class="loading-state">
+      <mat-spinner diameter="48"></mat-spinner>
+    </div>
+  } @else {
   <!-- ── Header ─────────────────────────────────────────────────────────── -->
   <div class="form-header">
     <h1 class="form-title">
@@ -276,4 +290,5 @@
       <button type="button" class="btn-cancel" (click)="onCancel()">Retour</button>
     </div>
   }
+  } <!-- end @else hasRelationSelected -->
 </div>
