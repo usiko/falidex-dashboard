@@ -1,5 +1,6 @@
 import { Component, computed, inject, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { BlobImagePipe } from '../../pipe/img-url.pipe';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { SymbolStore } from '../../../stores/symbols/symbols.store';
 import { IBaseSymbol } from '../../../models/data/base-data-models';
@@ -7,7 +8,7 @@ import { IBaseSymbol } from '../../../models/data/base-data-models';
 @Component({
   selector: 'app-symbols-collection',
   standalone: true,
-  imports: [CommonModule, MatProgressSpinnerModule],
+  imports: [CommonModule, MatProgressSpinnerModule, BlobImagePipe],
   templateUrl: './symbols-collection.component.html',
   styleUrl: './symbols-collection.component.scss'
 })

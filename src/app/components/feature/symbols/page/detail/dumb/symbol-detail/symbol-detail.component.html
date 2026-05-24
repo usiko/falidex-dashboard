@@ -8,7 +8,7 @@
       @if (symbol()?.imgs && symbol()!.imgs!.length > 0) {
         <div class="images">
           @for (img of symbol()!.imgs; track img.id) {
-            <img [src]="img.url" [alt]="symbol()?.name" />
+            <img [src]="img.url | blobImage | async" [alt]="symbol()?.name" />
           }
         </div>
       }

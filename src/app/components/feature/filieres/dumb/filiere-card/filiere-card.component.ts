@@ -1,6 +1,7 @@
 import { Component, input, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
+import { BlobImagePipe } from '../../../../pipe/img-url.pipe';
 import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
@@ -19,7 +20,8 @@ import { FiliereCombinationsTooltipComponent } from '../filiere-combinations-too
     MatIconModule,
     OverlayModule,
     FiliereCombinationsTooltipComponent,
-    RouterModule
+    RouterModule,
+    BlobImagePipe
   ],
   templateUrl: './filiere-card.component.html',
   styleUrl: './filiere-card.component.scss'

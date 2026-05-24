@@ -22,7 +22,7 @@
       <div class="images-grid">
         @for (img of symbol()!.imgs; track img.id; let idx = $index) {
           <img 
-            [src]="img.url" 
+            [src]="img.url | blobImage | async" 
             [alt]="symbol()?.name" 
             class="symbol-image"
             (click)="openImageCarousel(idx)" />

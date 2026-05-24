@@ -11,6 +11,7 @@ import { DataService } from '../../../../../services/data/data.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ImageCarouselDialogComponent } from '../../dialogs/image-carousel-dialog/image-carousel-dialog.component';
 import { SymbolAddImgDialogComponent, SymbolAddImgDialogData } from '../../dialogs/symbol-add-img-dialog/symbol-add-img-dialog.component';
+import { BlobImagePipe } from '../../../../pipe/img-url.pipe';
 
 @Component({
   selector: 'app-symbol-edit',
@@ -21,7 +22,8 @@ import { SymbolAddImgDialogComponent, SymbolAddImgDialogData } from '../../dialo
     MatButtonModule,
     MatFormFieldModule,
     MatIconModule,
-    MatInputModule
+    MatInputModule,
+    BlobImagePipe
   ],
   templateUrl: './symbol-edit.component.html',
   styleUrl: './symbol-edit.component.scss'

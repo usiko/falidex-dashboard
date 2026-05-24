@@ -3,7 +3,7 @@
     @if (data.symbole && data.symbole.imgs && data.symbole.imgs.length > 0) {
       <div class="symbol-image-container">
         <img 
-          [src]="data.symbole.imgs[0].url" 
+          [src]="data.symbole.imgs[0].url | blobImage | async" 
           [alt]="data.symbole.name" 
           class="symbol-image" 
           (click)="openImageCarousel(data.symbole.imgs, 0, data.symbole.name || 'unknown')" />

@@ -1,0 +1,32 @@
+import { Pipe, PipeTransform } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { map, Observable } from 'rxjs';
+
+@Pipe({
+  name: 'blobImage',
+  pure: true
+})
+export class BlobImagePipe implements PipeTransform {
+
+  private cache = new Map<string, string>();
+
+  constructor(private http: HttpClient) {}
+
+  transform(url: string): Observable<string> {
+
+    if (this.cache.has(url)) {
+      return new Observable(obs => {
+        obs.next(this.cache.get(url)!);
+        obs.complete();
+      });
+    }
+
+    return this.http.get(url, { responseType: 'blob' }).pipe(
+      map(blob => {
+        const objectUrl = URL.createObjectURL(blob);
+        this.cache.set(url, objectUrl);
+        return objectUrl;
+      })
+    );
+  }
+}

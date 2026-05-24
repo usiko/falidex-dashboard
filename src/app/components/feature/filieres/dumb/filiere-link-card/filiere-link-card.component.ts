@@ -6,6 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { LinkData } from '../../models/link-data.model';
 import { ImageCarouselDialogComponent } from '../../../symbols/dialogs/image-carousel-dialog/image-carousel-dialog.component';
 import { ColorBadgeComponent } from '../../../../shared/color-badge/color-badge.component';
+import { BlobImagePipe } from '../../../../pipe/img-url.pipe';
 
 @Component({
   selector: 'app-filiere-link-card',
@@ -14,7 +15,8 @@ import { ColorBadgeComponent } from '../../../../shared/color-badge/color-badge.
     CommonModule,
     ColorBadgeComponent,
     MatButtonModule,
-    MatIconModule
+    MatIconModule,
+    BlobImagePipe
   ],
   templateUrl: './filiere-link-card.component.html',
   styleUrl: './filiere-link-card.component.scss'

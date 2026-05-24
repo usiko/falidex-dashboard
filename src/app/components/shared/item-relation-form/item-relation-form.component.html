@@ -48,7 +48,7 @@
     @if (selectedSymbole()) {
       <div class="symbole-content">
         @if (selectedSymbole()!.imgs && selectedSymbole()!.imgs!.length > 0) {
-          <img [src]="selectedSymbole()!.imgs![0].url" [alt]="selectedSymbole()!.name" class="symbole-image" />
+          <img [src]="selectedSymbole()!.imgs![0].url | blobImage | async" [alt]="selectedSymbole()!.name" class="symbole-image" />
         }
         <div class="symbole-details">
           <p><strong>Symbole :</strong> {{ selectedSymbole()!.name }}</p>

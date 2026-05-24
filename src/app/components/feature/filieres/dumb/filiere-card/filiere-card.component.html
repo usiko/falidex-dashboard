@@ -1,7 +1,7 @@
 <mat-card class="filiere-card" [class.inactive]="inactive()" (click)="onCardClick($event)" style="cursor: pointer;">
     <mat-card-header>
       @if (symbolImageUrl()) {
-        <img [src]="symbolImageUrl()" alt="Symbol" class="symbol-avatar" mat-card-avatar />
+        <img [src]="symbolImageUrl()??'' | blobImage | async" alt="Symbol" class="symbol-avatar" mat-card-avatar />
       } @else {
         <div class="symbol-avatar" mat-card-avatar>
           <mat-icon>school</mat-icon>

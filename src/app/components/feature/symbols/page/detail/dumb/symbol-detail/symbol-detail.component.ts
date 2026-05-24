@@ -1,6 +1,7 @@
 import { Component, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
+import { BlobImagePipe } from '../../../../../../pipe/img-url.pipe';
 import { IBaseSymbol } from '../../../../../../../models/data/base-data-models';
 
 @Component({
@@ -8,7 +9,8 @@ import { IBaseSymbol } from '../../../../../../../models/data/base-data-models';
   standalone: true,
   imports: [
     CommonModule,
-    MatCardModule
+    MatCardModule,
+    BlobImagePipe
   ],
   templateUrl: './symbol-detail.component.html',
   styleUrl: './symbol-detail.component.scss'

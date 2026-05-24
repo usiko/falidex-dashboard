@@ -3,7 +3,7 @@
       @let imgs = symbol().imgs;
       @if (imgs && imgs.length > 0) {
         <div class="symbol-image-container" mat-card-avatar (click)="openImageCarousel($event, 0)">
-        <img [src]="imgs[0].url" [alt]="symbol().name" class="symbol-image">
+        <img [src]="imgs[0].url | blobImage | async" [alt]="symbol().name" class="symbol-image">
         @if (imgs.length > 1) {
           <div class="image-count-badge">{{ imgs.length }}</div>
         }

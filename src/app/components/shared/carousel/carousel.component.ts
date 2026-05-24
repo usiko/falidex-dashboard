@@ -1,5 +1,6 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, input, effect, ElementRef, viewChild, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { BlobImagePipe } from '../../pipe/img-url.pipe';
 import { register } from 'swiper/element/bundle';
 
 // Enregistrer les éléments Swiper
@@ -39,7 +40,7 @@ export interface CarouselSlide {
 @Component({
   selector: 'app-carousel',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, BlobImagePipe],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: './carousel.component.html',
   styleUrl: './carousel.component.scss'
