@@ -15,7 +15,8 @@ export interface IAppConfig {
         occurence:string
 		token: string;
         login:string;
-        imgUpload:string;
+        resourceUpload:string;
+        resourceRemove:string;
 	};
     pictureServerSalt: string;
 }

@@ -292,7 +292,31 @@ export class Synchronizer {
     });
 
     events.onUpdate$?.subscribe(({ id, changes, old, send }) => {
-      if (send && Object.keys(changes).length > 0) {
+      // On ignore les changements si la seule clé modifiée est 'imgs',
+      // mais si imgs est présent, on log les éléments supprimés
+      const changeKeys = Object.keys(changes);
+      if (changeKeys.length === 1 && changeKeys[0] === 'imgs') {
+        const oldImgs = Array.isArray(old?.imgs) ? old.imgs : [];
+        const newImgs = Array.isArray(changes.imgs) ? changes.imgs : [];
+        const removedImgs = oldImgs.filter((img: any) => !newImgs.some((n: any) => n?.id === img?.id));
+        if (removedImgs.length > 0) {
+          console.log('🗑️ Images supprimées du symbole', id, removedImgs);
+          // Suppression des images via dataService
+          forkJoin(
+             removedImgs.map((img: any) => this.dataService.deleteSymboleImg(img.id))
+          ).subscribe({
+            next: () => {
+              this.snackbarService.success('Images supprimées avec succès');
+              this.reloadSymboles();
+            },
+            error: (err) => {
+              console.error('❌ Erreur lors de la suppression des images:', err);
+              this.snackbarService.error('Erreur lors de la suppression des images');
+              this.reloadSymboles();
+            }
+          });
+        }
+      } else if (send && changeKeys.length > 0) {
         const updated = { id, ...changes };
         this.dataService.editSymbol(updated).subscribe({
           next: () => {

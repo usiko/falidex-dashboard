@@ -19,7 +19,8 @@
         "occurence": "occurence",
         "token": "token",
         "login":"auth",
-        "imgUpload":"img/upload"
+        "resourceUpload":"resource/upload",
+        "resourceRemove":"resource/remove"
     },
     "pictureServerSalt": "iBhodGT6GTqS6Bb"
 }

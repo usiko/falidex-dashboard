@@ -218,10 +218,18 @@ export class DataService {
     const formData = new FormData();
     formData.append('file', file);
     const symbolPath = this.configService.getConfig()?.paths.symbols;
-    const imgPath = this.configService.getConfig()?.paths.imgUpload
+    const imgPath = this.configService.getConfig()?.paths.resourceUpload
     return this.http.post<{ id: string; url: string; modificationDate: Date }>(
       `${environment.urls.dataServer}/${this.configService.getConfig()?.paths.symbols}/${id}/${imgPath}`,
       formData
+    );
+  }
+  deleteSymboleImg(id: string): Observable<{ id: string; url: string; modificationDate: Date }>
+  {
+
+    const imgPath = this.configService.getConfig()?.paths.resourceRemove
+    return this.http.delete<{ id: string; url: string; modificationDate: Date }>(
+      `${environment.urls.dataServer}/${this.configService.getConfig()?.paths.resourceRemove}/${id}`,
     );
   }
 
