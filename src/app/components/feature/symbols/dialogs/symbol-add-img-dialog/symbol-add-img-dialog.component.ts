@@ -25,8 +25,8 @@ export class SymbolAddImgDialogComponent {
   onFileUpload(file: File) {
     this.uploadState.set({ state: 'running' });
     this.dataService.addSymboleImg(this.data.symbolId, file).subscribe({
-      next: (newImg) => {
-        this.dialogRef.close(newImg);
+      next: (newImgs) => {
+        this.dialogRef.close(newImgs);
       },
       error: () => {
         this.uploadState.set({ state: 'error', message: "Erreur lors de l'upload de l'image" });

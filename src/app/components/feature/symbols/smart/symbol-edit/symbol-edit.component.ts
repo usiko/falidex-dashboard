@@ -95,11 +95,21 @@ export class SymbolEditComponent {
     this.dialog.open(SymbolAddImgDialogComponent, {
       data: dialogData,
       width: '420px'
-    }).afterClosed().subscribe(newImg => {
-      if (newImg) {
+    }).afterClosed().subscribe((newImgs: {
+      id: string;
+      url: string;
+      modificationDate: Date;
+    }[]) => {
+      if (newImgs) {
         const symbol = this.symbol();
         const currentImgs = symbol?.imgs ?? [];
-        this.symbolStore.update(id, { imgs: [...currentImgs, newImg] });
+        // Replace imgs with same id, otherwise keep existing
+        const newImgsMap = new Map(newImgs.map(img => [img.id, img]));
+        const mergedImgs = [
+          ...currentImgs.filter(img => !newImgsMap.has(img.id)),
+          ...newImgs
+        ];
+        this.symbolStore.update(id, { imgs: mergedImgs });
       }
     });
   }
