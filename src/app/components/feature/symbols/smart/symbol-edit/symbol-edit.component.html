@@ -24,7 +24,7 @@
             @for (img of symbol()!.imgs!; track img.id; let idx = $index) {
               <div class="image-wrapper">
                 <img
-                  [src]="img.url | blobImage | async "
+                  [src]="img.url "
                   [alt]="symbol()?.name"
                   class="symbol-image"
                   (click)="openImageCarousel(idx)" />

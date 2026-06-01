@@ -5,7 +5,7 @@
   @for (slide of slides(); track $index) {
     <swiper-slide>
       @if (slide.imageUrl) {
-        <img [src]="slide.imageUrl | blobImage | async" [alt]="slide.alt || 'Slide ' + ($index + 1)" class="slide-image" />
+        <img [src]="slide.imageUrl" [alt]="slide.alt || 'Slide ' + ($index + 1)" class="slide-image" />
       }
       @if (slide.content) {
         <div class="slide-content" [innerHTML]="slide.content"></div>
