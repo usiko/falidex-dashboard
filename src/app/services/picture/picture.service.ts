@@ -8,6 +8,6 @@ import { environment } from '../../../environments/environment';
 export class PictureService {
     constructor(private config: AppConfigService) {}
     getFullResourceUrl(src: string) {
-        return `http://localhost:3000${src}`;
+        return `${environment.urls.dataServer}${src}`;
     }
 }
