@@ -5,7 +5,6 @@ import { SymbolStore } from '../../../../../stores/symbols/symbols.store';
 import { linkStore } from '../../../../../stores/links/links.store';
 import { SymbolDetailCardComponent } from '../../dumb/symbol-detail-card/symbol-detail-card.component';
 import { ConfirmDialogComponent, ConfirmDialogData } from '../../../../shared/confirm-dialog/confirm-dialog.component';
-import { InputDialogComponent, InputDialogData } from '../../../../shared/input-dialog/input-dialog.component';
 import { SelectedRelationStore } from '../../../../../stores/selected-relation/selected-relation.store';
 import { CurrentUserStore } from '../../../../../stores/current-user/current-user.store';
 import { DataService } from '../../../../../services/data/data.service';
@@ -90,34 +89,7 @@ export class SymbolDetailComponent {
   onEditSymbol() {
     const symbol = this.symbol();
     if (!symbol || !symbol.id) return;
-    
-    this.dataService.getOccurenceRelationSymbole(symbol.id).subscribe(occurences => {
-      const totalOccurences = occurences.reduce((sum, occ) => sum + occ.items, 0);
-      const totalRelations = occurences.length;
-      const message = totalOccurences > 0 
-        ? `Cet élément est utilisé : ${totalOccurences} élément(s) parmi ${totalRelations} relation(s)` 
-        : undefined;
-
-      const dialogData: InputDialogData = {
-        title: 'Éditer le symbole',
-        message: message,
-        placeholder: 'Nom du symbole',
-        initialValue: symbol.name,
-        confirmText: 'Enregistrer',
-        cancelText: 'Annuler'
-      };
-      
-      const dialogRef = this.dialog.open(InputDialogComponent, {
-        data: dialogData,
-        width: '400px'
-      });
-      
-      dialogRef.afterClosed().subscribe(result => {
-        if (result && symbol.id) {
-          this.symbolStore.update(symbol.id, { name: result });
-        }
-      });
-    });
+    this.router.navigate(['/symbole', symbol.id, 'edit']);
   }
   
   onDeleteSymbol() {

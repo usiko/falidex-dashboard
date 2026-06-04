@@ -1,0 +1,21 @@
+:host{
+    .container{
+    display: block;
+    box-sizing: border-box;
+    height: 100%;
+    width: 100%;
+    position: relative;
+    .content{
+         display: block;
+        box-sizing: border-box;
+        height: 100%;
+        width: 100%;
+        position: relative;
+    }
+    &.fileovererror,&.fileover{
+        .content{
+             pointer-events: none;
+        }
+    }
+    }
+}

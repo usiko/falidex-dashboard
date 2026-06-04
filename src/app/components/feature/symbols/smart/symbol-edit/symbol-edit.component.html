@@ -1,0 +1,60 @@
+<div class="symbol-edit">
+  <div class="header">
+    <h1 class="page-title">Éditer le symbole</h1>
+  </div>
+
+  @if (symbol()) {
+    <div class="edit-card">
+      @if (occurenceMessage()) {
+        <div class="occurence-info">
+          <mat-icon>info</mat-icon>
+          <span>{{ occurenceMessage() }}</span>
+        </div>
+      }
+
+      <mat-form-field appearance="outline" class="name-field">
+        <mat-label>Nom du symbole</mat-label>
+        <input matInput [ngModel]="nameValue()" (ngModelChange)="nameValue.set($event)" placeholder="Nom du symbole" />
+      </mat-form-field>
+
+      @if (symbol()?.imgs && symbol()!.imgs!.length > 0) {
+        <div class="images-section">
+          <h2 class="section-title">Images</h2>
+          <div class="images-grid">
+            @for (img of symbol()!.imgs!; track img.id; let idx = $index) {
+              <div class="image-wrapper">
+                <img
+                  [src]="img.url "
+                  [alt]="symbol()?.name"
+                  class="symbol-image"
+                  (click)="openImageCarousel(idx)" />
+                <button
+                  mat-icon-button
+                  class="delete-img-btn"
+                  (click)="onDeleteImg(img.id)"
+                  aria-label="Supprimer l'image">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </div>
+            }
+          </div>
+        </div>
+      }
+
+      <button mat-stroked-button (click)="openAddImageDialog()">
+          <mat-icon>add_photo_alternate</mat-icon>
+          Ajouter une image
+        </button>
+
+      <div class="actions">
+        <button mat-button (click)="onCancel()">Annuler</button>
+        <button mat-raised-button color="primary" [disabled]="!nameValue().trim()" (click)="onSave()">
+          <mat-icon>save</mat-icon>
+          Enregistrer
+        </button>
+      </div>
+    </div>
+  } @else {
+    <p class="not-found">Symbole introuvable.</p>
+  }
+</div>

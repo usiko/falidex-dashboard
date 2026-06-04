@@ -213,6 +213,35 @@ export class DataService {
     );
   }
 
+  addSymboleImg(id: string, file: File): Observable<{ id: string; url: string; modificationDate: Date }[]>
+  {
+    const formData = new FormData();
+    formData.append('file', file);
+    const symbolPath = this.configService.getConfig()?.paths.symbols;
+    const imgPath = this.configService.getConfig()?.paths.resourceUpload
+    return this.http.post<{ id: string; url: string; modificationDate: Date }[]>(
+      `${environment.urls.dataServer}/${this.configService.getConfig()?.paths.symbols}/${id}/${imgPath}`,
+      formData
+    ).pipe(map(imgs=>{
+        
+        return imgs.map(item=>{
+            const url = this.pictureService.getFullResourceUrl(item.url)
+            return{
+                ...item,
+                url:url??''
+            }
+        })
+    }));
+  }
+  deleteSymboleImg(id: string): Observable<{ id: string; url: string; modificationDate: Date }>
+  {
+
+    const imgPath = this.configService.getConfig()?.paths.resourceRemove
+    return this.http.delete<{ id: string; url: string; modificationDate: Date }>(
+      `${environment.urls.dataServer}/${this.configService.getConfig()?.paths.resourceRemove}/${id}`,
+    );
+  }
+
   editSymbol(symbol:Partial<ISymbol>): Observable<void>
   {
     return this.http.put(

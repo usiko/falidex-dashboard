@@ -1,0 +1,70 @@
+:host{
+    --upload-form-height: 200px;
+    --upload-form-border-radius: 8px;
+    --upload-form-color-bg: var(--mat-sys-surface-container-low);
+    --upload-form-color: var(--mat-sys-primary);
+    --upload-form-fileover-bg: var(--mat-sys-primary-container);
+    --upload-form-fileover-color: var(--mat-sys-on-primary-container);
+    --upload-form-fileover-error-bg: color-mix(in srgb, var(--mat-sys-error) 20%, transparent);
+    --upload-form-fileover-error-color: var(--mat-sys-error);
+    --upload-form-delete-btn-bg: var(--mat-sys-error);
+    --upload-form-delete-btn-color: #fff;
+
+    --upload-form-message-height: 60px;
+
+    --upload-form-success-color: var(--mat-sys-tertiary);
+    --upload-form-error-color: var(--mat-sys-error);
+    --upload-form-spinner-color: var(--mat-sys-primary);
+    app-upload-item{
+        --upload-item-height: 200px;
+        --upload-item-success-color:var(--upload-form-success-color);
+        --upload-item-error-color:var(--upload-form-error-color);
+        --upload-item-spinner-color:var(--upload-form-spinner-color);
+            
+        --upload-item-color-bg :var(--upload-form-color-bg);
+        --upload-item-color:var(--upload-form-color);
+        --upload-item-color-on:var(--mat-sys-on-primary);
+        --upload-item-color-on:red;
+        --upload-item-border: solid 1px var(--upload-form-color);
+        --upload-item-border-radius: var(--upload-form-border-radius);
+        --upload-item-fileover-border:solid 1px var(--upload-form-fileover-color);
+        --upload-item-fileover-color:var(--upload-form-fileover-color);
+        --upload-item-fileover-error-border:solid 1px var(--upload-form-fileover-error-color);
+        --upload-item-fileover-error-color: var(--upload-form-fileover-error-color);
+
+        --upload-item-delete-btn-bg:var(--upload-form-delete-btn-bg);
+        --upload-item-delete-btn-color:var(--upload-form-delete-btn-color);
+
+        --upload-item-success-color:green;
+        --upload-item-error-color:pink;
+        
+    }
+
+    .message{
+        height:var(--upload-form-message-height);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        &.error{
+            color:var(--upload-form-fileover-error-color);
+            >span{
+                &::first-letter{
+                    text-transform: uppercase;
+                }
+            }
+        }
+       --mat-button-text-label-text-color: #ffffff;
+        button{
+            text-transform: capitalize;
+            background-color: var(--upload-form-color);
+            
+
+            --mdc-text-button-disabled-label-text-color:var(--upload-form-color);
+            &:disabled{
+                background-color: transparent;
+                opacity: 0.5;
+            }
+
+        }
+    }
+}

@@ -12,6 +12,8 @@ import type { RelationTypeStats } from '../../smart/symbol-item/symbol-item.comp
 import { SymbolPositionTooltipComponent } from '../symbol-position-tooltip/symbol-position-tooltip.component';
 import { FiliereCombinationsTooltipComponent } from '../../../filieres/dumb/filiere-combinations-tooltip/filiere-combinations-tooltip.component';
 import { ImageCarouselDialogComponent } from '../../dialogs/image-carousel-dialog/image-carousel-dialog.component';
+import { BlobImagePipe } from '../../../../pipe/img-url.pipe';
+
 
 @Component({
   selector: 'app-symbol-card',
@@ -25,7 +27,8 @@ import { ImageCarouselDialogComponent } from '../../dialogs/image-carousel-dialo
     OverlayModule,
     SymbolPositionTooltipComponent,
     FiliereCombinationsTooltipComponent,
-    RouterModule
+    RouterModule,
+    BlobImagePipe
   ],
   templateUrl: './symbol-card.component.html',
   styleUrl: './symbol-card.component.scss'

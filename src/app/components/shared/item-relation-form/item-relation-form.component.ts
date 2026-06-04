@@ -15,6 +15,7 @@ import { IRelationItem } from '../../../models/data/base-relations.models';
 import { ColorBadgeComponent, ColorBadgeData } from '../color-badge/color-badge.component';
 import { CollectionDialogComponent, CollectionDialogData } from '../collection-dialog/collection-dialog.component';
 import { SymbolsCollectionComponent } from '../../collection/symbols/symbols-collection.component';
+import { BlobImagePipe } from '../../pipe/img-url.pipe';
 import { FilieresCollectionComponent } from '../../collection/filieres/filieres-collection.component';
 import { CirculairesCollectionComponent } from '../../collection/circulaires/circulaires-collection.component';
 import { SignificationsCollectionComponent } from '../../collection/significations/significations-collection.component';
@@ -46,6 +47,7 @@ type RelationMode = 'filiere' | 'signification';
   selector: 'app-item-relation-form',
   standalone: true,
   imports: [
+    BlobImagePipe,
     CommonModule,
     FormsModule,
     MatButtonModule,

@@ -1,0 +1,20 @@
+:host{
+    --input-file-btn-bg-color:blue;
+    --input-file-btn-color:orange;
+    .file-input{
+        display: none;
+    }
+
+    .fileupload{
+        .file-name{
+            font-size: 0.8em;
+            color:var(---input-file-filename-color);
+
+        }
+        button{
+            background-color: var(--input-file-btn-bg-color);
+            color: var(--input-file-btn-color);
+            --mdc-text-button-label-text-color: var(--input-file-btn-color);
+        }
+    }
+}

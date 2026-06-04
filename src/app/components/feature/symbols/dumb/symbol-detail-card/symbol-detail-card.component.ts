@@ -7,6 +7,7 @@ import { IBaseSymbol } from '../../../../../models/data/base-data-models';
 import { IRelationItem } from '../../../../../models/data/base-relations.models';
 import { ImageCarouselDialogComponent } from '../../dialogs/image-carousel-dialog/image-carousel-dialog.component';
 import { SymbolRelationItemComponent } from '../../smart/symbol-relation-item/symbol-relation-item.component';
+import { BlobImagePipe } from '../../../../pipe/img-url.pipe';
 
 @Component({
   selector: 'app-symbol-detail-card',
@@ -15,7 +16,8 @@ import { SymbolRelationItemComponent } from '../../smart/symbol-relation-item/sy
     CommonModule,
     SymbolRelationItemComponent,
     MatButtonModule,
-    MatIconModule
+    MatIconModule,
+    BlobImagePipe
   ],
   templateUrl: './symbol-detail-card.component.html',
   styleUrl: './symbol-detail-card.component.scss'
