@@ -13,12 +13,13 @@ export class BlobImagePipe implements PipeTransform {
   constructor(private http: HttpClient) {}
 
   transform(url: string): Observable<string> {
+    if (!url) {
+      return of('');
+    }
 
-    if (this.cache.has(url)) {
-      return new Observable(obs => {
-        obs.next(this.cache.get(url)!);
-        obs.complete();
-      });
+    const cached = this.cache.get(url);
+    if (cached) {
+      return of(cached);
     }
 
     return this.http.get(url, { responseType: 'blob' }).pipe(
