@@ -17,7 +17,7 @@ import { CirculaireStore } from '../../../../../stores/circulaires/circulaires.s
 import { SymbolSensStore } from '../../../../../stores/symbols-sens/symbols-sens.store';
 import { SymbolAccessoryStore } from '../../../../../stores/symbols-accessory/symbols-accessory.store';
 import { SnackbarService } from '../../../../../services/snackbar/snackbar.service';
-import { buildImportPrompt } from './importer-prompt.builder';
+import { ImporterPromptBuilderService } from './importer-prompt-builder.service';
 
 @Component({
   selector: 'app-importer-prompt',
@@ -38,6 +38,7 @@ export class ImporterPromptComponent {
   private readonly symbolSensStore = inject(SymbolSensStore);
   private readonly symbolAccessoryStore = inject(SymbolAccessoryStore);
   private readonly snackbar = inject(SnackbarService);
+  private readonly promptBuilder = inject(ImporterPromptBuilderService);
 
   protected readonly codes = computed(() =>
     [...this.relationStore.entities()].sort((a, b) => a.name.localeCompare(b.name) || b.annee - a.annee)
@@ -51,7 +52,7 @@ export class ImporterPromptComponent {
   });
 
   protected readonly prompt = computed(() =>
-    buildImportPrompt({
+    this.promptBuilder.buildPrompt({
       refs: {
         colors: this.colorStore.entities(),
         filieres: this.filiereStore.entities(),
