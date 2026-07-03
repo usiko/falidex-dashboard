@@ -2,6 +2,8 @@ import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { ImporterPromptComponent } from '../smart/prompt/importer-prompt.component';
+import { DiffTableComponent } from '../dumb/diff-table/diff-table.component';
+import { DiffOption, DiffRow } from '../models/diff-row.model';
 
 const MIN_PANEL_PERCENT = 20;
 const MAX_PANEL_PERCENT = 80;
@@ -10,13 +12,17 @@ const DEFAULT_LEFT_PERCENT = 60;
 @Component({
   selector: 'app-importer-page',
   standalone: true,
-  imports: [CommonModule, MatIconModule, ImporterPromptComponent],
+  imports: [CommonModule, MatIconModule, ImporterPromptComponent, DiffTableComponent],
   templateUrl: './importer.page.html',
   styleUrl: './importer.page.scss'
 })
 export class ImporterPageComponent {
   protected readonly leftPanelPercent = signal(DEFAULT_LEFT_PERCENT);
   protected readonly isDragging = signal(false);
+
+  // Alimentés par le smart "review" (QUE-70), pas encore implémenté : vide par défaut.
+  protected readonly diffRows = signal<DiffRow[]>([]);
+  protected readonly referentialOptions = signal<Partial<Record<string, DiffOption[]>>>({});
 
   private dragStartX = 0;
   private dragStartPercent = DEFAULT_LEFT_PERCENT;
