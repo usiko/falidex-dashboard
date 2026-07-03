@@ -1,5 +1,6 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
@@ -21,7 +22,7 @@ import { buildImportPrompt } from './importer-prompt.builder';
 @Component({
   selector: 'app-importer-prompt',
   standalone: true,
-  imports: [CommonModule, MatSelectModule, MatFormFieldModule, MatButtonModule, MatIconModule, MatTooltipModule],
+  imports: [CommonModule, FormsModule, MatSelectModule, MatFormFieldModule, MatButtonModule, MatIconModule, MatTooltipModule],
   templateUrl: './importer-prompt.component.html',
   styleUrl: './importer-prompt.component.scss'
 })
@@ -74,6 +75,8 @@ export class ImporterPromptComponent {
   );
 
   protected readonly promptLength = computed(() => this.prompt().length);
+
+  protected readonly pastedJson = signal('');
 
   protected onCodeChange(codeId: string | null): void {
     this.selectedCodeId.set(codeId);

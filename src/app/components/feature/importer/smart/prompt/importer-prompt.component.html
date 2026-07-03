@@ -23,4 +23,16 @@
   <p class="next-step-hint">
     Copiez ce prompt avec le PDF source dans l'IA de votre choix, puis collez le JSON obtenu ci-dessous une fois généré.
   </p>
+
+  <div class="prompt-preview-header">
+    <span>JSON généré par l'IA</span>
+    <span class="prompt-length">{{ pastedJson().length }} caractères</span>
+  </div>
+  <textarea
+    class="json-paste-textarea"
+    [ngModel]="pastedJson()"
+    (ngModelChange)="pastedJson.set($event)"
+    placeholder="Collez ici le JSON renvoyé par l'IA"
+    spellcheck="false">
+  </textarea>
 </div>
