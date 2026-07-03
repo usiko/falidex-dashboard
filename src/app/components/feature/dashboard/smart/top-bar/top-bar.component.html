@@ -62,6 +62,12 @@
       <mat-icon>table_chart</mat-icon>
       Table
     </button>
+    @if (isLoggedIn()) {
+      <button mat-button class="desktop-nav" (click)="onNavigate($event, ['/importer'])">
+        <mat-icon>upload_file</mat-icon>
+        Importer
+      </button>
+    }
   </div>
 
   <span class="spacer"></span>
@@ -141,6 +147,12 @@
         <mat-icon>table_chart</mat-icon>
         <span>Table</span>
       </button>
+      @if (isLoggedIn()) {
+        <button mat-menu-item (click)="onNavigate($event, ['/importer'])">
+          <mat-icon>upload_file</mat-icon>
+          <span>Importer</span>
+        </button>
+      }
       <mat-divider></mat-divider>
       <button mat-menu-item (click)="onNavigate($event, ['/significations'])">
         <mat-icon>label</mat-icon>
