@@ -87,6 +87,10 @@ export const routes: Routes = [
     loadComponent: () => import('./components/feature/colors/page/colors-list.page').then(m => m.ColorsListPageComponent)
   },
   {
+    path: 'importer',
+    loadComponent: () => import('./components/feature/importer/page/importer.page').then(m => m.ImporterPageComponent)
+  },
+  {
     path: '**',
     redirectTo: 'filieres'
   }
