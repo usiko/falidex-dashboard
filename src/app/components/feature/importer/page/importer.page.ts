@@ -1,6 +1,7 @@
 import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
+import { ImporterPromptComponent } from '../smart/prompt/importer-prompt.component';
 
 const MIN_PANEL_PERCENT = 20;
 const MAX_PANEL_PERCENT = 80;
@@ -9,7 +10,7 @@ const DEFAULT_LEFT_PERCENT = 60;
 @Component({
   selector: 'app-importer-page',
   standalone: true,
-  imports: [CommonModule, MatIconModule],
+  imports: [CommonModule, MatIconModule, ImporterPromptComponent],
   templateUrl: './importer.page.html',
   styleUrl: './importer.page.scss'
 })
