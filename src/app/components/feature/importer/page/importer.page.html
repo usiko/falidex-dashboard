@@ -11,9 +11,8 @@
         <mat-icon>table_chart</mat-icon>
         <span>Diff</span>
       </div>
-      <div class="panel-body panel-placeholder">
-        <mat-icon>rule</mat-icon>
-        <p>Le rendu du diff s'affichera ici une fois un JSON validé.</p>
+      <div class="panel-body">
+        <app-diff-table [rows]="diffRows()" [referentialOptions]="referentialOptions()" />
       </div>
     </div>
 
