@@ -49,6 +49,10 @@
           "incertain": {
             "type": "boolean",
             "description": "true si l'information est ambiguë, absente du PDF ou à vérifier manuellement, false sinon."
+          },
+          "note": {
+            "type": "string",
+            "description": "Obligatoire si incertain est true : explique la raison du doute (ex. valeur absente du PDF, tableau ambigu, interprétations possibles). Optionnel sinon."
           }
         }
       }
