@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { IRelationData, IRelationItem } from '../../../../../models/data/base-relations.models';
 import { IBaseCollectionData } from '../../../../../models/data/base-data-models';
 import importJsonSchema from './import-json-schema.json';
+import extractionRules from './extraction-rules.json';
 
 export interface ReferentialLists {
   colors: IBaseCollectionData[];
@@ -29,13 +30,14 @@ export interface BuildImportPromptParams {
   lookups: RelationLookups;
 }
 
-const EXTRACTION_RULES = `Consignes d'extraction :
-- Analyse uniquement le PDF fourni pour extraire les informations (filière, symbole, position, placement, signification, couleur, circulaire, notes...).
-- N'invente jamais une valeur absente ou illisible dans le PDF : marque plutôt l'opération avec "incertain": true, une "confidence" basse, et une note expliquant le doute.
-- En cas de tableau ambigu ou de regroupement implicite (ex. rattachement matière/couleur/filière peu clair), ne choisis pas arbitrairement : marque "incertain": true.
-- Pour toute entité qui n'existe pas déjà dans les référentiels listés ci-dessous, crée-la avec un id temporaire préfixé "tmp:" (ex. "tmp:symbole-1"). Cet id peut être référencé par une autre opération du même JSON (ex. une relation qui pointe vers un symbole pas encore créé).
-- Avant de créer une nouvelle entité, rapproche le libellé extrait des référentiels existants ci-dessous par leur nom (insensible à la casse et aux accents) pour éviter les doublons.
-- Réponds uniquement avec le JSON, sans texte ni balises markdown autour.`;
+function buildExtractionRulesBlock(): string {
+  const rulesList = extractionRules.rules.map((rule) => `- ${rule}`).join('\n');
+  const examplesList = extractionRules.fewShotExamples
+    .map((example, index) => `Exemple ${index + 1} : ${example.description}\n${JSON.stringify(example.output, null, 2)}`)
+    .join('\n\n');
+
+  return `Consignes d'extraction :\n${rulesList}\n\nExemples (few-shot) :\n${examplesList}`;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -45,7 +47,7 @@ export class ImporterPromptBuilderService {
     const sections = [
       'Tu es un assistant chargé de transformer le contenu d\'un PDF (circulaire militaire) en un batch de modifications structuré pour la base de données Falidex.',
       `Schéma JSON attendu (JSON Schema) :\n${JSON.stringify(importJsonSchema, null, 2)}`,
-      EXTRACTION_RULES,
+      buildExtractionRulesBlock(),
       `Référentiels existants (à utiliser pour rapprocher les libellés par nom au lieu de créer des doublons) :\n${this.buildReferentialsBlock(params.refs)}`
     ];
 
