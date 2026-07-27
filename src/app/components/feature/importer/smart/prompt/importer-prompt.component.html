@@ -35,4 +35,20 @@
     placeholder="Collez ici le JSON renvoyé par l'IA"
     spellcheck="false">
   </textarea>
+
+  <button mat-raised-button color="primary" class="validate-button" (click)="onValidateJson()" matTooltip="Valider le JSON et calculer le diff">
+    <mat-icon>rule</mat-icon>
+    Valider le JSON
+  </button>
+
+  @if (validationErrors(); as errors) {
+    <div class="validation-errors">
+      <mat-icon>error</mat-icon>
+      <ul>
+        @for (error of errors; track error) {
+          <li>{{ error }}</li>
+        }
+      </ul>
+    </div>
+  }
 </div>

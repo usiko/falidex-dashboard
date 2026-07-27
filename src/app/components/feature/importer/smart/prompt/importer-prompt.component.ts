@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
@@ -18,6 +18,8 @@ import { SymbolSensStore } from '../../../../../stores/symbols-sens/symbols-sens
 import { SymbolAccessoryStore } from '../../../../../stores/symbols-accessory/symbols-accessory.store';
 import { SnackbarService } from '../../../../../services/snackbar/snackbar.service';
 import { ImporterPromptBuilderService } from './importer-prompt-builder.service';
+import { ImportBatchValidatorService } from './import-batch-validator.service';
+import { EntityCollections, ImporterReviewBuilderService, ImporterReviewResult } from './importer-review-builder.service';
 
 @Component({
   selector: 'app-importer-prompt',
@@ -39,6 +41,10 @@ export class ImporterPromptComponent {
   private readonly symbolAccessoryStore = inject(SymbolAccessoryStore);
   private readonly snackbar = inject(SnackbarService);
   private readonly promptBuilder = inject(ImporterPromptBuilderService);
+  private readonly batchValidator = inject(ImportBatchValidatorService);
+  private readonly reviewBuilder = inject(ImporterReviewBuilderService);
+
+  readonly reviewed = output<ImporterReviewResult>();
 
   protected readonly codes = computed(() =>
     [...this.relationStore.entities()].sort((a, b) => a.name.localeCompare(b.name) || b.annee - a.annee)
@@ -78,6 +84,19 @@ export class ImporterPromptComponent {
   protected readonly promptLength = computed(() => this.prompt().length);
 
   protected readonly pastedJson = signal('');
+  protected readonly validationErrors = signal<string[] | null>(null);
+
+  private readonly entityCollections = computed<EntityCollections>(() => ({
+    circulaire: this.circulaireStore.entities(),
+    color: this.colorStore.entities(),
+    filiere: this.filiereStore.entities(),
+    placement: this.placementStore.entities(),
+    position: this.positionStore.entities(),
+    symbole: this.symbolStore.entities(),
+    signification: this.significationStore.entities(),
+    symboleSens: this.symbolSensStore.entities(),
+    symboleAccessoire: this.symbolAccessoryStore.entities()
+  }));
 
   protected onCodeChange(codeId: string | null): void {
     this.selectedCodeId.set(codeId);
@@ -90,5 +109,19 @@ export class ImporterPromptComponent {
     } catch {
       this.snackbar.error('Impossible de copier le prompt');
     }
+  }
+
+  protected onValidateJson(): void {
+    const { batch, errors } = this.batchValidator.parse(this.pastedJson());
+
+    if (!batch) {
+      this.validationErrors.set(errors);
+      return;
+    }
+
+    this.validationErrors.set(null);
+    const result = this.reviewBuilder.buildReview(batch, this.entityCollections());
+    this.reviewed.emit(result);
+    this.snackbar.success(`${result.rows.length} opération(s) chargée(s) dans le diff`);
   }
 }
