@@ -12,8 +12,48 @@
         <span>Diff</span>
       </div>
       <div class="panel-body">
-        <app-diff-table [rows]="diffRows()" [referentialOptions]="referentialOptions()" (fieldCorrected)="onFieldCorrected($event)" />
+        <app-diff-table
+          [rows]="diffRows()"
+          [referentialOptions]="referentialOptions()"
+          (fieldCorrected)="onFieldCorrected($event)"
+          (incertainResolved)="onIncertainResolved($event)" />
       </div>
+
+      @if (batch()) {
+        <div class="apply-bar">
+          <mat-form-field appearance="outline" class="apply-field">
+            <mat-label>Nom de l'import</mat-label>
+            <input matInput [ngModel]="importName()" (ngModelChange)="importName.set($event)" placeholder="Ex : Circulaire 2024-12" />
+          </mat-form-field>
+
+          @if (needsNewFicheName()) {
+            <mat-form-field appearance="outline" class="apply-field">
+              <mat-label>Nom de la nouvelle fiche</mat-label>
+              <input matInput [ngModel]="newFicheName()" (ngModelChange)="newFicheName.set($event)" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="apply-field apply-field-small">
+              <mat-label>Année</mat-label>
+              <input
+                matInput
+                type="number"
+                [ngModel]="newFicheAnnee()"
+                (ngModelChange)="newFicheAnnee.set($event)" />
+            </mat-form-field>
+          }
+
+          <span class="spacer"></span>
+
+          <button mat-raised-button color="primary" [disabled]="!canApplyImport()" (click)="onApplyImport()">
+            @if (isApplying()) {
+              <mat-spinner diameter="18" />
+            } @else {
+              <mat-icon>publish</mat-icon>
+            }
+            Appliquer l'import
+          </button>
+        </div>
+      }
     </div>
 
     <div
