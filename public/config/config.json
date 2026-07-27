@@ -20,7 +20,8 @@
         "token": "token",
         "login":"auth",
         "resourceUpload":"resource/upload",
-        "resourceRemove":"resource/remove"
+        "resourceRemove":"resource/remove",
+        "import":"collection/import"
     },
     "pictureServerSalt": "iBhodGT6GTqS6Bb"
 }

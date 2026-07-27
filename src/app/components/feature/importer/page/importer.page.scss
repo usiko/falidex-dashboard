@@ -106,6 +106,43 @@
   min-height: 0;
 }
 
+.apply-bar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 12px 16px;
+  border-top: 1px solid var(--mat-sys-outline-variant);
+  background-color: var(--mat-sys-surface-container-high);
+  flex-shrink: 0;
+
+  .apply-field {
+    flex: 1;
+    min-width: 160px;
+  }
+
+  .apply-field-small {
+    flex: 0 0 100px;
+    min-width: 100px;
+  }
+
+  button[mat-raised-button] {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+
+    mat-spinner {
+      display: inline-flex;
+    }
+  }
+
+  .spacer {
+    flex: 1;
+    min-width: 0;
+  }
+}
+
 .split-divider {
   flex-shrink: 0;
   width: 10px;

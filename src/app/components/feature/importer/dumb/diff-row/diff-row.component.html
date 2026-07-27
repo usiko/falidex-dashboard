@@ -15,10 +15,14 @@
       <span class="row-label">{{ row().label }}</span>
 
       @if (row().incertain) {
-        <span class="incertain-chip" matTooltip="À vérifier avant validation">
+        <button
+          type="button"
+          class="incertain-chip"
+          matTooltip="Cliquer une fois vérifié pour lever le doute"
+          (click)="onResolveIncertain()">
           <mat-icon>warning</mat-icon>
           Incertain
-        </span>
+        </button>
       }
 
       <span class="spacer"></span>

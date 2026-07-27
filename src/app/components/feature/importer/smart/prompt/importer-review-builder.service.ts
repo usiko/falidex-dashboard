@@ -6,7 +6,8 @@ import {
   DiffOption,
   DiffRelationField,
   DiffRelationFieldKey,
-  DiffRow
+  DiffRow,
+  RELATION_FIELD_JSON_KEYS
 } from '../../models/diff-row.model';
 import { ImportBatch, ImportOperation } from './import-batch.model';
 
@@ -15,6 +16,7 @@ export type NonRelationEntityType = Exclude<DiffEntityType, 'relation'>;
 export type EntityCollections = Record<NonRelationEntityType, IBaseCollectionData[]>;
 
 export interface ImporterReviewResult {
+  batch: ImportBatch;
   rows: DiffRow[];
   referentialOptions: Partial<Record<DiffEntityType, DiffOption[]>>;
 }
@@ -25,16 +27,9 @@ interface RelationFieldDef {
   jsonKey: string;
 }
 
-const RELATION_FIELD_DEFS: RelationFieldDef[] = [
-  { key: 'filiere', entityType: 'filiere', jsonKey: 'filiereId' },
-  { key: 'symbole', entityType: 'symbole', jsonKey: 'symboleId' },
-  { key: 'placement', entityType: 'placement', jsonKey: 'placementId' },
-  { key: 'position', entityType: 'position', jsonKey: 'positionId' },
-  { key: 'circulaire', entityType: 'circulaire', jsonKey: 'circulaireId' },
-  { key: 'signification', entityType: 'signification', jsonKey: 'significationId' },
-  { key: 'symboleSens', entityType: 'symboleSens', jsonKey: 'symboleSensId' },
-  { key: 'symboleAccessoire', entityType: 'symboleAccessoire', jsonKey: 'symboleAccessoryId' }
-];
+const RELATION_FIELD_DEFS: RelationFieldDef[] = (
+  Object.entries(RELATION_FIELD_JSON_KEYS) as [DiffRelationFieldKey, string][]
+).map(([key, jsonKey]) => ({ key, entityType: key as NonRelationEntityType, jsonKey }));
 
 type NameMap = Map<string, string>;
 type NameMapByEntity = Partial<Record<NonRelationEntityType, NameMap>>;
@@ -50,7 +45,7 @@ export class ImporterReviewBuilderService {
     const rows = batch.operations.map((op, index) => this.buildRow(op, index, storeNames, batchNames));
     const referentialOptions = this.buildReferentialOptions(collections, batchNames);
 
-    return { rows, referentialOptions };
+    return { batch, rows, referentialOptions };
   }
 
   private buildStoreNames(collections: EntityCollections): NameMapByEntity {

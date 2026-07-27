@@ -16,4 +16,5 @@ export class DiffTableComponent {
   referentialOptions = input<Partial<Record<string, DiffOption[]>>>({});
 
   fieldCorrected = output<DiffFieldCorrection>();
+  incertainResolved = output<string>();
 }

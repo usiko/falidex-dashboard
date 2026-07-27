@@ -26,6 +26,7 @@ export class DiffRowComponent {
   referentialOptions = input<Partial<Record<string, DiffOption[]>>>({});
 
   fieldCorrected = output<DiffFieldCorrection>();
+  incertainResolved = output<string>();
 
   protected readonly isReferential = computed(() => this.row().entity !== 'relation');
   protected readonly entityLabel = computed(() => ENTITY_TYPE_LABELS[this.row().entity]);
@@ -55,5 +56,9 @@ export class DiffRowComponent {
         newLabel: selected.name
       });
     });
+  }
+
+  protected onResolveIncertain(): void {
+    this.incertainResolved.emit(this.row().id);
   }
 }

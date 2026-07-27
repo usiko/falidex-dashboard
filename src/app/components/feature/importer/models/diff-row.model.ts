@@ -58,6 +58,18 @@ export interface DiffFieldCorrection {
   newLabel: string;
 }
 
+/** Clé JSON (`fields.<clé>`) d'un champ de relation, telle qu'attendue par le schéma d'import. */
+export const RELATION_FIELD_JSON_KEYS: Record<DiffRelationFieldKey, string> = {
+  filiere: 'filiereId',
+  symbole: 'symboleId',
+  placement: 'placementId',
+  position: 'positionId',
+  circulaire: 'circulaireId',
+  signification: 'significationId',
+  symboleSens: 'symboleSensId',
+  symboleAccessoire: 'symboleAccessoryId'
+};
+
 export const ENTITY_TYPE_LABELS: Record<DiffEntityType, string> = {
   circulaire: 'Circulaire',
   color: 'Couleur',

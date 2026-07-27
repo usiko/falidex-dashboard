@@ -21,6 +21,11 @@ import { ImporterPromptBuilderService } from './importer-prompt-builder.service'
 import { ImportBatchValidatorService } from './import-batch-validator.service';
 import { EntityCollections, ImporterReviewBuilderService, ImporterReviewResult } from './importer-review-builder.service';
 
+export interface ImporterBatchReviewed extends ImporterReviewResult {
+  /** Code sélectionné comme base au moment de la validation (verrouillé, indépendant du <mat-select>). */
+  targetCode: { id: string; name: string; annee?: number } | null;
+}
+
 @Component({
   selector: 'app-importer-prompt',
   standalone: true,
@@ -44,7 +49,7 @@ export class ImporterPromptComponent {
   private readonly batchValidator = inject(ImportBatchValidatorService);
   private readonly reviewBuilder = inject(ImporterReviewBuilderService);
 
-  readonly reviewed = output<ImporterReviewResult>();
+  readonly reviewed = output<ImporterBatchReviewed>();
 
   protected readonly codes = computed(() =>
     [...this.relationStore.entities()].sort((a, b) => a.name.localeCompare(b.name) || b.annee - a.annee)
@@ -121,7 +126,11 @@ export class ImporterPromptComponent {
 
     this.validationErrors.set(null);
     const result = this.reviewBuilder.buildReview(batch, this.entityCollections());
-    this.reviewed.emit(result);
+    const code = this.selectedCode();
+    this.reviewed.emit({
+      ...result,
+      targetCode: code ? { id: code.id, name: code.name, annee: code.annee } : null
+    });
     this.snackbar.success(`${result.rows.length} opération(s) chargée(s) dans le diff`);
   }
 }

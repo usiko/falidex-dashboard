@@ -25,3 +25,37 @@ export interface ImportOperation {
 export interface ImportBatch {
   operations: ImportOperation[];
 }
+
+export interface ImportNewLinkFields {
+  name: string;
+  annee?: number;
+}
+
+/** Corps de `POST /collection/import` : le batch validé, accompagné du contexte cible. */
+export interface ImportApplyRequest {
+  name: string;
+  linkId?: string;
+  newLink?: ImportNewLinkFields;
+  operations: ImportOperation[];
+}
+
+export interface ImportOperationResult {
+  op: ImportOperationType;
+  entity: ImportEntityType;
+  sourceId: string;
+  resolvedId: string;
+  before?: unknown;
+  after?: unknown;
+}
+
+export interface ImportCode {
+  _id: string;
+  name: string;
+  date: string;
+  userId: string;
+  userName: string;
+  linkId?: string;
+  status: 'applied' | 'failed';
+  operations: ImportOperationResult[];
+  error?: string;
+}
