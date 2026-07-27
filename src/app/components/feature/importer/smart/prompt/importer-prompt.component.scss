@@ -45,12 +45,35 @@
   word-break: break-word;
 }
 
-.copy-button {
+.copy-button,
+.validate-button {
   align-self: flex-start;
   display: flex;
   align-items: center;
   gap: 8px;
   flex-shrink: 0;
+}
+
+.validation-errors {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--mat-sys-error);
+  background-color: var(--mat-sys-error-container);
+  color: var(--mat-sys-on-error-container);
+  font-size: 12px;
+  flex-shrink: 0;
+
+  mat-icon {
+    flex-shrink: 0;
+  }
+
+  ul {
+    margin: 0;
+    padding-left: 16px;
+  }
 }
 
 .next-step-hint {

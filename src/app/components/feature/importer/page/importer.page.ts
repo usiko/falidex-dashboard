@@ -2,8 +2,9 @@ import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { ImporterPromptComponent } from '../smart/prompt/importer-prompt.component';
+import { ImporterReviewResult } from '../smart/prompt/importer-review-builder.service';
 import { DiffTableComponent } from '../dumb/diff-table/diff-table.component';
-import { DiffOption, DiffRow } from '../models/diff-row.model';
+import { DiffFieldCorrection, DiffOption, DiffRow } from '../models/diff-row.model';
 
 const MIN_PANEL_PERCENT = 20;
 const MAX_PANEL_PERCENT = 80;
@@ -20,7 +21,7 @@ export class ImporterPageComponent {
   protected readonly leftPanelPercent = signal(DEFAULT_LEFT_PERCENT);
   protected readonly isDragging = signal(false);
 
-  // Alimentés par le smart "review" (QUE-70), pas encore implémenté : vide par défaut.
+  // Alimentés par le smart "prompt" une fois le JSON de l'IA validé (bouton "Valider le JSON").
   protected readonly diffRows = signal<DiffRow[]>([]);
   protected readonly referentialOptions = signal<Partial<Record<string, DiffOption[]>>>({});
 
@@ -68,5 +69,24 @@ export class ImporterPageComponent {
 
   protected onDividerDoubleClick(): void {
     this.leftPanelPercent.set(DEFAULT_LEFT_PERCENT);
+  }
+
+  protected onReviewed(result: ImporterReviewResult): void {
+    this.diffRows.set(result.rows);
+    this.referentialOptions.set(result.referentialOptions);
+  }
+
+  protected onFieldCorrected(correction: DiffFieldCorrection): void {
+    this.diffRows.update((rows) =>
+      rows.map((row) => {
+        if (row.id !== correction.rowId || !row.relationFields) return row;
+        return {
+          ...row,
+          relationFields: row.relationFields.map((field) =>
+            field.key === correction.fieldKey ? { ...field, id: correction.newId, label: correction.newLabel } : field
+          )
+        };
+      })
+    );
   }
 }

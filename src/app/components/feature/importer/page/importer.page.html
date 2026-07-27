@@ -12,7 +12,7 @@
         <span>Diff</span>
       </div>
       <div class="panel-body">
-        <app-diff-table [rows]="diffRows()" [referentialOptions]="referentialOptions()" />
+        <app-diff-table [rows]="diffRows()" [referentialOptions]="referentialOptions()" (fieldCorrected)="onFieldCorrected($event)" />
       </div>
     </div>
 
@@ -35,7 +35,7 @@
         <span>Prompt &amp; Review</span>
       </div>
       <div class="panel-body">
-        <app-importer-prompt />
+        <app-importer-prompt (reviewed)="onReviewed($event)" />
       </div>
     </div>
   </div>
