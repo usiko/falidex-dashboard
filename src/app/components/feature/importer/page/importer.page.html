@@ -1,0 +1,82 @@
+<div class="page-container">
+  <div class="page-header">
+    <div class="header-top">
+      <h1><mat-icon>upload_file</mat-icon> Importer</h1>
+    </div>
+  </div>
+
+  <div class="split-container" #splitContainer>
+    <div class="split-panel left-panel" [style.width.%]="leftPanelPercent()">
+      <div class="panel-header">
+        <mat-icon>table_chart</mat-icon>
+        <span>Diff</span>
+      </div>
+      <div class="panel-body">
+        <app-diff-table
+          [rows]="diffRows()"
+          [referentialOptions]="referentialOptions()"
+          (fieldCorrected)="onFieldCorrected($event)"
+          (incertainResolved)="onIncertainResolved($event)" />
+      </div>
+
+      @if (batch()) {
+        <div class="apply-bar">
+          <mat-form-field appearance="outline" class="apply-field">
+            <mat-label>Nom de l'import</mat-label>
+            <input matInput [ngModel]="importName()" (ngModelChange)="importName.set($event)" placeholder="Ex : Circulaire 2024-12" />
+          </mat-form-field>
+
+          @if (needsNewFicheName()) {
+            <mat-form-field appearance="outline" class="apply-field">
+              <mat-label>Nom de la nouvelle fiche</mat-label>
+              <input matInput [ngModel]="newFicheName()" (ngModelChange)="newFicheName.set($event)" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="apply-field apply-field-small">
+              <mat-label>Année</mat-label>
+              <input
+                matInput
+                type="number"
+                [ngModel]="newFicheAnnee()"
+                (ngModelChange)="newFicheAnnee.set($event)" />
+            </mat-form-field>
+          }
+
+          <span class="spacer"></span>
+
+          <button mat-raised-button color="primary" [disabled]="!canApplyImport()" (click)="onApplyImport()">
+            @if (isApplying()) {
+              <mat-spinner diameter="18" />
+            } @else {
+              <mat-icon>publish</mat-icon>
+            }
+            Appliquer l'import
+          </button>
+        </div>
+      }
+    </div>
+
+    <div
+      class="split-divider"
+      [class.dragging]="isDragging()"
+      role="separator"
+      aria-orientation="vertical"
+      aria-label="Redimensionner les panneaux"
+      tabindex="0"
+      (pointerdown)="onDividerPointerDown($event, splitContainer)"
+      (keydown)="onDividerKeydown($event)"
+      (dblclick)="onDividerDoubleClick()">
+      <div class="split-divider-handle"></div>
+    </div>
+
+    <div class="split-panel right-panel">
+      <div class="panel-header">
+        <mat-icon>smart_toy</mat-icon>
+        <span>Prompt &amp; Review</span>
+      </div>
+      <div class="panel-body">
+        <app-importer-prompt (reviewed)="onReviewed($event)" />
+      </div>
+    </div>
+  </div>
+</div>

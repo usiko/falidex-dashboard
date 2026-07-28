@@ -1,0 +1,54 @@
+<div class="importer-prompt">
+  <mat-form-field appearance="outline" class="code-select">
+    <mat-label>Code à dupliquer (optionnel)</mat-label>
+    <mat-select [value]="selectedCodeId()" (selectionChange)="onCodeChange($event.value)">
+      <mat-option [value]="null">Aucun (nouvelle fiche)</mat-option>
+      @for (code of codes(); track code.id) {
+        <mat-option [value]="code.id">{{ code.name }} - {{ code.annee }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <div class="prompt-preview-header">
+    <span>Prompt généré</span>
+    <span class="prompt-length">{{ promptLength() }} caractères</span>
+  </div>
+  <pre class="prompt-preview">{{ prompt() }}</pre>
+
+  <button mat-raised-button color="primary" class="copy-button" (click)="onCopyPrompt()" matTooltip="Copier le prompt dans le presse-papiers">
+    <mat-icon>content_copy</mat-icon>
+    Copier le prompt
+  </button>
+
+  <p class="next-step-hint">
+    Copiez ce prompt avec le PDF source dans l'IA de votre choix, puis collez le JSON obtenu ci-dessous une fois généré.
+  </p>
+
+  <div class="prompt-preview-header">
+    <span>JSON généré par l'IA</span>
+    <span class="prompt-length">{{ pastedJson().length }} caractères</span>
+  </div>
+  <textarea
+    class="json-paste-textarea"
+    [ngModel]="pastedJson()"
+    (ngModelChange)="pastedJson.set($event)"
+    placeholder="Collez ici le JSON renvoyé par l'IA"
+    spellcheck="false">
+  </textarea>
+
+  <button mat-raised-button color="primary" class="validate-button" (click)="onValidateJson()" matTooltip="Valider le JSON et calculer le diff">
+    <mat-icon>rule</mat-icon>
+    Valider le JSON
+  </button>
+
+  @if (validationErrors(); as errors) {
+    <div class="validation-errors">
+      <mat-icon>error</mat-icon>
+      <ul>
+        @for (error of errors; track error) {
+          <li>{{ error }}</li>
+        }
+      </ul>
+    </div>
+  }
+</div>

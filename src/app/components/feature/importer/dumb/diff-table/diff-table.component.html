@@ -1,0 +1,16 @@
+@if (rows().length) {
+  <div class="diff-table">
+    @for (row of rows(); track row.id) {
+      <app-diff-row
+        [row]="row"
+        [referentialOptions]="referentialOptions()"
+        (fieldCorrected)="fieldCorrected.emit($event)"
+        (incertainResolved)="incertainResolved.emit($event)" />
+    }
+  </div>
+} @else {
+  <div class="diff-table-empty">
+    <mat-icon>rule</mat-icon>
+    <p>Le rendu du diff s'affichera ici une fois un JSON validé.</p>
+  </div>
+}

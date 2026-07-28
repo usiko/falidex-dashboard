@@ -1,0 +1,26 @@
+<h2 mat-dialog-title>{{ data.title }}</h2>
+
+<mat-dialog-content>
+  <mat-form-field appearance="outline" class="search-field">
+    <mat-label>Rechercher</mat-label>
+    <input matInput [ngModel]="searchTerm()" (ngModelChange)="searchTerm.set($event)" autocomplete="off" />
+    <mat-icon matSuffix>search</mat-icon>
+  </mat-form-field>
+
+  <mat-nav-list class="options-list">
+    @for (option of filteredOptions(); track option.id) {
+      <a mat-list-item (click)="onSelect(option)" [class.current]="option.id === data.currentId">
+        <span matListItemTitle>{{ option.name }}</span>
+        @if (option.id === data.currentId) {
+          <mat-icon matListItemMeta>check</mat-icon>
+        }
+      </a>
+    } @empty {
+      <p class="empty-message">Aucun résultat.</p>
+    }
+  </mat-nav-list>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Annuler</button>
+</mat-dialog-actions>

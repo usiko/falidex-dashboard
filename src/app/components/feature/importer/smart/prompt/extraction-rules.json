@@ -1,0 +1,54 @@
+{
+  "rules": [
+    "Analyse uniquement le PDF fourni pour extraire les informations (filière, symbole, position, placement, signification, couleur, circulaire, notes...).",
+    "N'invente jamais une valeur absente, illisible ou non tranchée par le PDF : marque plutôt l'opération avec \"incertain\": true, une \"confidence\" basse, et un champ \"note\" expliquant précisément le doute.",
+    "En cas de tableau ambigu ou de regroupement implicite (ex. un intitulé qui pourrait correspondre soit à la matière de la circulaire, soit à une filière distincte, sans que le PDF ne tranche), ne choisis pas arbitrairement entre les interprétations possibles : marque \"incertain\": true et décris les interprétations envisagées dans \"note\".",
+    "Pour toute entité qui n'existe pas déjà dans les référentiels listés ci-dessous, crée-la avec un id temporaire préfixé \"tmp:\" (ex. \"tmp:symbole-1\"). Cet id peut être référencé par une autre opération du même batch (ex. une relation qui pointe vers un symbole pas encore créé).",
+    "Avant de créer une nouvelle entité, rapproche le libellé extrait des référentiels existants ci-dessous par leur nom (insensible à la casse et aux accents) pour éviter les doublons.",
+    "Pour une opération \"update\", ne renvoie dans \"fields\" que les champs qui changent réellement par rapport à la donnée existante fournie.",
+    "Pour une opération \"remove\", \"fields\" peut être omis : seuls \"entity\" et \"id\" sont nécessaires.",
+    "Calibre \"confidence\" : 0.9 ou plus si l'information est explicitement et clairement indiquée dans le PDF ; entre 0.5 et 0.89 si elle est déduite ou normalisée à partir du texte source ; en dessous de 0.5 si elle relève d'une supposition — dans ce dernier cas \"incertain\" doit être à true.",
+    "Réponds uniquement avec le JSON conforme au schéma, sans texte ni balises markdown autour."
+  ],
+  "fewShotExamples": [
+    {
+      "description": "Exemple illustratif (à remplacer par de vraies fiches saisies manuellement dès qu'elles sont disponibles) : le PDF indique explicitement \"Croix de guerre 1939-1945, attribuée pour bravoure au combat, filière Aviation\".",
+      "output": {
+        "operations": [
+          {
+            "op": "add",
+            "entity": "symbole",
+            "id": "tmp:symbole-1",
+            "fields": { "name": "Croix de guerre 1939-1945" },
+            "confidence": 0.95,
+            "incertain": false
+          },
+          {
+            "op": "add",
+            "entity": "relation",
+            "id": "tmp:relation-1",
+            "fields": { "symboleId": "tmp:symbole-1", "filiereId": "<id filière Aviation résolu depuis les référentiels>", "significationId": "<id signification Bravoure au combat résolu depuis les référentiels>" },
+            "confidence": 0.9,
+            "incertain": false
+          }
+        ]
+      }
+    },
+    {
+      "description": "Exemple illustratif : le tableau du PDF regroupe une couleur sous un intitulé qui pourrait correspondre soit à la matière de la circulaire, soit à une filière distincte, sans le préciser explicitement.",
+      "output": {
+        "operations": [
+          {
+            "op": "add",
+            "entity": "color",
+            "id": "tmp:color-1",
+            "fields": { "name": "Bleu marine" },
+            "confidence": 0.35,
+            "incertain": true,
+            "note": "Rattachement ambigu : l'intitulé du tableau pourrait désigner la matière de la circulaire ou une filière distincte — à vérifier manuellement avant validation."
+          }
+        ]
+      }
+    }
+  ]
+}

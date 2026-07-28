@@ -1,0 +1,19 @@
+.search-field {
+  width: 100%;
+}
+
+.options-list {
+  max-height: 360px;
+  overflow: auto;
+
+  .current {
+    background-color: var(--mat-sys-surface-container-high);
+    font-weight: 500;
+  }
+}
+
+.empty-message {
+  padding: 16px;
+  text-align: center;
+  color: var(--mat-sys-on-surface-variant);
+}
