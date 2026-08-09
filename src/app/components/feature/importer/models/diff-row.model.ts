@@ -61,7 +61,8 @@ export interface DiffRow {
 export interface DiffFieldCorrection {
   rowId: string;
   fieldKey: DiffRelationFieldKey;
-  newId: string;
+  /** `null` pour retirer la liaison (le champ repasse en « Non défini »). */
+  newId: string | null;
   newLabel: string;
 }
 

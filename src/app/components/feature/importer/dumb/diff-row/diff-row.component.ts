@@ -46,13 +46,15 @@ export class DiffRowComponent {
   });
 
   protected onFieldClick(field: DiffRelationField): void {
-    const options = this.referentialOptions()[field.entityType] ?? [];
+    // Option de tête factice (id vide) : sélectionnable pour retirer la liaison, distincte de tout id réel.
+    const clearOption: DiffOption = { id: '', name: 'Non défini' };
+    const options = [clearOption, ...(this.referentialOptions()[field.entityType] ?? [])];
     const dialogRef = this.dialog.open<EntityPickerDialogComponent, EntityPickerDialogData, DiffOption>(EntityPickerDialogComponent, {
       width: '400px',
       data: {
         title: `Sélectionner : ${ENTITY_TYPE_LABELS[field.entityType]}`,
         options,
-        currentId: field.id
+        currentId: field.id ?? ''
       }
     });
 
@@ -61,8 +63,8 @@ export class DiffRowComponent {
       this.fieldCorrected.emit({
         rowId: this.row().id,
         fieldKey: field.key,
-        newId: selected.id,
-        newLabel: selected.name
+        newId: selected.id || null,
+        newLabel: selected.id ? selected.name : ''
       });
     });
   }

@@ -157,9 +157,9 @@ export class ImporterReviewBuilderService {
     const confidence = Math.round(Math.min(1, Math.max(0, op.confidence)) * 100);
 
     if (op.entity === 'relation') {
-      const relationFields: DiffRelationField[] = RELATION_FIELD_DEFS.filter((def) =>
-        op.fields ? Object.prototype.hasOwnProperty.call(op.fields, def.jsonKey) : false
-      ).map((def) => {
+      // Tous les champs de relation possibles sont affichés (pas seulement ceux extraits par l'IA) :
+      // chacun reste éditable pour ajouter une liaison manquante, avec « Non défini » si absente.
+      const relationFields: DiffRelationField[] = RELATION_FIELD_DEFS.map((def) => {
         const fieldId = (op.fields?.[def.jsonKey] as string | null) ?? null;
         return {
           key: def.key,

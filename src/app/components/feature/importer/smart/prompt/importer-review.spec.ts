@@ -106,7 +106,10 @@ describe('ImporterReviewBuilderService', () => {
       emptyCollections
     );
 
-    expect(rows[0].relationFields).toEqual([{ key: 'filiere', entityType: 'filiere', id: 'filiere-1', label: 'Aviation' }]);
+    // Tous les champs de relation sont présents (pas seulement ceux extraits par l'IA), pour rester éditables.
+    expect(rows[0].relationFields).toHaveLength(8);
+    expect(rows[0].relationFields).toContainEqual({ key: 'filiere', entityType: 'filiere', id: 'filiere-1', label: 'Aviation' });
+    expect(rows[0].relationFields).toContainEqual({ key: 'symbole', entityType: 'symbole', id: null, label: '' });
   });
 
   it('resolves a relation field pointing to a tmp: id created earlier in the same batch', () => {
@@ -128,9 +131,31 @@ describe('ImporterReviewBuilderService', () => {
     );
 
     const relationRow = rows.find((r) => r.entity === 'relation');
-    expect(relationRow?.relationFields?.[0]).toEqual({ key: 'symbole', entityType: 'symbole', id: 'tmp:symbole-1', label: 'Croix de guerre' });
+    expect(relationRow?.relationFields?.find((f) => f.key === 'symbole')).toEqual({
+      key: 'symbole',
+      entityType: 'symbole',
+      id: 'tmp:symbole-1',
+      label: 'Croix de guerre'
+    });
     expect(relationRow?.label).toBe('Croix de guerre');
     expect(referentialOptions.symbole).toContainEqual({ id: 'tmp:symbole-1', name: 'Croix de guerre' });
+  });
+
+  it('always exposes every relation field type, even those the AI did not extract, as an empty (addable) slot', () => {
+    const { rows } = service.buildReview(
+      {
+        operations: [
+          { op: 'add', entity: 'relation', id: 'tmp:relation-1', fields: { filiereId: 'filiere-1' }, confidence: 0.9, incertain: false }
+        ]
+      },
+      emptyCollections
+    );
+
+    const keys = rows[0].relationFields?.map((f) => f.key).sort();
+    expect(keys).toEqual(
+      ['circulaire', 'filiere', 'placement', 'position', 'signification', 'symbole', 'symboleAccessoire', 'symboleSens'].sort()
+    );
+    expect(rows[0].relationFields?.filter((f) => f.id === null)).toHaveLength(7);
   });
 
   it('marks an unresolved relation field id with an empty label instead of throwing', () => {
@@ -143,7 +168,12 @@ describe('ImporterReviewBuilderService', () => {
       emptyCollections
     );
 
-    expect(rows[0].relationFields?.[0]).toEqual({ key: 'filiere', entityType: 'filiere', id: 'unknown-id', label: '' });
+    expect(rows[0].relationFields?.find((f) => f.key === 'filiere')).toEqual({
+      key: 'filiere',
+      entityType: 'filiere',
+      id: 'unknown-id',
+      label: ''
+    });
     expect(rows[0].incertain).toBe(true);
     expect(rows[0].note).toBe('à vérifier');
   });
@@ -228,8 +258,9 @@ describe('ImporterReviewBuilderService', () => {
     );
 
     const relationRow = rows.find((r) => r.entity === 'relation');
-    expect(relationRow?.relationFields?.[0].label).toBe('Décoré pour acte de bravoure');
-    expect(relationRow?.relationFields?.[0].label).not.toContain('tmp:');
+    const significationField = relationRow?.relationFields?.find((f) => f.key === 'signification');
+    expect(significationField?.label).toBe('Décoré pour acte de bravoure');
+    expect(significationField?.label).not.toContain('tmp:');
   });
 
   it('lists existing significations as referential options despite the absence of `name`', () => {
@@ -265,10 +296,11 @@ describe('ImporterReviewBuilderService', () => {
 
     const circulaireRow = rows.find((r) => r.entity === 'circulaire');
     const relationRow = rows.find((r) => r.entity === 'relation');
+    const circulaireField = relationRow?.relationFields?.find((f) => f.key === 'circulaire');
 
     expect(circulaireRow?.label).toBe('Non défini');
-    expect(relationRow?.relationFields?.[0].label).toBe('Non défini');
-    expect(relationRow?.relationFields?.[0].label).not.toContain('tmp:');
+    expect(circulaireField?.label).toBe('Non défini');
+    expect(circulaireField?.label).not.toContain('tmp:');
   });
 
   it('falls back to the existing name for an update/remove without fields.name', () => {
