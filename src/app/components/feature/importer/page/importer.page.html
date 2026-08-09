@@ -16,10 +16,13 @@
           [rows]="diffRows()"
           [referentialOptions]="referentialOptions()"
           (fieldCorrected)="onFieldCorrected($event)"
-          (incertainResolved)="onIncertainResolved($event)" />
+          (incertainResolved)="onIncertainResolved($event)"
+          (rowDeleted)="onRowDeleted($event)"
+          (rowMatched)="onRowMatched($event)"
+          (rowTypeChanged)="onRowTypeChanged($event)" />
       </div>
 
-      @if (batch()) {
+      @if (hasBatch()) {
         <div class="apply-bar">
           <mat-form-field appearance="outline" class="apply-field">
             <mat-label>Nom de l'import</mat-label>

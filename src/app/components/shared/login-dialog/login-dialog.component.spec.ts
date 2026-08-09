@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { vi } from 'vitest';
 import { LoginDialogComponent } from './login-dialog.component';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -8,12 +9,12 @@ import { of, throwError } from 'rxjs';
 describe('LoginDialogComponent', () => {
   let component: LoginDialogComponent;
   let fixture: ComponentFixture<LoginDialogComponent>;
-  let mockDialogRef: jasmine.SpyObj<MatDialogRef<LoginDialogComponent>>;
-  let mockAuthService: jasmine.SpyObj<AuthService>;
+  let mockDialogRef: { close: ReturnType<typeof vi.fn> };
+  let mockAuthService: { login: ReturnType<typeof vi.fn> };
 
   beforeEach(async () => {
-    mockDialogRef = jasmine.createSpyObj('MatDialogRef', ['close']);
-    mockAuthService = jasmine.createSpyObj('AuthService', ['login']);
+    mockDialogRef = { close: vi.fn() };
+    mockAuthService = { login: vi.fn() };
 
     await TestBed.configureTestingModule({
       imports: [LoginDialogComponent, NoopAnimationsModule],
@@ -60,7 +61,7 @@ describe('LoginDialogComponent', () => {
   });
 
   it('should close dialog with credentials on submit', () => {
-    mockAuthService.login.and.returnValue(of({}));
+    mockAuthService.login.mockReturnValue(of({}));
     
     component.loginForm.patchValue({
       username: 'testuser',
@@ -87,7 +88,7 @@ describe('LoginDialogComponent', () => {
 
   it('should display error message on login failure', () => {
     const errorMessage = 'Invalid credentials';
-    mockAuthService.login.and.returnValue(throwError(() => ({ message: errorMessage })));
+    mockAuthService.login.mockReturnValue(throwError(() => ({ message: errorMessage })));
     
     component.loginForm.patchValue({
       username: 'testuser',
@@ -101,7 +102,7 @@ describe('LoginDialogComponent', () => {
   });
 
   it('should set loading state during login', () => {
-    mockAuthService.login.and.returnValue(of({}));
+    mockAuthService.login.mockReturnValue(of({}));
     
     component.loginForm.patchValue({
       username: 'testuser',
@@ -117,7 +118,7 @@ describe('LoginDialogComponent', () => {
 
   it('should clear error message on new submit', () => {
     component.errorMessage.set('Previous error');
-    mockAuthService.login.and.returnValue(of({}));
+    mockAuthService.login.mockReturnValue(of({}));
     
     component.loginForm.patchValue({
       username: 'testuser',

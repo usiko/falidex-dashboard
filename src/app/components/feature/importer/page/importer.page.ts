@@ -9,9 +9,17 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ImporterBatchReviewed, ImporterPromptComponent } from '../smart/prompt/importer-prompt.component';
 import { ImporterApplyService } from '../smart/prompt/importer-apply.service';
-import { ImportApplyRequest, ImportBatch } from '../smart/prompt/import-batch.model';
+import { DiffEntry, ImporterBatchEditService } from '../smart/prompt/importer-batch-edit.service';
+import { ImportApplyRequest } from '../smart/prompt/import-batch.model';
 import { DiffTableComponent } from '../dumb/diff-table/diff-table.component';
-import { DiffFieldCorrection, DiffOption, DiffRow, RELATION_FIELD_JSON_KEYS } from '../models/diff-row.model';
+import {
+  DiffFieldCorrection,
+  DiffOption,
+  DiffRowMatch,
+  DiffRowTypeChange,
+  ENTITY_TYPE_LABELS,
+  RELATION_FIELD_JSON_KEYS
+} from '../models/diff-row.model';
 import { SnackbarService } from '../../../../services/snackbar/snackbar.service';
 
 const MIN_PANEL_PERCENT = 20;
@@ -37,14 +45,15 @@ const DEFAULT_LEFT_PERCENT = 60;
 })
 export class ImporterPageComponent {
   private readonly importerApplyService = inject(ImporterApplyService);
+  private readonly batchEditService = inject(ImporterBatchEditService);
   private readonly snackbar = inject(SnackbarService);
 
   protected readonly leftPanelPercent = signal(DEFAULT_LEFT_PERCENT);
   protected readonly isDragging = signal(false);
 
   // Alimentés par le smart "prompt" une fois le JSON de l'IA validé (bouton "Valider le JSON").
-  protected readonly batch = signal<ImportBatch | null>(null);
-  protected readonly diffRows = signal<DiffRow[]>([]);
+  // Chaque entrée garde ensemble la ligne affichée et l'opération du batch dont elle est issue.
+  protected readonly entries = signal<DiffEntry[]>([]);
   protected readonly referentialOptions = signal<Partial<Record<string, DiffOption[]>>>({});
   protected readonly targetCode = signal<{ id: string; name: string; annee?: number } | null>(null);
 
@@ -53,11 +62,13 @@ export class ImporterPageComponent {
   protected readonly newFicheAnnee = signal<number | null>(null);
   protected readonly isApplying = signal(false);
 
+  protected readonly diffRows = computed(() => this.entries().map((entry) => entry.row));
+  protected readonly hasBatch = computed(() => this.entries().length > 0);
   protected readonly hasRelationRows = computed(() => this.diffRows().some((row) => row.entity === 'relation'));
   protected readonly needsNewFicheName = computed(() => this.hasRelationRows() && !this.targetCode());
 
   protected readonly canApplyImport = computed(() => {
-    if (!this.batch() || this.diffRows().length === 0 || this.isApplying()) return false;
+    if (!this.hasBatch() || this.isApplying()) return false;
     if (this.diffRows().some((row) => row.incertain)) return false;
     if (!this.importName().trim()) return false;
     if (this.needsNewFicheName() && !this.newFicheName().trim()) return false;
@@ -111,56 +122,114 @@ export class ImporterPageComponent {
   }
 
   protected onReviewed(event: ImporterBatchReviewed): void {
-    this.batch.set(event.batch);
-    this.diffRows.set(event.rows);
+    this.entries.set(this.batchEditService.buildEntries(event.rows, event.batch.operations));
     this.referentialOptions.set(event.referentialOptions);
     this.targetCode.set(event.targetCode);
   }
 
   protected onFieldCorrected(correction: DiffFieldCorrection): void {
-    this.diffRows.update((rows) =>
-      rows.map((row) => {
-        if (row.id !== correction.rowId || !row.relationFields) return row;
+    const jsonKey = RELATION_FIELD_JSON_KEYS[correction.fieldKey];
+    this.entries.update((entries) =>
+      entries.map((entry) => {
+        if (entry.row.id !== correction.rowId || !entry.row.relationFields) return entry;
         return {
-          ...row,
-          relationFields: row.relationFields.map((field) =>
-            field.key === correction.fieldKey ? { ...field, id: correction.newId, label: correction.newLabel } : field
-          )
+          row: {
+            ...entry.row,
+            relationFields: entry.row.relationFields.map((field) =>
+              field.key === correction.fieldKey ? { ...field, id: correction.newId, label: correction.newLabel } : field
+            )
+          },
+          operation: { ...entry.operation, fields: { ...entry.operation.fields, [jsonKey]: correction.newId } }
         };
       })
     );
-
-    const index = this.parseRowIndex(correction.rowId);
-    if (index === null) return;
-    const jsonKey = RELATION_FIELD_JSON_KEYS[correction.fieldKey];
-    this.batch.update((current) => {
-      if (!current) return current;
-      const operations = current.operations.map((op, i) =>
-        i === index ? { ...op, fields: { ...op.fields, [jsonKey]: correction.newId } } : op
-      );
-      return { ...current, operations };
-    });
   }
 
   protected onIncertainResolved(rowId: string): void {
-    this.diffRows.update((rows) => rows.map((row) => (row.id === rowId ? { ...row, incertain: false } : row)));
+    this.entries.update((entries) =>
+      entries.map((entry) =>
+        entry.row.id === rowId
+          ? { row: { ...entry.row, incertain: false }, operation: { ...entry.operation, incertain: false } }
+          : entry
+      )
+    );
+  }
 
-    const index = this.parseRowIndex(rowId);
-    if (index === null) return;
-    this.batch.update((current) => {
-      if (!current) return current;
-      const operations = current.operations.map((op, i) => (i === index ? { ...op, incertain: false } : op));
-      return { ...current, operations };
+  protected onRowDeleted(rowId: string): void {
+    const entry = this.entries().find((candidate) => candidate.row.id === rowId);
+    if (!entry) return;
+
+    const { entries, affectedRelations } = this.batchEditService.removeEntry(this.entries(), rowId);
+    this.entries.set(entries);
+    this.dropReferentialOption(entry.row.entity, entry.row.sourceId);
+
+    this.snackbar.success(
+      affectedRelations
+        ? `« ${entry.row.label} » retiré — ${affectedRelations} relation(s) à réaffecter`
+        : `« ${entry.row.label} » retiré de l'import`
+    );
+  }
+
+  protected onRowMatched(match: DiffRowMatch): void {
+    const entry = this.entries().find((candidate) => candidate.row.id === match.rowId);
+    if (!entry) return;
+
+    const { entries, affectedRelations } = this.batchEditService.matchEntryToExisting(
+      this.entries(),
+      match.rowId,
+      match.targetId,
+      match.targetLabel
+    );
+    this.entries.set(entries);
+    this.dropReferentialOption(entry.row.entity, entry.row.sourceId);
+
+    this.snackbar.success(
+      affectedRelations
+        ? `« ${entry.row.label} » rattaché à « ${match.targetLabel} » — ${affectedRelations} relation(s) mise(s) à jour`
+        : `« ${entry.row.label} » rattaché à « ${match.targetLabel} »`
+    );
+  }
+
+  protected onRowTypeChanged(change: DiffRowTypeChange): void {
+    const entry = this.entries().find((candidate) => candidate.row.id === change.rowId);
+    if (!entry || entry.row.entity === change.entity) return;
+
+    const { entries, affectedRelations } = this.batchEditService.changeEntryType(this.entries(), change.rowId, change.entity);
+    this.entries.set(entries);
+    this.moveReferentialOption(entry.row.entity, change.entity, entry.row.sourceId, entry.row.label);
+
+    const typeLabel = ENTITY_TYPE_LABELS[change.entity];
+    this.snackbar.success(
+      affectedRelations
+        ? `« ${entry.row.label} » est maintenant un ${typeLabel} — ${affectedRelations} relation(s) mise(s) à jour`
+        : `« ${entry.row.label} » est maintenant un ${typeLabel}`
+    );
+  }
+
+  /** L'entrée a changé de collection : son id temporaire doit être proposé dans les pickers du nouveau type. */
+  private moveReferentialOption(fromEntity: string, toEntity: string, sourceId: string, label: string): void {
+    this.referentialOptions.update((options) => ({
+      ...options,
+      [fromEntity]: (options[fromEntity] ?? []).filter((option) => option.id !== sourceId),
+      [toEntity]: [...(options[toEntity] ?? []), { id: sourceId, name: label }]
+    }));
+  }
+
+  /** L'entrée n'existe plus dans le batch : elle ne doit plus être proposée comme cible dans les pickers. */
+  private dropReferentialOption(entity: string, sourceId: string): void {
+    this.referentialOptions.update((options) => {
+      const entityOptions = options[entity];
+      if (!entityOptions) return options;
+      return { ...options, [entity]: entityOptions.filter((option) => option.id !== sourceId) };
     });
   }
 
   protected onApplyImport(): void {
-    const currentBatch = this.batch();
-    if (!currentBatch || !this.canApplyImport()) return;
+    if (!this.canApplyImport()) return;
 
     const request: ImportApplyRequest = {
       name: this.importName().trim(),
-      operations: currentBatch.operations
+      operations: this.entries().map((entry) => entry.operation)
     };
 
     const code = this.targetCode();
@@ -190,18 +259,11 @@ export class ImporterPageComponent {
   }
 
   private resetAfterApply(): void {
-    this.batch.set(null);
-    this.diffRows.set([]);
+    this.entries.set([]);
     this.referentialOptions.set({});
     this.targetCode.set(null);
     this.importName.set('');
     this.newFicheName.set('');
     this.newFicheAnnee.set(null);
-  }
-
-  private parseRowIndex(rowId: string): number | null {
-    const [indexPart] = rowId.split(':');
-    const index = Number(indexPart);
-    return Number.isInteger(index) ? index : null;
   }
 }

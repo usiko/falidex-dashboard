@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { IRelationData, IRelationItem } from '../../../../../models/data/base-relations.models';
-import { IBaseCollectionData } from '../../../../../models/data/base-data-models';
+import { IBaseCollectionData, IBaseColor } from '../../../../../models/data/base-data-models';
 import importJsonSchema from './import-json-schema.json';
 import extractionRules from './extraction-rules.json';
 
 export interface ReferentialLists {
-  colors: IBaseCollectionData[];
+  colors: IBaseColor[];
   filieres: IBaseCollectionData[];
   symbols: IBaseCollectionData[];
   placements: IBaseCollectionData[];
@@ -62,7 +62,7 @@ export class ImporterPromptBuilderService {
 
   buildReferentialsBlock(refs: ReferentialLists): string {
     return [
-      this.formatNamesList('Couleurs existantes', refs.colors),
+      this.formatColorsList('Couleurs existantes', refs.colors),
       this.formatNamesList('Filières existantes', refs.filieres),
       this.formatNamesList('Symboles existants', refs.symbols),
       this.formatNamesList('Placements existants', refs.placements),
@@ -107,6 +107,14 @@ ${JSON.stringify(simplified, null, 2)}`;
   private formatNamesList(label: string, items: IBaseCollectionData[]): string {
     const names = items.map((i) => i.name).filter((n): n is string => !!n);
     return `${label} (${names.length}) : ${names.length ? names.join(', ') : 'aucun'}`;
+  }
+
+  /** Les couleurs sont listées avec leur code (`colorData`) pour que l'IA puisse rapprocher une teinte du PDF d'une couleur existante. */
+  private formatColorsList(label: string, colors: IBaseColor[]): string {
+    const entries = colors
+      .filter((color): color is IBaseColor & { name: string } => !!color.name)
+      .map((color) => (color.colorData ? `${color.name} (${color.colorData})` : color.name));
+    return `${label} (${entries.length}) : ${entries.length ? entries.join(', ') : 'aucun'}`;
   }
 
   private resolveName(id: string | undefined, map: Record<string, IBaseCollectionData>): string | undefined {

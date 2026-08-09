@@ -5,7 +5,10 @@
         [row]="row"
         [referentialOptions]="referentialOptions()"
         (fieldCorrected)="fieldCorrected.emit($event)"
-        (incertainResolved)="incertainResolved.emit($event)" />
+        (incertainResolved)="incertainResolved.emit($event)"
+        (rowDeleted)="rowDeleted.emit($event)"
+        (rowMatched)="rowMatched.emit($event)"
+        (rowTypeChanged)="rowTypeChanged.emit($event)" />
     }
   </div>
 } @else {

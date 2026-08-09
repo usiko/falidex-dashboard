@@ -1,6 +1,9 @@
 import { TestBed } from '@angular/core/testing';
+import { IBaseColor } from '../../../../../models/data/base-data-models';
 import { ImportBatchValidatorService } from './import-batch-validator.service';
 import { EntityCollections, ImporterReviewBuilderService } from './importer-review-builder.service';
+
+const existingColor: IBaseColor = { id: 'color-1', name: 'Bleu marine', colorData: '#1B3A6B' };
 
 describe('ImportBatchValidatorService', () => {
   let service: ImportBatchValidatorService;
@@ -53,7 +56,7 @@ describe('ImporterReviewBuilderService', () => {
 
   const emptyCollections: EntityCollections = {
     circulaire: [],
-    color: [],
+    color: [existingColor],
     filiere: [{ id: 'filiere-1', name: 'Aviation' }],
     placement: [],
     position: [],
@@ -142,6 +145,20 @@ describe('ImporterReviewBuilderService', () => {
     expect(rows[0].relationFields?.[0]).toEqual({ key: 'filiere', entityType: 'filiere', id: 'unknown-id', label: '' });
     expect(rows[0].incertain).toBe(true);
     expect(rows[0].note).toBe('à vérifier');
+  });
+
+  it('includes colorData in referential options for existing and batch-local colors', () => {
+    const { referentialOptions } = service.buildReview(
+      {
+        operations: [
+          { op: 'add', entity: 'color', id: 'tmp:color-1', fields: { name: 'Bleu roy', colorData: '#4169E1' }, confidence: 0.85, incertain: false }
+        ]
+      },
+      emptyCollections
+    );
+
+    expect(referentialOptions.color).toContainEqual(existingColor);
+    expect(referentialOptions.color).toContainEqual({ id: 'tmp:color-1', name: 'Bleu roy', colorData: '#4169E1' });
   });
 
   it('falls back to the existing name for an update/remove without fields.name', () => {

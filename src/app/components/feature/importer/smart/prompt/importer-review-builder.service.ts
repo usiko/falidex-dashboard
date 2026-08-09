@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { IBaseCollectionData } from '../../../../../models/data/base-data-models';
+import { IBaseCollectionData, IBaseColor } from '../../../../../models/data/base-data-models';
 import {
   DiffAttribute,
   DiffEntityType,
@@ -34,6 +34,28 @@ const RELATION_FIELD_DEFS: RelationFieldDef[] = (
 type NameMap = Map<string, string>;
 type NameMapByEntity = Partial<Record<NonRelationEntityType, NameMap>>;
 
+/** Un ajout de collection est à traiter en premier : c'est lui qui conditionne les ids référencés par les relations. */
+export function isCollectionAdd(row: DiffRow): boolean {
+  return row.op === 'add' && row.entity !== 'relation';
+}
+
+/**
+ * Ordre de revue : les ajouts de collection d'abord, puis le reste ; dans chaque groupe,
+ * du moins certain au plus certain (`incertain` d'abord, puis confiance croissante).
+ */
+export function sortDiffRows(rows: DiffRow[]): DiffRow[] {
+  return [...rows].sort((a, b) => {
+    const groupDelta = (isCollectionAdd(a) ? 0 : 1) - (isCollectionAdd(b) ? 0 : 1);
+    if (groupDelta !== 0) return groupDelta;
+
+    const incertainDelta = (a.incertain ? 0 : 1) - (b.incertain ? 0 : 1);
+    if (incertainDelta !== 0) return incertainDelta;
+
+    if (a.confidence !== b.confidence) return a.confidence - b.confidence;
+    return a.label.localeCompare(b.label);
+  });
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -41,9 +63,10 @@ export class ImporterReviewBuilderService {
   buildReview(batch: ImportBatch, collections: EntityCollections): ImporterReviewResult {
     const storeNames = this.buildStoreNames(collections);
     const batchNames = this.buildBatchLocalNames(batch);
+    const batchColorData = this.buildBatchLocalColorData(batch);
 
     const rows = batch.operations.map((op, index) => this.buildRow(op, index, storeNames, batchNames));
-    const referentialOptions = this.buildReferentialOptions(collections, batchNames);
+    const referentialOptions = this.buildReferentialOptions(collections, batchNames, batchColorData);
 
     return { batch, rows, referentialOptions };
   }
@@ -68,6 +91,17 @@ export class ImporterReviewBuilderService {
       const name = (op.fields?.['name'] as string | undefined) || op.id;
       if (!result[entityType]) result[entityType] = new Map();
       result[entityType]!.set(op.id, name);
+    }
+    return result;
+  }
+
+  /** Code couleur (`colorData`) des ajouts de couleur du batch, pour l'aperçu dans le picker de rattachement. */
+  private buildBatchLocalColorData(batch: ImportBatch): NameMap {
+    const result: NameMap = new Map();
+    for (const op of batch.operations) {
+      if (op.op !== 'add' || op.entity !== 'color') continue;
+      const colorData = op.fields?.['colorData'] as string | undefined;
+      if (colorData) result.set(op.id, colorData);
     }
     return result;
   }
@@ -106,6 +140,7 @@ export class ImporterReviewBuilderService {
 
       return {
         id: rowId,
+        sourceId: op.id,
         op: op.op,
         entity: 'relation',
         label,
@@ -127,6 +162,7 @@ export class ImporterReviewBuilderService {
 
     return {
       id: rowId,
+      sourceId: op.id,
       op: op.op,
       entity: op.entity,
       label,
@@ -145,15 +181,22 @@ export class ImporterReviewBuilderService {
 
   private buildReferentialOptions(
     collections: EntityCollections,
-    batchNames: NameMapByEntity
+    batchNames: NameMapByEntity,
+    batchColorData: NameMap
   ): Partial<Record<DiffEntityType, DiffOption[]>> {
     const result: Partial<Record<DiffEntityType, DiffOption[]>> = {};
     for (const entityType of Object.keys(collections) as NonRelationEntityType[]) {
+      const isColor = entityType === 'color';
+
       const storeOptions: DiffOption[] = collections[entityType]
         .filter((item): item is IBaseCollectionData & { name: string } => !!item.name)
-        .map((item) => ({ id: item.id, name: item.name }));
+        .map((item) => ({ id: item.id, name: item.name, ...(isColor ? { colorData: (item as IBaseColor).colorData } : {}) }));
 
-      const batchOptions: DiffOption[] = [...(batchNames[entityType]?.entries() ?? [])].map(([id, name]) => ({ id, name }));
+      const batchOptions: DiffOption[] = [...(batchNames[entityType]?.entries() ?? [])].map(([id, name]) => ({
+        id,
+        name,
+        ...(isColor ? { colorData: batchColorData.get(id) } : {})
+      }));
 
       result[entityType] = [...storeOptions, ...batchOptions];
     }

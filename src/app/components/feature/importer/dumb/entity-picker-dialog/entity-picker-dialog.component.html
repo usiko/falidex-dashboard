@@ -10,6 +10,9 @@
   <mat-nav-list class="options-list">
     @for (option of filteredOptions(); track option.id) {
       <a mat-list-item (click)="onSelect(option)" [class.current]="option.id === data.currentId">
+        @if (option.colorData) {
+          <span matListItemIcon class="color-swatch" [style.backgroundColor]="option.colorData"></span>
+        }
         <span matListItemTitle>{{ option.name }}</span>
         @if (option.id === data.currentId) {
           <mat-icon matListItemMeta>check</mat-icon>
