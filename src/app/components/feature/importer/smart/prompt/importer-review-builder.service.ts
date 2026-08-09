@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { IBaseCollectionData, IBaseColor } from '../../../../../models/data/base-data-models';
+import { IBaseCollectionData, IBaseColor, IBaseSignification } from '../../../../../models/data/base-data-models';
 import {
   DiffAttribute,
   DiffEntityType,
@@ -33,6 +33,41 @@ const RELATION_FIELD_DEFS: RelationFieldDef[] = (
 
 type NameMap = Map<string, string>;
 type NameMapByEntity = Partial<Record<NonRelationEntityType, NameMap>>;
+
+/**
+ * Champ qui sert de libellé pour chaque type d'entité. La signification n'a pas de `name`
+ * (voir `IBaseSignification`, `SignificationFields` côté serveur) : c'est `content` qui joue ce rôle,
+ * sans quoi son libellé retombe sur l'id (`tmp:signification-1`) partout où elle est référencée.
+ */
+const DISPLAY_FIELD_KEY: Record<NonRelationEntityType, string> = {
+  circulaire: 'name',
+  color: 'name',
+  filiere: 'name',
+  placement: 'name',
+  position: 'name',
+  symbole: 'name',
+  signification: 'content',
+  symboleSens: 'name',
+  symboleAccessoire: 'name'
+};
+
+/** Libellé porté par l'objet du référentiel déjà en base (`item.name`, sauf pour `signification`). */
+function itemDisplayName(entityType: NonRelationEntityType, item: IBaseCollectionData): string | undefined {
+  if (entityType === 'signification') return (item as IBaseSignification).content || undefined;
+  return item.name;
+}
+
+/** Libellé porté par les `fields` d'une opération du batch (`fields.name`, sauf pour `signification`). */
+function fieldsDisplayName(entityType: NonRelationEntityType, fields: Record<string, unknown> | undefined): string | undefined {
+  return fields?.[DISPLAY_FIELD_KEY[entityType]] as string | undefined;
+}
+
+/**
+ * Libellé de repli pour un item du référentiel (existant ou du batch) sans nom exploitable.
+ * On l'affiche quand même (au lieu de l'exclure ou de retomber sur son id `tmp:...`) : il reste
+ * sélectionnable pour une relation, mais sans id technique visible dans l'UI.
+ */
+const UNDEFINED_LABEL = 'Non défini';
 
 /** Un ajout de collection est à traiter en premier : c'est lui qui conditionne les ids référencés par les relations. */
 export function isCollectionAdd(row: DiffRow): boolean {
@@ -76,7 +111,8 @@ export class ImporterReviewBuilderService {
     for (const entityType of Object.keys(collections) as NonRelationEntityType[]) {
       const map: NameMap = new Map();
       for (const item of collections[entityType]) {
-        if (item.name) map.set(item.id, item.name);
+        const name = itemDisplayName(entityType, item);
+        if (name) map.set(item.id, name);
       }
       result[entityType] = map;
     }
@@ -88,7 +124,7 @@ export class ImporterReviewBuilderService {
     for (const op of batch.operations) {
       if (op.op !== 'add' || op.entity === 'relation') continue;
       const entityType = op.entity as NonRelationEntityType;
-      const name = (op.fields?.['name'] as string | undefined) || op.id;
+      const name = fieldsDisplayName(entityType, op.fields) ?? UNDEFINED_LABEL;
       if (!result[entityType]) result[entityType] = new Map();
       result[entityType]!.set(op.id, name);
     }
@@ -153,11 +189,12 @@ export class ImporterReviewBuilderService {
 
     const entityType = op.entity as NonRelationEntityType;
     const existingName = this.resolveName(entityType, op.id, storeNames, batchNames);
-    const fieldsName = op.fields?.['name'] as string | undefined;
+    const fieldsName = fieldsDisplayName(entityType, op.fields);
     const label = fieldsName ?? existingName ?? op.id;
 
+    const displayFieldKey = DISPLAY_FIELD_KEY[entityType];
     const attributes: DiffAttribute[] = Object.entries(op.fields ?? {})
-      .filter(([key]) => key !== 'name')
+      .filter(([key]) => key !== displayFieldKey)
       .map(([key, value]) => ({ key, value: this.stringifyAttributeValue(value) }));
 
     return {
@@ -188,9 +225,11 @@ export class ImporterReviewBuilderService {
     for (const entityType of Object.keys(collections) as NonRelationEntityType[]) {
       const isColor = entityType === 'color';
 
-      const storeOptions: DiffOption[] = collections[entityType]
-        .filter((item): item is IBaseCollectionData & { name: string } => !!item.name)
-        .map((item) => ({ id: item.id, name: item.name, ...(isColor ? { colorData: (item as IBaseColor).colorData } : {}) }));
+      const storeOptions: DiffOption[] = collections[entityType].map((item) => ({
+        id: item.id,
+        name: itemDisplayName(entityType, item) ?? UNDEFINED_LABEL,
+        ...(isColor ? { colorData: (item as IBaseColor).colorData } : {})
+      }));
 
       const batchOptions: DiffOption[] = [...(batchNames[entityType]?.entries() ?? [])].map(([id, name]) => ({
         id,

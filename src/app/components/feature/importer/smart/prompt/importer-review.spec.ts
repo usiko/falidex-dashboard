@@ -1,9 +1,10 @@
 import { TestBed } from '@angular/core/testing';
-import { IBaseColor } from '../../../../../models/data/base-data-models';
+import { IBaseColor, IBaseSignification } from '../../../../../models/data/base-data-models';
 import { ImportBatchValidatorService } from './import-batch-validator.service';
 import { EntityCollections, ImporterReviewBuilderService } from './importer-review-builder.service';
 
 const existingColor: IBaseColor = { id: 'color-1', name: 'Bleu marine', colorData: '#1B3A6B' };
+const existingSignification: IBaseSignification = { id: 'signification-1', content: 'Bravoure au combat' };
 
 describe('ImportBatchValidatorService', () => {
   let service: ImportBatchValidatorService;
@@ -61,7 +62,7 @@ describe('ImporterReviewBuilderService', () => {
     placement: [],
     position: [],
     symbole: [],
-    signification: [],
+    signification: [existingSignification],
     symboleSens: [],
     symboleAccessoire: []
   };
@@ -159,6 +160,115 @@ describe('ImporterReviewBuilderService', () => {
 
     expect(referentialOptions.color).toContainEqual(existingColor);
     expect(referentialOptions.color).toContainEqual({ id: 'tmp:color-1', name: 'Bleu roy', colorData: '#4169E1' });
+  });
+
+  it('uses fields.content (not fields.name) as the label of a signification add', () => {
+    const { rows } = service.buildReview(
+      {
+        operations: [
+          {
+            op: 'add',
+            entity: 'signification',
+            id: 'tmp:signification-81',
+            fields: { content: 'Bravoure au combat' },
+            confidence: 0.9,
+            incertain: false
+          }
+        ]
+      },
+      emptyCollections
+    );
+
+    expect(rows[0].label).toBe('Bravoure au combat');
+    // `content` porte le libellé : il ne doit pas réapparaître comme attribut brut.
+    expect(rows[0].attributes).toBeUndefined();
+  });
+
+  it('resolves an existing signification\'s content when referenced by a relation', () => {
+    const { rows } = service.buildReview(
+      {
+        operations: [
+          { op: 'add', entity: 'relation', id: 'tmp:relation-1', fields: { significationId: 'signification-1' }, confidence: 0.9, incertain: false }
+        ]
+      },
+      emptyCollections
+    );
+
+    expect(rows[0].relationFields).toContainEqual({
+      key: 'signification',
+      entityType: 'signification',
+      id: 'signification-1',
+      label: 'Bravoure au combat'
+    });
+  });
+
+  it('resolves a batch-local signification\'s content when referenced by a relation, instead of its tmp id', () => {
+    const { rows } = service.buildReview(
+      {
+        operations: [
+          {
+            op: 'add',
+            entity: 'signification',
+            id: 'tmp:signification-81',
+            fields: { content: 'Décoré pour acte de bravoure' },
+            confidence: 0.9,
+            incertain: false
+          },
+          {
+            op: 'add',
+            entity: 'relation',
+            id: 'tmp:relation-1',
+            fields: { significationId: 'tmp:signification-81' },
+            confidence: 0.9,
+            incertain: false
+          }
+        ]
+      },
+      emptyCollections
+    );
+
+    const relationRow = rows.find((r) => r.entity === 'relation');
+    expect(relationRow?.relationFields?.[0].label).toBe('Décoré pour acte de bravoure');
+    expect(relationRow?.relationFields?.[0].label).not.toContain('tmp:');
+  });
+
+  it('lists existing significations as referential options despite the absence of `name`', () => {
+    const { referentialOptions } = service.buildReview({ operations: [] }, emptyCollections);
+
+    expect(referentialOptions.signification).toContainEqual({ id: 'signification-1', name: 'Bravoure au combat' });
+  });
+
+  it('still lists a nameless existing item as a referential option, labeled "Non défini"', () => {
+    const collections: EntityCollections = { ...emptyCollections, placement: [{ id: 'placement-1' }] };
+    const { referentialOptions } = service.buildReview({ operations: [] }, collections);
+
+    expect(referentialOptions.placement).toContainEqual({ id: 'placement-1', name: 'Non défini' });
+  });
+
+  it('labels a nameless batch add "Non défini" instead of leaking its tmp id, in both the row and any relation referencing it', () => {
+    const { rows } = service.buildReview(
+      {
+        operations: [
+          { op: 'add', entity: 'circulaire', id: 'tmp:circulaire-3', fields: { matiere: 'Papier' }, confidence: 0.4, incertain: true },
+          {
+            op: 'add',
+            entity: 'relation',
+            id: 'tmp:relation-1',
+            fields: { circulaireId: 'tmp:circulaire-3' },
+            confidence: 0.4,
+            incertain: true
+          }
+        ]
+      },
+      emptyCollections
+    );
+
+    const circulaireRow = rows.find((r) => r.entity === 'circulaire');
+    const relationRow = rows.find((r) => r.entity === 'relation');
+
+    expect(circulaireRow?.label).toBe('Non défini');
+    expect(relationRow?.relationFields?.[0].label).toBe('Non défini');
+    expect(relationRow?.relationFields?.[0].label).not.toContain('tmp:');
   });
 
   it('falls back to the existing name for an update/remove without fields.name', () => {
