@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, effect, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -7,10 +7,13 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatDialog } from '@angular/material/dialog';
 import { ImporterBatchReviewed, ImporterPromptComponent } from '../smart/prompt/importer-prompt.component';
 import { ImporterApplyService } from '../smart/prompt/importer-apply.service';
 import { DiffEntry, ImporterBatchEditService } from '../smart/prompt/importer-batch-edit.service';
 import { ImportApplyRequest } from '../smart/prompt/import-batch.model';
+import { ImporterDraft } from '../smart/prompt/importer-draft.model';
+import { ImporterDraftStorageService } from '../smart/prompt/importer-draft-storage.service';
 import { DiffTableComponent } from '../dumb/diff-table/diff-table.component';
 import {
   DiffFieldCorrection,
@@ -21,6 +24,7 @@ import {
   RELATION_FIELD_JSON_KEYS
 } from '../models/diff-row.model';
 import { SnackbarService } from '../../../../services/snackbar/snackbar.service';
+import { ConfirmDialogComponent } from '../../../shared/confirm-dialog/confirm-dialog.component';
 
 const MIN_PANEL_PERCENT = 20;
 const MAX_PANEL_PERCENT = 80;
@@ -47,6 +51,8 @@ export class ImporterPageComponent {
   private readonly importerApplyService = inject(ImporterApplyService);
   private readonly batchEditService = inject(ImporterBatchEditService);
   private readonly snackbar = inject(SnackbarService);
+  private readonly draftStorage = inject(ImporterDraftStorageService);
+  private readonly dialog = inject(MatDialog);
 
   protected readonly leftPanelPercent = signal(DEFAULT_LEFT_PERCENT);
   protected readonly isDragging = signal(false);
@@ -56,6 +62,10 @@ export class ImporterPageComponent {
   protected readonly entries = signal<DiffEntry[]>([]);
   protected readonly referentialOptions = signal<Partial<Record<string, DiffOption[]>>>({});
   protected readonly targetCode = signal<{ id: string; name: string; annee?: number } | null>(null);
+
+  // Liés en bidirectionnel au smart "prompt" : conservés ici pour pouvoir persister/reprendre le brouillon.
+  protected readonly pastedJson = signal('');
+  protected readonly selectedCodeId = signal<string | null>(null);
 
   protected readonly importName = signal('');
   protected readonly newFicheName = signal('');
@@ -74,6 +84,74 @@ export class ImporterPageComponent {
     if (this.needsNewFicheName() && !this.newFicheName().trim()) return false;
     return true;
   });
+
+  /** Reprend un brouillon d'import laissé en cours (rechargement de page, navigation...) avant de persister ses futurs changements. */
+  constructor() {
+    this.restoreDraft();
+
+    effect(() => {
+      const draft: ImporterDraft = {
+        savedAt: new Date().toISOString(),
+        pastedJson: this.pastedJson(),
+        selectedCodeId: this.selectedCodeId(),
+        entries: this.entries(),
+        referentialOptions: this.referentialOptions() as Partial<Record<string, DiffOption[]>>,
+        targetCode: this.targetCode(),
+        importName: this.importName(),
+        newFicheName: this.newFicheName(),
+        newFicheAnnee: this.newFicheAnnee()
+      } as ImporterDraft;
+
+      if (this.isDraftEmpty(draft)) {
+        this.draftStorage.clear();
+      } else {
+        this.draftStorage.save(draft);
+      }
+    });
+  }
+
+  private restoreDraft(): void {
+    const draft = this.draftStorage.load();
+    if (!draft || this.isDraftEmpty(draft)) return;
+
+    this.pastedJson.set(draft.pastedJson);
+    this.selectedCodeId.set(draft.selectedCodeId);
+    this.entries.set(draft.entries);
+    this.referentialOptions.set(draft.referentialOptions);
+    this.targetCode.set(draft.targetCode);
+    this.importName.set(draft.importName);
+    this.newFicheName.set(draft.newFicheName);
+    this.newFicheAnnee.set(draft.newFicheAnnee);
+
+    const savedAt = new Date(draft.savedAt);
+    const savedAtLabel = Number.isNaN(savedAt.getTime()) ? '' : ` (sauvegardé le ${savedAt.toLocaleString('fr-FR')})`;
+    this.snackbar.success(`Import en cours repris${savedAtLabel}`);
+  }
+
+  private isDraftEmpty(draft: ImporterDraft): boolean {
+    return !draft.pastedJson.trim() && draft.entries.length === 0 && !draft.importName.trim();
+  }
+
+  protected onCancelImport(): void {
+    if (!this.hasBatch() && !this.pastedJson().trim()) return;
+
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '400px',
+      data: {
+        title: "Annuler l'import",
+        message: "Êtes-vous sûr de vouloir annuler cet import ? Le JSON collé et toutes les corrections effectuées seront perdus.",
+        confirmText: 'Annuler l\'import',
+        cancelText: 'Continuer l\'import'
+      }
+    });
+
+    dialogRef.afterClosed().subscribe((confirmed) => {
+      if (!confirmed) return;
+      this.draftStorage.clear();
+      this.resetAfterApply();
+      this.snackbar.success('Import annulé');
+    });
+  }
 
   private dragStartX = 0;
   private dragStartPercent = DEFAULT_LEFT_PERCENT;
@@ -248,6 +326,7 @@ export class ImporterPageComponent {
       next: () => {
         this.isApplying.set(false);
         this.snackbar.success("Import appliqué avec succès");
+        this.draftStorage.clear();
         this.resetAfterApply();
       },
       error: (err: HttpErrorResponse) => {
@@ -265,5 +344,7 @@ export class ImporterPageComponent {
     this.importName.set('');
     this.newFicheName.set('');
     this.newFicheAnnee.set(null);
+    this.pastedJson.set('');
+    this.selectedCodeId.set(null);
   }
 }

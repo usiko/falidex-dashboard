@@ -1,4 +1,4 @@
-import { Component, computed, inject, output, signal } from '@angular/core';
+import { Component, computed, inject, model, output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
@@ -51,11 +51,13 @@ export class ImporterPromptComponent {
 
   readonly reviewed = output<ImporterBatchReviewed>();
 
+  /** Liés en bidirectionnel à la page parente, pour persister le brouillon d'import et le reprendre plus tard. */
+  readonly pastedJson = model('');
+  readonly selectedCodeId = model<string | null>(null);
+
   protected readonly codes = computed(() =>
     [...this.relationStore.entities()].sort((a, b) => a.name.localeCompare(b.name) || b.annee - a.annee)
   );
-
-  protected readonly selectedCodeId = signal<string | null>(null);
 
   protected readonly selectedCode = computed(() => {
     const id = this.selectedCodeId();
@@ -88,7 +90,6 @@ export class ImporterPromptComponent {
 
   protected readonly promptLength = computed(() => this.prompt().length);
 
-  protected readonly pastedJson = signal('');
   protected readonly validationErrors = signal<string[] | null>(null);
 
   private readonly entityCollections = computed<EntityCollections>(() => ({

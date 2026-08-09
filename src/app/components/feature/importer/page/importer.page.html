@@ -47,6 +47,11 @@
 
           <span class="spacer"></span>
 
+          <button mat-button color="warn" [disabled]="isApplying()" (click)="onCancelImport()">
+            <mat-icon>close</mat-icon>
+            Annuler
+          </button>
+
           <button mat-raised-button color="primary" [disabled]="!canApplyImport()" (click)="onApplyImport()">
             @if (isApplying()) {
               <mat-spinner diameter="18" />
@@ -78,7 +83,10 @@
         <span>Prompt &amp; Review</span>
       </div>
       <div class="panel-body">
-        <app-importer-prompt (reviewed)="onReviewed($event)" />
+        <app-importer-prompt
+          [(pastedJson)]="pastedJson"
+          [(selectedCodeId)]="selectedCodeId"
+          (reviewed)="onReviewed($event)" />
       </div>
     </div>
   </div>
