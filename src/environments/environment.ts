@@ -2,8 +2,8 @@ export const environment = {
      prod:false,
      configPaths:['/config/config.json'],
      tokenHeader:'X-Token',
-     tokenKey:'default_dev_token_hash_please_change',
-     derivationTokenKey:'default_dev_token_hash_please_change',
+     tokenKey:'yt2phThpsqGpnNCw6j!bdA10RXY5uA',
+     derivationTokenKey:'mxvw%6$P45QhvH9yMcfZUNahvf9H&R%Tn5Ap02Abv',
      urls: {
 		dataServer: "http://localhost:3000",
 		pictureServer: "https://resources.falidex.fr/index.php"

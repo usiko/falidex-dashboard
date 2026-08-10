@@ -1,7 +1,7 @@
 import { Component, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
-import { DiffFieldCorrection, DiffOption, DiffRow } from '../../models/diff-row.model';
+import { DiffFieldCorrection, DiffOption, DiffRow, DiffRowMatch, DiffRowTypeChange } from '../../models/diff-row.model';
 import { DiffRowComponent } from '../diff-row/diff-row.component';
 
 @Component({
@@ -17,4 +17,7 @@ export class DiffTableComponent {
 
   fieldCorrected = output<DiffFieldCorrection>();
   incertainResolved = output<string>();
+  rowDeleted = output<string>();
+  rowMatched = output<DiffRowMatch>();
+  rowTypeChanged = output<DiffRowTypeChange>();
 }

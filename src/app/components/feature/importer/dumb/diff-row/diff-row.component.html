@@ -30,6 +30,30 @@
       <span class="confidence-badge" [style.backgroundColor]="confidenceColor()" matTooltip="Indice de confiance">
         {{ confidencePercent() }}%
       </span>
+
+      <span class="row-actions">
+        @if (canMatchExisting()) {
+          <button
+            type="button"
+            class="row-action"
+            matTooltip="Changer le type de cette entrée"
+            (click)="onChangeType()">
+            <mat-icon>swap_horiz</mat-icon>
+          </button>
+
+          <button
+            type="button"
+            class="row-action"
+            matTooltip="Rattacher à un item existant au lieu de le créer"
+            (click)="onMatchExisting()">
+            <mat-icon>merge</mat-icon>
+          </button>
+        }
+
+        <button type="button" class="row-action danger" matTooltip="Retirer cette entrée de l'import" (click)="onDelete()">
+          <mat-icon>delete_outline</mat-icon>
+        </button>
+      </span>
     </div>
 
     @if (row().relationFields?.length) {

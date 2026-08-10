@@ -21,7 +21,8 @@
         "login":"auth",
         "resourceUpload":"resource/upload",
         "resourceRemove":"resource/remove",
-        "import":"collection/import"
+        "import":"collection/import",
+        "importDraft":"collection/import-draft"
     },
     "pictureServerSalt": "iBhodGT6GTqS6Bb"
 }

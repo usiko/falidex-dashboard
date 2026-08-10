@@ -1,16 +1,7 @@
-import { TestBed } from '@angular/core/testing';
+import { httpInterceptor } from './http-interceptor.service';
 
-import { HttpInterceptorService } from './http-interceptor.service';
-
-describe('HttpInterceptorService', () => {
-  let service: HttpInterceptorService;
-
-  beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(HttpInterceptorService);
-  });
-
-  it('should be created', () => {
-    expect(service).toBeTruthy();
+describe('httpInterceptor', () => {
+  it('est exporté comme intercepteur fonctionnel', () => {
+    expect(typeof httpInterceptor).toBe('function');
   });
 });
