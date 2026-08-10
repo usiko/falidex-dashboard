@@ -1,7 +1,10 @@
 import { Component, computed, effect, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
+import { Subject } from 'rxjs';
+import { debounceTime, switchMap } from 'rxjs/operators';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -12,7 +15,7 @@ import { ImporterBatchReviewed, ImporterPromptComponent } from '../smart/prompt/
 import { ImporterApplyService } from '../smart/prompt/importer-apply.service';
 import { DiffEntry, ImporterBatchEditService } from '../smart/prompt/importer-batch-edit.service';
 import { ImportApplyRequest } from '../smart/prompt/import-batch.model';
-import { ImporterDraft } from '../smart/prompt/importer-draft.model';
+import { ImporterDraftContent } from '../smart/prompt/importer-draft.model';
 import { ImporterDraftStorageService } from '../smart/prompt/importer-draft-storage.service';
 import { DiffTableComponent } from '../dumb/diff-table/diff-table.component';
 import {
@@ -85,51 +88,62 @@ export class ImporterPageComponent {
     return true;
   });
 
-  /** Reprend un brouillon d'import laissé en cours (rechargement de page, navigation...) avant de persister ses futurs changements. */
+  /** Notifié à chaque changement pertinent, avec un anti-rebond pour ne pas appeler le serveur à chaque frappe. */
+  private readonly draftChanges = new Subject<ImporterDraftContent>();
+
+  /**
+   * Reprend le brouillon d'import laissé en cours par l'utilisateur (potentiellement depuis un
+   * autre poste) avant de persister côté serveur ses futurs changements — c'est ce qui permet de
+   * commencer un import sur un poste et de le terminer sur un autre.
+   */
   constructor() {
     this.restoreDraft();
 
-    effect(() => {
-      const draft: ImporterDraft = {
-        savedAt: new Date().toISOString(),
-        pastedJson: this.pastedJson(),
-        selectedCodeId: this.selectedCodeId(),
-        entries: this.entries(),
-        referentialOptions: this.referentialOptions() as Partial<Record<string, DiffOption[]>>,
-        targetCode: this.targetCode(),
-        importName: this.importName(),
-        newFicheName: this.newFicheName(),
-        newFicheAnnee: this.newFicheAnnee()
-      } as ImporterDraft;
+    this.draftChanges
+      .pipe(
+        debounceTime(600),
+        switchMap((content) => (this.isContentEmpty(content) ? this.draftStorage.clear() : this.draftStorage.save(content))),
+        takeUntilDestroyed()
+      )
+      .subscribe();
 
-      if (this.isDraftEmpty(draft)) {
-        this.draftStorage.clear();
-      } else {
-        this.draftStorage.save(draft);
-      }
-    });
+    effect(() => this.draftChanges.next(this.buildDraftContent()));
+  }
+
+  private buildDraftContent(): ImporterDraftContent {
+    return {
+      pastedJson: this.pastedJson(),
+      selectedCodeId: this.selectedCodeId(),
+      entries: this.entries(),
+      referentialOptions: this.referentialOptions() as Partial<Record<string, DiffOption[]>>,
+      targetCode: this.targetCode(),
+      importName: this.importName(),
+      newFicheName: this.newFicheName(),
+      newFicheAnnee: this.newFicheAnnee()
+    };
   }
 
   private restoreDraft(): void {
-    const draft = this.draftStorage.load();
-    if (!draft || this.isDraftEmpty(draft)) return;
+    this.draftStorage.load().subscribe((draft) => {
+      if (!draft || this.isContentEmpty(draft.payload)) return;
 
-    this.pastedJson.set(draft.pastedJson);
-    this.selectedCodeId.set(draft.selectedCodeId);
-    this.entries.set(draft.entries);
-    this.referentialOptions.set(draft.referentialOptions);
-    this.targetCode.set(draft.targetCode);
-    this.importName.set(draft.importName);
-    this.newFicheName.set(draft.newFicheName);
-    this.newFicheAnnee.set(draft.newFicheAnnee);
+      this.pastedJson.set(draft.payload.pastedJson);
+      this.selectedCodeId.set(draft.payload.selectedCodeId);
+      this.entries.set(draft.payload.entries);
+      this.referentialOptions.set(draft.payload.referentialOptions);
+      this.targetCode.set(draft.payload.targetCode);
+      this.importName.set(draft.payload.importName);
+      this.newFicheName.set(draft.payload.newFicheName);
+      this.newFicheAnnee.set(draft.payload.newFicheAnnee);
 
-    const savedAt = new Date(draft.savedAt);
-    const savedAtLabel = Number.isNaN(savedAt.getTime()) ? '' : ` (sauvegardé le ${savedAt.toLocaleString('fr-FR')})`;
-    this.snackbar.success(`Import en cours repris${savedAtLabel}`);
+      const savedAt = new Date(draft.savedAt);
+      const savedAtLabel = Number.isNaN(savedAt.getTime()) ? '' : ` (sauvegardé le ${savedAt.toLocaleString('fr-FR')})`;
+      this.snackbar.success(`Import en cours repris${savedAtLabel}`);
+    });
   }
 
-  private isDraftEmpty(draft: ImporterDraft): boolean {
-    return !draft.pastedJson.trim() && draft.entries.length === 0 && !draft.importName.trim();
+  private isContentEmpty(content: ImporterDraftContent): boolean {
+    return !content.pastedJson.trim() && content.entries.length === 0 && !content.importName.trim();
   }
 
   protected onCancelImport(): void {
@@ -147,7 +161,7 @@ export class ImporterPageComponent {
 
     dialogRef.afterClosed().subscribe((confirmed) => {
       if (!confirmed) return;
-      this.draftStorage.clear();
+      this.draftStorage.clear().subscribe();
       this.resetAfterApply();
       this.snackbar.success('Import annulé');
     });
@@ -326,7 +340,7 @@ export class ImporterPageComponent {
       next: () => {
         this.isApplying.set(false);
         this.snackbar.success("Import appliqué avec succès");
-        this.draftStorage.clear();
+        this.draftStorage.clear().subscribe();
         this.resetAfterApply();
       },
       error: (err: HttpErrorResponse) => {

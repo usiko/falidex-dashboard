@@ -2,11 +2,10 @@ import { DiffEntityType, DiffOption } from '../../models/diff-row.model';
 import { DiffEntry } from './importer-batch-edit.service';
 
 /**
- * Snapshot complet de l'import en cours (JSON collé + revue + corrections), persisté pour permettre
- * de reprendre le travail après un rechargement de page ou de l'annuler explicitement.
+ * Contenu du brouillon d'import en cours (JSON collé + revue + corrections), tel qu'envoyé au
+ * serveur pour permettre de reprendre le travail sur un autre poste ou de l'annuler.
  */
-export interface ImporterDraft {
-  savedAt: string;
+export interface ImporterDraftContent {
   pastedJson: string;
   selectedCodeId: string | null;
   entries: DiffEntry[];
@@ -15,4 +14,10 @@ export interface ImporterDraft {
   importName: string;
   newFicheName: string;
   newFicheAnnee: number | null;
+}
+
+/** Brouillon tel que restitué par `GET /collection/import-draft` : le contenu, horodaté côté serveur. */
+export interface ImporterDraft {
+  savedAt: string;
+  payload: ImporterDraftContent;
 }

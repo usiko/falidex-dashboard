@@ -18,6 +18,7 @@ export interface IAppConfig {
         resourceUpload:string;
         resourceRemove:string;
         import:string;
+        importDraft:string;
 	};
     pictureServerSalt: string;
 }
